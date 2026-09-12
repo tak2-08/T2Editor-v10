@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "code": "ko",
+    "plugin": "link",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "link": {
+    "modal_title": "링크 추가",
+    "modal_title_edit": "링크 편집",
+    "url_label": "URL",
+    "url_placeholder": "https://example.com",
+    "text_label": "링크 텍스트",
+    "text_placeholder": "링크 설명 (선택)",
+    "target_label": "새 창에서 열기",
+    "select_text_first": "텍스트를 선택한 후 링크를 추가해주세요.",
+    "invalid_url": "올바른 URL 형식이 아닙니다.",
+    "no_url": "URL을 입력해주세요.",
+    "btn_insert": "링크 삽입",
+    "btn_update": "업데이트",
+    "btn_remove": "링크 제거",
+    "no_selection": "선택 영역을 찾을 수 없습니다.",
+    "no_text_selected": "텍스트가 선택되지 않았습니다.",
+    "apply_error": "링크를 적용하는 중 오류가 발생했습니다.",
+    "remove_error": "링크를 제거하는 중 오류가 발생했습니다."
+  }
+}

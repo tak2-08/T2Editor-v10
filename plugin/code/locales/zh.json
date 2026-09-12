@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "code": "zh",
+    "plugin": "code",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "code": {
+    "modal_title": "代码块",
+    "language_label": "语言",
+    "language_placeholder": "选择语言",
+    "code_placeholder": "在此输入代码",
+    "btn_insert": "插入代码",
+    "copy_code": "复制代码",
+    "copied": "已复制"
+  }
+}

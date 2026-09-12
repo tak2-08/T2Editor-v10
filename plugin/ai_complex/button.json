@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "openAiComplex",
+      "plugin": "ai_complex",
+      "ariaLabel": "AI 글쓰기 · 재구성",
+      "style": "color:#ff6600",
+      "order": 18,
+      "icon": {
+        "type": "material-icons",
+        "name": "auto_awesome",
+        "style": "animation: t2AicShimmer 3s ease-in-out infinite;"
+      }
+    }
+  ]
+}

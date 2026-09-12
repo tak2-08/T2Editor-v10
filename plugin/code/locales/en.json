@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "code": "en",
+    "plugin": "code",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "code": {
+    "modal_title": "Code block",
+    "language_label": "Language",
+    "language_placeholder": "Select language",
+    "code_placeholder": "Enter code here",
+    "btn_insert": "Insert code",
+    "copy_code": "Copy code",
+    "copied": "Copied"
+  }
+}

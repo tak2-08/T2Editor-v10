@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "code": "ko",
+    "plugin": "table",
+    "source": "plugin",
+    "version": "10.4.0"
+  },
+  "table": {
+    "modal_title": "표 삽입",
+    "rows_label": "행",
+    "cols_label": "열",
+    "header_row_label": "헤더 행 포함",
+    "border_label": "테두리",
+    "btn_insert": "표 삽입",
+    "add_row": "행 추가",
+    "add_col": "열 추가",
+    "del_row": "행 삭제",
+    "del_col": "열 삭제",
+    "header_row": "헤더 행",
+    "header_col": "헤더 열",
+    "cols_count_label": "가로 셀 수:",
+    "rows_count_label": "세로 셀 수:",
+    "large_table_warning": "큰 테이블은 가로 스크롤이 생성됩니다.",
+    "width_label": "테이블 너비:",
+    "width_full": "100% (전체)",
+    "width_custom": "직접 입력",
+    "border_style_label": "테두리 스타일:",
+    "border_solid": "실선",
+    "border_dashed": "점선",
+    "border_dotted": "점선 (원형)",
+    "border_double": "이중선",
+    "header_label": "헤더 {n}",
+    "cols_short_label": "가로:",
+    "rows_short_label": "세로:",
+    "cells_short_label": "셀:",
+    "merge_cells": "선택한 셀 병합",
+    "merge_cells_hint": "첫 셀을 선택한 뒤 Shift+클릭하거나 병합 버튼을 누르고 마지막 셀을 선택하세요.",
+    "split_cell": "병합된 셀 분할",
+    "delete_table": "테이블 삭제",
+    "move_up": "위로 이동",
+    "move_down": "아래로 이동"
+  }
+}

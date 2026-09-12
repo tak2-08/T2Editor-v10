@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "code": "en",
+    "plugin": "draw",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "draw": {
+    "modal_title": "Draw",
+    "modal_title_edit": "Edit drawing",
+    "tool_pen": "Pen",
+    "tool_eraser": "Eraser",
+    "tool_line": "Line",
+    "tool_rect": "Rectangle",
+    "tool_circle": "Circle",
+    "tool_arrow": "Arrow",
+    "tool_text": "Text",
+    "color_label": "Color",
+    "size_label": "Size",
+    "clear_all": "Clear all",
+    "drawing_loading": "Drawing...",
+    "confirm_clear": "Clear all content?",
+    "confirm_delete": "Delete this drawing?",
+    "delete_drawing": "Delete drawing",
+    "error_save": "Error saving drawing:\n{error}",
+    "btn_insert": "Insert as image",
+    "btn_add": "Add",
+    "btn_update": "Update",
+    "btn_cancel": "Cancel",
+    "console_url_recovery_failed": "[T2Draw] URL recovery failed, skipping block:"
+  }
+}

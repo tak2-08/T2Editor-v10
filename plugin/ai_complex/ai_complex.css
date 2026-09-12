@@ -1,0 +1,2131 @@
+/* Path: T2Editor/plugin/ai_complex/ai_complex.css */
+:root {
+    --t2-aic-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+
+    /* 브랜드 마크 전용 — 라이트/다크 공통, 로고의 "T2"와 전송 버튼에 사용 */
+    --t2-aic-brand-mark: #ff6600;
+    --t2-aic-brand-mark-strong: #e65c00;
+
+    /* v13.0.0: 포인트 컬러를 파랑(#2D5BFF)에서 브랜드 오렌지(#ff6600) 계열로
+       완전히 전환 — 로고 마크와 강조색을 하나로 통일해 "T2" 오렌지가 앱
+       전체의 유일한 포인트 컬러가 되도록 한다(파란색은 더 이상 사용 안 함). */
+    --t2-aic-accent: #ff6600;
+    --t2-aic-accent-strong: #e65c00;
+    --t2-aic-accent-text: #ff6600;
+    --t2-aic-accent-surface: #fff1e6;
+    --t2-aic-accent-border: #ffcda3;
+
+    --t2-aic-success: #16723a;
+    --t2-aic-success-surface: #effaf3;
+    --t2-aic-success-border: #bfe8cd;
+
+    --t2-aic-warning: #a16207;
+    --t2-aic-warning-surface: #fffbeb;
+    --t2-aic-warning-border: #f3d68a;
+
+    --t2-aic-danger: #DC3545;
+    --t2-aic-danger-surface: rgba(220, 53, 69, 0.1);
+    --t2-aic-danger-border: rgba(220, 53, 69, 0.3);
+
+    --t2-aic-text: #111827;
+    --t2-aic-text-soft: #374151;
+    --t2-aic-text-muted: #6b7280;
+    --t2-aic-text-faint: #9ca3af;
+
+    --t2-aic-surface: #ffffff;
+    --t2-aic-surface-subtle: #f3f4f6;
+    --t2-aic-surface-muted: #e5e7eb;
+    --t2-aic-border: #e5e7eb;
+    --t2-aic-border-strong: #d1d5db;
+
+    --t2-aic-overlay: rgba(17, 24, 39, 0.4);
+    /* v13.1.0: 단일 그림자 대신 근거리(선명)+원거리(확산) 레이어를 겹쳐
+       Apple/머티리얼 3 스타일의 부드럽고 입체감 있는 뜬 느낌을 낸다. */
+    --t2-aic-modal-shadow:
+        0 1px 1px rgba(15, 23, 42, 0.03),
+        0 8px 24px -8px rgba(15, 23, 42, 0.16),
+        0 24px 64px -12px rgba(15, 35, 60, 0.22);
+
+    --t2-aic-radius-sm: 8px;
+    --t2-aic-radius-md: 12px;
+    --t2-aic-radius-lg: 20px;
+
+    /* v13.1.0: 감속 위주의 "ease-out-expo" 계열 커브 — Apple/Anthropic UI가
+       공통으로 쓰는, 빠르게 시작해 부드럽게 멈추는 진중한 모션감. 일반
+       hover/toggle 같은 빠른 반응에는 조금 더 대칭적인 -soft 버전을 쓴다. */
+    --t2-aic-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --t2-aic-ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* v16.0.0: "생각하는 중…" 등 로딩 라벨에 쓰는 텍스트 shimmer —
+       바탕색(무채 회색)은 항상 그대로 보이고, 그 위로 밝은 빛줄기 하나가
+       가로로 훑고 지나가는 효과. base/highlight 모두 완전 불투명 색이라
+       하이라이트가 지나가지 않는 부분의 글자가 투명해지는 일은 없다. */
+    --t2-aic-shimmer-base: var(--t2-aic-text-muted);
+    --t2-aic-shimmer-highlight: #ffffff;
+}
+
+html[data-t2editor-theme="dark"] {
+    --t2-aic-accent: #ff8a3d;
+    --t2-aic-accent-strong: #ff6600;
+    --t2-aic-accent-text: #ffab6b;
+    --t2-aic-accent-surface: rgba(255, 102, 0, 0.16);
+    --t2-aic-accent-border: rgba(255, 102, 0, 0.4);
+
+    --t2-aic-success: #86efac;
+    --t2-aic-success-surface: #203428;
+    --t2-aic-success-border: #315f3f;
+
+    --t2-aic-warning: #fcd34d;
+    --t2-aic-warning-surface: #3a2f10;
+    --t2-aic-warning-border: #6b551c;
+
+    --t2-aic-danger: #DC3545;
+    --t2-aic-danger-surface: rgba(220, 53, 69, 0.12);
+    --t2-aic-danger-border: rgba(220, 53, 69, 0.35);
+
+    --t2-aic-text: #ffffff;
+    --t2-aic-text-soft: #d4d4d8;
+    --t2-aic-text-muted: #999999;
+    --t2-aic-text-faint: #666666;
+
+    --t2-aic-surface: #1a1a1a;
+    --t2-aic-surface-subtle: #242424;
+    --t2-aic-surface-muted: #2a2a2a;
+    --t2-aic-border: #333333;
+    --t2-aic-border-strong: #444444;
+
+    --t2-aic-overlay: rgba(0, 0, 0, 0.6);
+    /* 다크 배경에서는 옅은 확산광 대신 진하고 뚜렷한 그림자 + 미세한 상단
+       하이라이트 라인으로 "떠 있음"을 표현해야 밋밋해 보이지 않는다. */
+    --t2-aic-modal-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 12px 32px -8px rgba(0, 0, 0, 0.55),
+        0 32px 80px -16px rgba(0, 0, 0, 0.65);
+}
+
+@keyframes t2AicShimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
+/* v16.0.0: 텍스트 위로 빛줄기가 좌→우로 훑고 지나가는 shimmer.
+   background-position만 이동시키므로 GPU 합성으로 가볍게 돈다. */
+@keyframes t2AicTextShimmer {
+    0%   { background-position: 160% 0; }
+    100% { background-position: -60% 0; }
+}
+
+@keyframes t2AicCursorBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+/* v6.5.0: 가짜 스트리밍 재생 중 텍스트 끝에 붙는 깜빡이는 커서. */
+.t2-aic-typewriter-cursor {
+    display: inline-block;
+    width: 2px; height: 1em;
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    background: var(--t2-aic-text-soft);
+    animation: t2AicCursorBlink 0.85s steps(1) infinite;
+}
+
+@keyframes t2AicSlideUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes t2AicSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* 답변이 나오는 동안 "지금 살아서 작동 중"임을 은은하게 알리는 파동 —
+   클로드/Grok의 로딩 모션에 대응. 중단 버튼 자체가 이 파동을 낸다. */
+@keyframes t2AicPulseRing {
+    0%   { box-shadow: 0 0 0 0 rgba(1, 135, 254, 0.35); }
+    70%  { box-shadow: 0 0 0 7px rgba(1, 135, 254, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(1, 135, 254, 0); }
+}
+
+/* ── Overlay / Modal shell (mobile-first bottom sheet) ───────────────────
+   기본값(모바일)은 화면 하단에서 올라오는 바텀시트 — 뷰포트 전체를 덮지
+   않고 위쪽으로 에디터가 살짝 보이도록 max-height를 제한한다. 데스크톱은
+   아래 @media(min-width:761px)에서 기존처럼 가운데 뜨는 카드로 되돌린다. */
+.t2-aic-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--t2-aic-overlay);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 10001;
+    font-family: var(--t2-aic-font);
+}
+
+.t2-aic-modal {
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text);
+    border-radius: var(--t2-aic-radius-lg) var(--t2-aic-radius-lg) 0 0;
+    box-shadow: var(--t2-aic-modal-shadow);
+    width: 100%;
+    max-width: 100%;
+    max-height: 88vh;
+    height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: t2AicSlideUp 0.28s var(--t2-aic-ease);
+}
+
+.t2-aic-modal.is-chat-mode { height: 88vh; min-height: 480px; }
+
+/* 바텀시트 드래그 핸들 — 모바일 제스처(아래로 끌어 닫기)의 시각적 단서. */
+.t2-aic-sheet-handle {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 2px;
+    cursor: grab;
+    touch-action: none;
+}
+.t2-aic-sheet-handle span {
+    width: 36px; height: 4px; border-radius: 999px;
+    background: var(--t2-aic-border-strong);
+}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+.t2-aic-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--t2-aic-border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.t2-aic-title-block { display: flex; align-items: center; gap: 10px; min-width: 0; }
+
+.t2-aic-title-icon {
+    color: var(--t2-aic-text-soft);
+    background: var(--t2-aic-surface-muted);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    /* v13.0.1: 외부 Material Icons 스타일시트가 로드 순서에 따라
+       display:inline-block/line-height 등을 나중에 덮어써서 아이콘이
+       40x40 박스 좌상단에 붙어버리는 문제가 있었다 — 정중앙 정렬에
+       필요한 속성을 !important로 못 박아 로드 순서와 무관하게 고정한다. */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    font-size: 20px !important;
+    flex-shrink: 0;
+}
+
+.t2-aic-title-copy h3 {
+    margin: 0; font-size: 16.5px; font-weight: 700; letter-spacing: -0.01em;
+    display: flex; align-items: baseline; gap: 0;
+}
+.t2-aic-brand-mark { color: var(--t2-aic-brand-mark); font-weight: 800; }
+.t2-aic-brand-rest { color: var(--t2-aic-text); }
+.t2-aic-brand-suffix { color: var(--t2-aic-text-muted); font-weight: 600; margin-left: 5px; font-size: 12px; letter-spacing: 0.01em; }
+.t2-aic-title-copy p { margin: 1px 0 0; font-size: 12px; color: var(--t2-aic-text-muted); }
+
+.t2-aic-header-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+
+.t2-aic-info, .t2-aic-close {
+    background: none; border: none; cursor: pointer; padding: 8px;
+    display: flex; color: var(--t2-aic-text-muted); border-radius: var(--t2-aic-radius-sm);
+    transition: background 0.15s;
+}
+.t2-aic-info:hover, .t2-aic-close:hover { background: var(--t2-aic-surface-subtle); }
+
+/* ── Mode segment (일반 / 재구성) — 옛 4탭 대신 얇은 세그먼트 하나 ───── */
+.t2-aic-mode-row {
+    padding: 16px 24px;
+    flex-shrink: 0;
+}
+
+.t2-aic-mode-seg {
+    display: inline-flex;
+    padding: 4px;
+    background: var(--t2-aic-surface-muted);
+    border: none;
+    border-radius: var(--t2-aic-radius-md);
+    gap: 4px;
+}
+
+.t2-aic-mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    color: var(--t2-aic-text-muted);
+    border-radius: var(--t2-aic-radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.t2-aic-mode-btn:hover:not(.is-active) { color: var(--t2-aic-text); }
+.t2-aic-mode-btn .material-icons { font-size: 16px; }
+.t2-aic-mode-btn.is-active {
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text);
+    box-shadow: 0 1px 3px rgba(24,24,27,0.12);
+}
+
+/* ── Content / body ───────────────────────────────────────────────────── */
+.t2-aic-body {
+    padding: 16px 24px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.t2-aic-body > section,
+.t2-aic-body > .t2-aic-result {
+    width: 100%;
+    max-width: 896px;
+    margin: 0 auto;
+}
+
+/* 채팅 모드 — 본문 자체는 스크롤하지 않고, 메시지 영역만 내부 스크롤을
+   갖는다(컴포저가 항상 보이도록). flex:1 1 0 + min-height:0 조합이 있어야
+   부모가 줄어들 때 이 영역도 줄어들고 overflow가 정상 작동한다. */
+.t2-aic-body.is-chat-mode {
+    overflow: hidden;
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 0;
+    gap: 0;
+}
+
+.t2-aic-section-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--t2-aic-text-soft);
+    margin-bottom: 4px;
+}
+
+.t2-aic-section-desc {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--t2-aic-text-muted);
+}
+
+.t2-aic-input-shell { position: relative; }
+
+.t2-aic-instruction-section { display: flex; flex-direction: column; gap: 12px; }
+.t2-aic-instruction-section .t2-aic-section-label { font-size: 16px; font-weight: 600; color: var(--t2-aic-text); letter-spacing: normal; text-transform: none; }
+
+.t2-aic-instruction-card {
+    background: var(--t2-aic-surface);
+    border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-md);
+    padding: 16px;
+}
+
+.t2-aic-instruction {
+    width: 100%;
+    min-height: 128px;
+    resize: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--t2-aic-text);
+    background: transparent;
+    box-sizing: border-box;
+}
+.t2-aic-instruction:focus { outline: none; }
+.t2-aic-instruction::placeholder { color: var(--t2-aic-text-faint); }
+
+.t2-aic-char-count-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+.t2-aic-char-count {
+    font-size: 11px;
+    color: var(--t2-aic-text-faint);
+}
+.t2-aic-char-count.is-warning { color: var(--t2-aic-warning); }
+.t2-aic-char-count.is-danger { color: var(--t2-aic-danger); }
+
+.t2-aic-prompt-hints { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.t2-aic-prompt-hint {
+    border: 1px solid var(--t2-aic-border);
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text-muted);
+    border-radius: var(--t2-aic-radius-md);
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.t2-aic-prompt-hint:hover { background: var(--t2-aic-surface-subtle); }
+
+/* focus-pick (요소 선택) — 상단 구분선 + 전체너비 버튼, 붙여넣은 디자인 그대로 */
+.t2-aic-focus-row-section {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-top: 8px; padding-top: 24px;
+    border-top: 1px solid var(--t2-aic-border);
+}
+
+.t2-aic-focus-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    flex: 1 1 auto;
+    border: 1px solid var(--t2-aic-border-strong);
+    background: var(--t2-aic-surface-subtle);
+    color: var(--t2-aic-text);
+    border-radius: var(--t2-aic-radius-sm);
+    padding: 12px 16px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.t2-aic-focus-btn:hover { background: var(--t2-aic-surface-muted); }
+.t2-aic-focus-btn.is-active { border-color: var(--t2-aic-border-strong); color: var(--t2-aic-text); background: var(--t2-aic-surface-muted); }
+.t2-aic-focus-btn .material-icons { font-size: 15px; }
+
+.t2-aic-focus-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--t2-aic-surface-muted);
+    border: 1px solid var(--t2-aic-border-strong);
+    color: var(--t2-aic-text);
+    border-radius: 999px;
+    padding: 4px 10px 4px 10px;
+    font-size: 12px;
+    max-width: 100%;
+}
+.t2-aic-focus-chip span.txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.t2-aic-focus-chip button {
+    border: none; background: none; cursor: pointer; color: inherit;
+    display: flex; padding: 0; font-size: 14px; line-height: 1;
+}
+
+/* 여러 블록을 골랐을 때(2개 이상) 칩 줄 끝에 붙는 "전체 해제" 링크 버튼 */
+.t2-aic-focus-clear-all {
+    border: none; background: none; cursor: pointer;
+    color: var(--t2-aic-text-soft);
+    font-size: 11.5px;
+    text-decoration: underline;
+    padding: 4px 2px;
+}
+.t2-aic-focus-clear-all:hover { color: var(--t2-aic-text); }
+
+/* editor-side highlight while picking */
+.t2-aic-focus-pick { outline: 2px dashed var(--t2-aic-text-soft) !important; outline-offset: 2px; cursor: pointer !important; }
+.t2-aic-focus-selected { outline: 2px solid var(--t2-aic-text) !important; outline-offset: 2px; }
+
+/* ── 하단 상태 바 (v3.5.0) ────────────────────────────────────────────────
+   "person내 요청 / public서버 요청" 배지 + "Powered by T2Editor AI" 링크는
+   더 이상 본문(body) 스크롤 안의 한 섹션이 아니라, 모달의 독립된 하단
+   구획(header/tabs/body와 같은 레벨의 형제 요소)이다. flex-shrink:0으로
+   고정해 두어서 어떤 탭이든, 본문을 얼마나 스크롤하든 항상 맨 아래에
+   그대로 보인다 — 매 renderBody 호출마다 다시 그릴 필요도 없다. */
+/* v5.0.0: "내 요청/서버 요청" 배지 + "Powered by" 링크 + 안내 문구, 세
+   줄짜리 구획을 한 줄로. 자세한 설명은 옆의 정보 아이콘 팝업이 맡는다. */
+/* v6.0.0: 배지 두 개 + "Powered by" 텍스트 + (i) 아이콘, 네 조각이던
+   하단 바를 문장 하나로. 평소엔 클로드의 디스클레이머처럼 조용하고,
+   탭하면 소개 팝업이 열린다 — 그 팝업 안에 사용량 숫자가 있다. */
+.t2-aic-status-bar {
+    padding: 10px 24px;
+    border-top: 1px solid var(--t2-aic-border);
+    background: var(--t2-aic-surface-subtle);
+    flex-shrink: 0;
+}
+/* 채팅 모드에서는 이 안내문구가 footer의 .t2-aic-chat-footer-row 안으로
+   옮겨가(붙여넣은 디자인처럼 "안내문구 + 대화 초기화" 한 줄) 흡수되므로,
+   독립 상태 바는 숨긴다 — renderBody()에서 모드에 따라 토글. */
+.t2-aic-status-bar.is-hidden { display: none; }
+
+.t2-aic-status-caption {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    border: none; background: none; cursor: pointer; padding: 2px;
+    font-size: 11px; color: var(--t2-aic-text-faint);
+    transition: color 0.15s ease;
+}
+.t2-aic-status-caption:hover { color: var(--t2-aic-text-muted); }
+.t2-aic-status-caption .material-icons { font-size: 13px; line-height: 1; }
+.t2-aic-status-caption-text { text-decoration: underline dotted; text-underline-offset: 2px; }
+.t2-aic-status-caption.is-warning { color: var(--t2-aic-warning); font-weight: 600; }
+
+/* 채팅 footer 행 — 붙여넣은 디자인의 "T2Editor AI는 실수할 수 있어요"
+   (좌) + "대화 초기화" (우) 한 줄 배치를 그대로 재현한다. */
+.t2-aic-chat-footer-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; width: 100%;
+}
+.t2-aic-chat-footer-row .t2-aic-status-caption {
+    width: auto; flex: 1 1 auto; min-width: 0;
+    justify-content: flex-start;
+}
+.t2-aic-chat-footer-row .t2-aic-status-caption-text {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.t2-aic-chat-footer-row .t2-aic-chat-clear { flex-shrink: 0; }
+
+/* 정보 팝업 안의 사용량 — 항상 보이던 배지 대신, 여기서만 정확한 숫자를
+   보여준다. */
+.t2-aic-info-usage {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px dashed var(--t2-aic-border);
+}
+.t2-aic-info-usage span {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--t2-aic-text-muted);
+    background: var(--t2-aic-surface-subtle);
+    border: 1px solid var(--t2-aic-border);
+    border-radius: 999px; padding: 3px 9px;
+}
+.t2-aic-info-usage .material-icons { font-size: 12.5px; }
+.t2-aic-info-usage.is-warning span { color: var(--t2-aic-warning); border-color: var(--t2-aic-warning-border); background: var(--t2-aic-warning-surface); }
+
+/* ── Tool on/off (알약 + 전체 목록 팝업) ─────────────────────────────── */
+.t2-aic-tools-section { display: flex; flex-direction: column; gap: 8px; }
+.t2-aic-tools-toprow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.t2-aic-tools-title { font-size: 11.5px; font-weight: 700; color: var(--t2-aic-text-muted); letter-spacing: 0.01em; }
+
+.t2-aic-tools-caret {
+    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px;
+    border: 1px solid var(--t2-aic-border-strong);
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text-soft);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.t2-aic-tools-caret .material-icons { font-size: 16px; }
+.t2-aic-tools-caret:hover { background: var(--t2-aic-surface-subtle); }
+.t2-aic-tools-caret.is-open { background: var(--t2-aic-text); color: var(--t2-aic-surface); border-color: var(--t2-aic-text); }
+
+.t2-aic-tools-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.t2-aic-tools-empty { font-size: 11.5px; color: var(--t2-aic-text-faint); }
+
+.t2-aic-tool-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 6px 4px 10px;
+    background: var(--t2-aic-surface-subtle);
+    border: 1px solid var(--t2-aic-border);
+    border-radius: 999px;
+    font-size: 11.5px;
+    color: var(--t2-aic-text-soft);
+    max-width: 100%;
+}
+.t2-aic-tool-pill-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.t2-aic-tool-pill-x {
+    display: flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px;
+    border: none; background: transparent; padding: 0;
+    color: var(--t2-aic-text-faint);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.t2-aic-tool-pill-x .material-icons { font-size: 13px; }
+.t2-aic-tool-pill-x:hover { background: var(--t2-aic-danger-surface); color: var(--t2-aic-danger); }
+
+/* 전체 도구 목록 팝업 — document.body에 fixed로 붙어서 모달의 스크롤/
+   overflow에 영향받지 않는다. overlay 자체는 화면을 가리지 않고(뒤 배경
+   클릭 가능), 팝업 패널만 클릭을 받는다. */
+.t2-aic-tools-popup-overlay { position: fixed; inset: 0; z-index: 10002; pointer-events: none; }
+.t2-aic-tools-popup {
+    position: fixed;
+    pointer-events: auto;
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text);
+    border: 1px solid var(--t2-aic-border-strong);
+    border-radius: var(--t2-aic-radius-md);
+    box-shadow: var(--t2-aic-modal-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: t2AicSlideUp 0.18s var(--t2-aic-ease);
+}
+.t2-aic-tools-popup-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--t2-aic-border);
+    font-size: 12.5px; font-weight: 700;
+}
+.t2-aic-tools-popup-hint { font-size: 10.5px; font-weight: 400; color: var(--t2-aic-text-faint); }
+.t2-aic-tools-popup-list { overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+
+.t2-aic-tools-popup-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 8px;
+    border-radius: var(--t2-aic-radius-sm);
+    cursor: pointer;
+    background: transparent;
+    color: var(--t2-aic-text-soft);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.t2-aic-tools-popup-row:hover { background: var(--t2-aic-surface-subtle); }
+/* 사용중(활성) 도구 — v7.0.0: 새 디자인 시안에 맞춰 배경은 옅게 짙어지고
+   체크/아이콘/텍스트만 primary 색으로 강조하는 방식으로 변경. */
+.t2-aic-tools-popup-row.is-active {
+    background: var(--t2-aic-surface-muted);
+    color: var(--t2-aic-text);
+}
+.t2-aic-tools-popup-row.is-active:hover { background: var(--t2-aic-surface-muted); }
+.t2-aic-tools-popup-check {
+    display: flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; flex: none;
+}
+.t2-aic-tools-popup-check .material-icons { font-size: 15px; color: currentColor; }
+/* 붙여넣은 디자인처럼 체크 표시 다음에 도구별 아이콘을 하나 더 둔다
+   (문서 분석/요약/맞춤법 등 도구 성격을 한눈에 구분). */
+.t2-aic-tools-popup-icon { font-size: 17px; flex: none; color: currentColor; opacity: 0.85; }
+.t2-aic-tools-popup-name { flex: 1; font-size: 12.5px; font-weight: 600; }
+.t2-aic-tools-popup-info {
+    display: flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; flex: none;
+    border: none; background: transparent; padding: 0;
+    color: var(--t2-aic-text-faint);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+.t2-aic-tools-popup-info:hover { color: var(--t2-aic-text); background: rgba(127, 127, 127, 0.18); }
+.t2-aic-tools-popup-info .material-icons { font-size: 16px; }
+
+.t2-aic-tool-info-popup { max-width: 360px; }
+
+
+.t2-aic-model-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11.5px;
+    color: var(--t2-aic-text-soft);
+    background: var(--t2-aic-surface-subtle);
+    border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-sm);
+    padding: 6px 10px;
+}
+.t2-aic-model-badge .material-icons { font-size: 14px; }
+.t2-aic-model-badge strong { font-weight: 700; }
+
+/* ── Result: DSL preview cards (write mode) ──────────────────────────── */
+.t2-aic-result { display: none; flex-direction: column; gap: 10px; }
+.t2-aic-result.is-visible { display: flex; }
+
+.t2-aic-loading {
+    display: flex; align-items: center; gap: 10px;
+    padding: 22px 10px; color: var(--t2-aic-text-muted); font-size: 13.5px;
+}
+.t2-aic-loading.t2-aic-loading-inline { padding: 6px 2px; }
+.t2-aic-spinner {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2.5px solid var(--t2-aic-accent-border);
+    border-top-color: var(--t2-aic-accent);
+    animation: t2AicSpin 0.7s linear infinite;
+}
+
+/* ── Tool 사용 표시 (v6.1.0 — 진짜 클로드 방식) ─────────────────────────
+   카드도, 테두리도, 배경도 없다. 답변 위에 작은 회색 텍스트 한 줄이
+   놓일 뿐이고, 그 줄 자체를 누르면 무엇을 했는지 아래로 조용히
+   펼쳐진다. 라이트/다크 모두 var(--t2-aic-text-muted) 하나로 자동
+   대응된다. */
+.t2-aic-tool-round {
+    margin-bottom: 8px;
+    font-size: 12.5px;
+}
+.t2-aic-tool-round-toggle {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 0; border: none; background: none; cursor: pointer;
+    color: var(--t2-aic-text-muted); font-weight: 500; font-size: 12.5px;
+    max-width: 100%;
+}
+.t2-aic-tool-round-toggle:hover { color: var(--t2-aic-text-soft); }
+.t2-aic-tool-round-spin { display: inline-flex; align-items: center; flex-shrink: 0; font-size: 14px; }
+.t2-aic-tool-round-spin .material-icons { font-size: 14px; }
+.t2-aic-tool-round-spin.is-spinning { color: var(--t2-aic-accent); }
+
+/* v12.x: 브랜드 픽셀 웨이브 스피너 — "T2E"를 5×7 도트 매트릭스로 그리고
+   각 픽셀 셀에 대각선 위치 기반의 animation-delay 를 주어, T의 좌하단에서
+   2를 거쳐 E의 우상단까지 밝은 파도가 우상향 대각선 방향으로 흐른다.
+   SVG 를 쓰지 않고 순수 DOM + CSS 만으로 구성했으며, opacity + transform
+   기반 애니메이션만 사용해 iOS Safari 12+ 및 구형 WebKit 브라우저에서도
+   무리 없이 재생된다. 색은 무채색(currentColor)으로, 라이트/다크 모드
+   포인트 컬러를 그대로 물려받는다.
+
+   구조:
+     <span class="t2-aic-brand-spinner">
+         <span class="t2-aic-bs-char" data-ch="T"></span>
+         <span class="t2-aic-bs-char" data-ch="2"></span>
+         <span class="t2-aic-bs-char" data-ch="E"></span>
+     </span>
+   각 .t2-aic-bs-char 안쪽에 자바스크립트(hooks.js) 가 .t2-aic-bs-dot 을
+   채워 넣는다. 자바스크립트가 아직 실행되지 않아 dot 이 없더라도
+   컨테이너 크기 자체는 CSS 로 보장되어 레이아웃이 흔들리지 않는다. */
+.t2-aic-brand-spinner{
+    --t2-bs-cell: 2.1px;          /* 셀 한 변 크기(=픽셀 밀도) — 조금 더 잘 보이도록 확대 */
+    --t2-bs-cycle: 1.6s;          /* 파도 한 바퀴 */
+    --t2-bs-step: 55ms;           /* 셀 사이 대각선 지연 */
+    --t2-bs-dim: 0.20;            /* 어두운 상태 밝기 */
+    display: inline-block;
+    position: relative;
+    /* 5+1+5+1+5 = 17 col × 7 row */
+    width: calc(var(--t2-bs-cell) * 17);
+    height: calc(var(--t2-bs-cell) * 7);
+    vertical-align: middle;
+    line-height: 0;
+    font-size: 0;
+    overflow: visible;
+    /* iOS Safari 서브픽셀 잔상 방지 */
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+}
+.t2-aic-brand-spinner .t2-aic-bs-char{
+    display: inline-block;
+    position: relative;
+    width: calc(var(--t2-bs-cell) * 5);
+    height: calc(var(--t2-bs-cell) * 7);
+    margin-right: var(--t2-bs-cell);   /* 글자 사이 1 col gap */
+    vertical-align: top;
+}
+.t2-aic-brand-spinner .t2-aic-bs-char:last-child{ margin-right: 0; }
+.t2-aic-brand-spinner .t2-aic-bs-dot{
+    position: absolute;
+    width: var(--t2-bs-cell);
+    height: var(--t2-bs-cell);
+    background-color: currentColor;
+    opacity: 0.20;
+    -webkit-animation: t2AicBsWave var(--t2-bs-cycle) linear infinite;
+            animation: t2AicBsWave var(--t2-bs-cycle) linear infinite;
+    /* scale(1.35)로 셀보다 살짝 크게 그려 인접 도트끼리 조금씩 겹치게
+       한다 — 그리드 좌표(top/left)는 그대로 두고 중심 기준으로만 확대되므로
+       배치는 흐트러지지 않으면서 전체적으로 더 두껍고 볼드한 인상을 준다. */
+    -webkit-transform: translateZ(0) scale(1.35);
+            transform: translateZ(0) scale(1.35);
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+}
+@-webkit-keyframes t2AicBsWave{
+    0%   { opacity: 0.20; }
+    18%  { opacity: 1;    }
+    38%  { opacity: 0.20; }
+    100% { opacity: 0.20; }
+}
+@keyframes t2AicBsWave{
+    0%   { opacity: 0.20; }
+    18%  { opacity: 1;    }
+    38%  { opacity: 0.20; }
+    100% { opacity: 0.20; }
+}
+@media (prefers-reduced-motion: reduce){
+    .t2-aic-brand-spinner .t2-aic-bs-dot{
+        -webkit-animation: none;
+                animation: none;
+        opacity: 0.6;
+    }
+}
+
+/* v16.5.0: 답변이 끝난 뒤 그 아래 남는 정지된 T2E 서명 — 클로드 웹
+   채팅에서 완료된 답변 아래 로고가 남는 것과 같은 자리. 웨이브가 아니라
+   도트가 전부 완전히 켜진 상태로 고정되고, 브랜드 컬러를 그대로 쓴다.
+   (헤더 로고에 이미 쓰이는 .t2-aic-brand-mark와 이름이 겹쳐서
+   .t2-aic-chat-brandmark로 분리했다. 모델 표시줄/복사 버튼과는 섞이지
+   않는 독립된 줄로, 메시지 맨 아래에 그대로 남는다.) */
+.t2-aic-chat-brandmark {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 0;
+    opacity: 0.85;
+    margin-top: 8px;
+}
+.t2-aic-chat-brandmark-label {
+    line-height: 1;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--t2-aic-text-faint);
+}
+.t2-aic-brand-spinner.is-static {
+    color: var(--t2-aic-brand-mark);
+}
+.t2-aic-brand-spinner.is-static .t2-aic-bs-dot {
+    -webkit-animation: none;
+            animation: none;
+    opacity: 1;
+}
+.t2-aic-tool-round-summary { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* v16.0.0: 스피너가 돌고 있는 동안(is-spinning)에만 옆의 라벨 텍스트에
+   shimmer를 건다 — "생각하는 중…", "Tool 3개 실행 중…" 등 살아서 움직이는
+   중임을 알리는 모든 라벨에 자동으로 적용된다(마크업 추가 변경 불필요).
+   background-clip:text로 그라디언트를 글자 모양대로 잘라 쓰되, 그라디언트
+   구간 전부를 불투명한 색(base/highlight)으로만 채워서 — 빛줄기가 지나가지
+   않는 나머지 글자가 투명해지는 일 없이 항상 원래 색(muted)으로 보이고,
+   그 위에 더 밝은 색이 잠깐 스치듯 지나가게만 만든다. */
+.t2-aic-tool-round-spin.is-spinning ~ .t2-aic-tool-round-summary {
+    background-image: linear-gradient(
+        100deg,
+        var(--t2-aic-shimmer-base) 0%,
+        var(--t2-aic-shimmer-base) 42%,
+        var(--t2-aic-shimmer-highlight) 50%,
+        var(--t2-aic-shimmer-base) 58%,
+        var(--t2-aic-shimmer-base) 100%
+    );
+    background-size: 250% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: t2AicTextShimmer 1.8s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .t2-aic-tool-round-spin.is-spinning ~ .t2-aic-tool-round-summary {
+        animation: none;
+        background: none;
+        -webkit-text-fill-color: currentColor;
+        color: var(--t2-aic-shimmer-base);
+    }
+}
+.t2-aic-tool-round-chevron { font-size: 15px; transition: transform 0.15s; flex-shrink: 0; }
+.t2-aic-tool-round.is-collapsed .t2-aic-tool-round-chevron { transform: rotate(-90deg); }
+
+/* v6.4.0: Tool 호출이 아직 없는 "생각 중" 단계 — 펼칠 게 없으니 버튼이
+   아니라 정적인 한 줄. 나중에 Tool을 부르기 시작하면 이 자리가 그대로
+   .t2-aic-tool-round-toggle(클릭 가능한 버전)로 바뀐다. */
+.t2-aic-tool-round-plain {
+    display: inline-flex; align-items: center; gap: 5px;
+    color: var(--t2-aic-text-muted); font-weight: 500;
+}
+
+/* 펼쳤을 때 — 카드가 아니라, 왼쪽에 가는 안내선 하나만 두른 조용한
+   들여쓰기 목록. */
+.t2-aic-tool-round-list {
+    display: flex; flex-direction: column; gap: 4px;
+    margin: 5px 0 2px 6px;
+    padding-left: 12px;
+    border-left: 1.5px solid var(--t2-aic-border);
+}
+.t2-aic-tool-round.is-collapsed .t2-aic-tool-round-list { display: none; }
+.t2-aic-tool-call-row {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--t2-aic-text-muted);
+    /* v15.0.0: Tool 호출/도구 왕복이 "실시간으로 흘러들어오는" 느낌을 주기
+       위한 등장 애니메이션. 매 렌더마다 DOM이 통째로 새로 그려지므로 이미
+       끝난 행도 다시 재생되지만, 지속시간이 아주 짧고(180ms) 이동폭도
+       작아(4px) 반복 재생에도 산만하지 않다. */
+    animation: t2AicRowIn 0.18s ease-out;
+}
+@keyframes t2AicRowIn {
+    from { opacity: 0; transform: translateY(3px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .t2-aic-tool-call-row { animation: none; }
+}
+.t2-aic-tool-call-icon { font-size: 13px; flex-shrink: 0; }
+.t2-aic-tool-call-label { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.t2-aic-tool-call-args { font-size: 10.5px; color: var(--t2-aic-text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.t2-aic-tool-call-state { font-size: 13px; flex-shrink: 0; }
+.t2-aic-tool-call-state.is-running { color: var(--t2-aic-accent); animation: t2AicSpin 1s linear infinite; }
+.t2-aic-tool-call-state.is-done { color: var(--t2-aic-success); }
+.t2-aic-tool-call-state.is-error { color: var(--t2-aic-danger); }
+
+/* 사고 내용(_reasoning) — provider가 실제로 채워줬을 때만 나타난다.
+   Tool 실행 목록과 구분되도록 살짝 더 여유 있는 줄간격을 주고, 그
+   아래 실행 목록이 있으면 얇은 구분선으로 나눈다. */
+.t2-aic-tool-reasoning {
+    font-size: 12px; line-height: 1.6; color: var(--t2-aic-text-muted);
+    padding-bottom: 6px;
+}
+.t2-aic-tool-reasoning:not(:last-child) { margin-bottom: 4px; border-bottom: 1px dashed var(--t2-aic-border); }
+.t2-aic-tool-reasoning p { margin: 0 0 6px; }
+.t2-aic-tool-reasoning p:last-child { margin-bottom: 0; }
+
+/* ── v4.1.0: 재구성 스트림 턴 부가 UI ──────────────────────────────────── */
+.t2-aic-rearrange-diff-slot { display: flex; flex-direction: column; gap: 10px; }
+.t2-aic-rearrange-turn-actions { display: flex; gap: 8px; margin-top: 10px; }
+.t2-aic-rearrange-applied-badge {
+    display: flex; align-items: center; gap: 6px; margin-top: 10px;
+    font-size: 12px; font-weight: 600; color: #16a34a;
+}
+.t2-aic-rearrange-stale-hint { margin-top: 8px; font-size: 11.5px; color: var(--t2-aic-text-faint); font-style: italic; }
+.t2-aic-rearrange-stream.is-visible { padding-top: 14px; border-top: 1px dashed var(--t2-aic-border); margin-top: 14px; }
+
+.t2-aic-error-box {
+    border: 1px solid var(--t2-aic-danger-border);
+    background: var(--t2-aic-danger-surface);
+    color: var(--t2-aic-danger);
+    border-radius: var(--t2-aic-radius-sm);
+    padding: 12px 14px;
+    font-size: 13px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+.t2-aic-error-box .material-icons { font-size: 18px; flex-shrink: 0; }
+
+.t2-aic-dsl-preview {
+    border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-sm);
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.t2-aic-dsl-card {
+    display: flex;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--t2-aic-border);
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+.t2-aic-dsl-card:last-child { border-bottom: none; }
+
+.t2-aic-dsl-tag {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    background: var(--t2-aic-surface-muted);
+    color: var(--t2-aic-text-soft);
+    display: flex; align-items: center; justify-content: center;
+}
+.t2-aic-dsl-tag .material-icons { font-size: 16px; }
+
+.t2-aic-dsl-body { flex: 1; min-width: 0; word-break: break-word; }
+.t2-aic-dsl-body b { font-weight: 700; }
+.t2-aic-dsl-body i { font-style: italic; }
+.t2-aic-dsl-body code {
+    background: var(--t2-aic-surface-muted);
+    padding: 1px 5px; border-radius: 4px; font-size: 12.5px;
+}
+.t2-aic-dsl-body pre {
+    margin: 4px 0 0; background: var(--t2-aic-surface-muted);
+    padding: 8px 10px; border-radius: 6px; overflow-x: auto; font-size: 12px;
+}
+.t2-aic-dsl-meta { font-size: 11px; color: var(--t2-aic-text-faint); margin-bottom: 2px; }
+
+/* ── Result: split diff (rearrange mode) ─────────────────────────────── */
+.t2-aic-diff-shell {
+    border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-sm);
+    overflow: auto;
+    max-height: 360px;
+}
+
+.t2-aic-diff-head {
+    display: grid;
+    grid-template-columns: 34px 1fr 34px 1fr;
+    background: var(--t2-aic-surface-subtle);
+    position: sticky; top: 0;
+    font-size: 11px; font-weight: 700; color: var(--t2-aic-text-muted);
+}
+.t2-aic-diff-head > div { padding: 6px 8px; border-bottom: 1px solid var(--t2-aic-border); }
+
+.t2-aic-diff-row {
+    display: grid;
+    grid-template-columns: 34px 1fr 34px 1fr;
+    font-size: 12.5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.t2-aic-diff-linenum {
+    padding: 4px 6px;
+    text-align: right;
+    color: var(--t2-aic-text-faint);
+    background: var(--t2-aic-surface-subtle);
+}
+
+.t2-aic-diff-cell {
+    padding: 4px 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.t2-aic-diff-cell.is-removed { background: var(--t2-aic-danger-surface); }
+.t2-aic-diff-cell.is-added { background: var(--t2-aic-success-surface); }
+.t2-aic-diff-cell.is-empty { background: var(--t2-aic-surface-subtle); }
+
+.t2-ai-diff-token.is-removed { background: var(--t2-aic-danger-border); border-radius: 3px; }
+.t2-ai-diff-token.is-added { background: var(--t2-aic-success-border); border-radius: 3px; }
+.t2-ai-diff-empty, .t2-ai-diff-blank-line { color: var(--t2-aic-text-faint); font-style: italic; }
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+.t2-aic-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--t2-aic-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.t2-aic-footer.is-hidden { display: none; }
+
+.t2-aic-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: none; border-radius: var(--t2-aic-radius-sm);
+    padding: 9px 16px; font-size: 13.5px; font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s var(--t2-aic-ease-soft), transform 0.12s var(--t2-aic-ease-soft), box-shadow 0.15s var(--t2-aic-ease-soft);
+}
+.t2-aic-btn .material-icons { font-size: 17px; }
+.t2-aic-btn:hover { opacity: 0.88; }
+/* v13.1.0: 눌렀을 때 살짝 눌리는 손맛(tactile feedback) — 시각적으로
+   "반응한다"는 확신을 준다. disabled 상태는 아래에서 별도로 무효화. */
+.t2-aic-btn:active { transform: scale(0.97); }
+
+.t2-aic-btn-primary { background: var(--t2-aic-accent); color: #fff; box-shadow: 0 1px 2px rgba(230, 92, 0, 0.25); }
+.t2-aic-btn-primary:hover { box-shadow: 0 4px 14px rgba(230, 92, 0, 0.28); }
+.t2-aic-btn-ghost { background: var(--t2-aic-surface-subtle); color: var(--t2-aic-text-soft); border: 1px solid var(--t2-aic-border); }
+.t2-aic-btn-success { background: var(--t2-aic-success); color: #fff; }
+.t2-aic-btn[disabled] { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* v13.1.0: 키보드 포커스 가시성 — 마우스 hover 스타일만으로는 키보드/
+   스크린리더 사용자가 "지금 어디 있는지" 알 수 없다. 브랜드 컬러로 통일된
+   focus-visible 링을 주요 인터랙티브 요소 전반에 얇게 두른다. */
+.t2-aic-btn:focus-visible,
+.t2-aic-mode-btn:focus-visible,
+.t2-aic-tools-caret:focus-visible,
+.t2-aic-tools-trigger:focus-visible,
+.t2-aic-chat-plus:focus-visible,
+.t2-aic-send-fab:focus-visible,
+.t2-aic-info:focus-visible,
+.t2-aic-close:focus-visible,
+.t2-aic-focus-btn:focus-visible,
+.t2-aic-skill-toggle:focus-visible,
+.t2-aic-tools-collapse-btn:focus-visible,
+.t2-aic-chat-quick-btn:focus-visible {
+    outline: 2px solid var(--t2-aic-accent);
+    outline-offset: 2px;
+}
+
+/* ── Info popup (marketing/설명) ──────────────────────────────────────── */
+.t2-aic-info-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--t2-aic-overlay);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* v5.0.0 버그 수정: 이 팝업(Tool/Skill "설명 보기" 포함)은 "+" 통합
+       바텀시트(.t2-aic-plus-sheet-overlay, z-index:10050) 위에서 열릴 수
+       있어야 한다 — 기존 10003이었을 때는 바텀시트에 가려 아래로 숨어버리는
+       레이아웃 버그가 있었다. 항상 가장 위 레이어로 고정. */
+    z-index: 10060;
+    font-family: var(--t2-aic-font);
+}
+
+.t2-aic-info-popup {
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text);
+    border: 1px solid var(--t2-aic-border);
+    border-radius: 20px;
+    box-shadow: 0 24px 70px rgba(24, 24, 27, 0.22), 0 2px 6px rgba(24, 24, 27, 0.06);
+    width: 92%; max-width: 460px;
+    max-height: 82vh;
+    overflow-y: auto;
+    padding: 26px 28px 22px;
+    animation: t2AicSlideUp 0.22s var(--t2-aic-ease);
+}
+
+.t2-aic-info-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--t2-aic-border);
+}
+.t2-aic-info-head strong { font-size: 18.5px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; flex: 1; }
+
+/* 디스클레이머(면책) 팝업 — 소개 패널보다 훨씬 작고 가벼운 단일 안내창.
+   탭도 없고 목록도 없이 문구 한 덩어리만 보여주면 되므로 최대 폭/여백을
+   줄여 가볍게 뜨고 가볍게 닫히도록 한다. */
+.t2-aic-disclaimer-popup {
+    max-width: 360px;
+    padding: 22px 24px 20px;
+}
+.t2-aic-disclaimer-popup .t2-aic-info-head { margin-bottom: 16px; padding-bottom: 14px; }
+.t2-aic-disclaimer-popup .t2-aic-info-head strong { font-size: 16px; }
+
+/* v13.0.0: 정사각형 배경 배지를 없애고 아이콘만 남겨 더 정갈하게
+   — 아이콘 세로 정렬(line-height:1)까지 함께 맞춘다. */
+.t2-aic-info-badge {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    margin-top: 2px;
+    color: var(--t2-aic-text-soft);
+    display: flex; align-items: center; justify-content: center;
+}
+.t2-aic-info-badge .material-icons { font-size: 20px; line-height: 1; }
+
+/* 생성형 AI(LLM) 답변 주의 안내 — 박스형 배지 없이 좌측 라인 강조만 사용. */
+.t2-aic-llm-disclaimer {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px 12px 12px;
+    border-left: 3px solid var(--t2-aic-border-strong);
+    background: var(--t2-aic-surface-subtle);
+    border-radius: 0 var(--t2-aic-radius-sm) var(--t2-aic-radius-sm) 0;
+    margin-bottom: 18px;
+}
+.t2-aic-llm-disclaimer .material-icons { font-size: 18px; color: var(--t2-aic-text-soft); flex-shrink: 0; margin-top: 1px; }
+.t2-aic-llm-disclaimer p { margin: 0; font-size: 12px; line-height: 1.6; color: var(--t2-aic-text-muted); }
+.t2-aic-llm-disclaimer p b { color: var(--t2-aic-text); font-weight: 700; }
+
+.t2-aic-info-list { display: flex; flex-direction: column; gap: 20px; }
+.t2-aic-info-item { display: flex; align-items: flex-start; gap: 14px; }
+.t2-aic-info-copy { flex: 1; min-width: 0; }
+.t2-aic-info-copy h4 {
+    margin: 0 0 5px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--t2-aic-text);
+}
+.t2-aic-info-copy p { margin: 0; font-size: 12.5px; color: var(--t2-aic-text-muted); line-height: 1.7; }
+.t2-aic-info-mono {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--t2-aic-text-soft);
+    background: var(--t2-aic-surface-muted);
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+.t2-aic-info-footer {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 12px 14px;
+    background: var(--t2-aic-surface-subtle);
+    border-radius: var(--t2-aic-radius-md);
+}
+.t2-aic-info-footer-tag {
+    flex-shrink: 0;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--t2-aic-text-faint);
+    background: var(--t2-aic-surface);
+    border: 1px solid var(--t2-aic-border);
+    border-radius: 5px;
+    padding: 2px 6px;
+    margin-top: 1px;
+}
+.t2-aic-info-footer p { margin: 0; font-size: 11.5px; color: var(--t2-aic-text-faint); line-height: 1.6; }
+
+/* ── 요소 선택 모드 — 모달을 잠깐 숨기고 안내 바만 노출 ─────────────────── */
+/* 요소 선택(포커스 픽) 모드: enterPickMode()가 this.modal(= .t2-aic-overlay
+   전체 — 배경 딤 + 모달 박스를 함께 감싸는 element)에 이 클래스를 붙인다.
+   풀스크린 오버레이 자체를 숨겨야 뒤에 있는 에디터 콘텐츠 클릭이 통과된다
+   (.t2-aic-modal만 숨기면 부모인 .t2-aic-overlay가 fixed inset:0 상태로
+   그대로 남아 클릭을 계속 가로챈다 — 실제 버그였던 지점). */
+.t2-aic-overlay.t2-aic-hidden-while-picking { display: none; }
+
+.t2-aic-pick-bar {
+    position: fixed;
+    top: 16px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text);
+    border: 1px solid var(--t2-aic-border-strong);
+    box-shadow: var(--t2-aic-modal-shadow);
+    border-radius: 999px;
+    padding: 8px 10px 8px 14px;
+    font-size: 12.5px;
+    z-index: 10005;
+    animation: t2AicSlideUp 0.2s var(--t2-aic-ease);
+}
+.t2-aic-pick-bar .material-icons { font-size: 16px; color: var(--t2-aic-text-soft); }
+.t2-aic-pick-bar-text { white-space: nowrap; }
+.t2-aic-pick-bar .t2-aic-pick-clear {
+    border: none;
+    background: none;
+    color: var(--t2-aic-text-soft);
+    padding: 4px 6px;
+    font-size: 11.5px;
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.t2-aic-pick-bar .t2-aic-pick-clear:hover { color: var(--t2-aic-text); }
+.t2-aic-pick-bar .t2-aic-pick-cancel {
+    border: 1px solid var(--t2-aic-border-strong);
+    background: var(--t2-aic-surface-subtle);
+    color: var(--t2-aic-text-soft);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11.5px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+
+/* ── Chat 탭 (v3.5.0) — 위지윅 에디터계의 "에이전트"처럼, 문서를 직접
+   고치지 않고도 AI와 짧게 티키타카하며 Tool 상태/사용법/편집 조언을 받을
+   수 있는 채팅창. 본문은 두 개의 독립된 컨테이너로 분리된다:
+
+     ┌─────────────────────────────────────┐
+     │ 상단 메뉴바 (tabs)                   │  ← 모달 직접 자식(body 바깥)
+     ├─────────────────────────────────────┤
+     │ 채팅 메시지 (.t2-aic-chat-messages) │  ← 컨테이너 A: 메시지 스크롤
+     │  (빈 힌트도 이 안)                   │     flex:1 1 0, overflow:auto
+     ├─────────────────────────────────────┤
+     │ Tool list + 채팅 입력란             │  ← 컨테이너 B: 하단 고정
+     │ (.t2-aic-chat-bottom)               │     flex:0 0 auto
+     └─────────────────────────────────────┘
+
+   A는 남는 공간을 모두 차지해 스크롤되고, B는 항상 같은 높이로 하단에
+   고정된다 — 입력창과 전송 버튼이 대화가 얼마나 길어지든 항상 보인다. */
+
+.t2-aic-chat-messages-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    padding: 0 20px;
+}
+
+.t2-aic-chat-messages {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 16px 2px 12px;
+    scroll-behavior: smooth;
+}
+
+/* 빈 힌트 — 대화 기록이 없을 때만 보이는 안내. 일반 흐름(flex 자식)으로
+   두면 하단 고정 영역(퀵 액션 칩 + 작업량 패널 + 입력창)이 늘어날 때마다
+   가운데 정렬 공간이 줄어들며 안내 문구가 짓눌리거나 가려질 수 있다.
+   그래서 메시지 영역 안에서 위치를 flex 흐름과 분리해(position: absolute)
+   항상 하단 고정 영역을 피한 만큼만 차지하는 세로 중앙에 고정한다. 정확히
+   얼마나 피해야 하는지는 --t2-aic-chat-bottom-h 변수로 받는다 — 이 변수는
+   setupChatBottomSpacingObserver()가 하단 고정 영역의 실제 렌더링 높이를
+   ResizeObserver로 실시간 관찰해 갱신하므로, 퀵 액션 줄이 나타나거나
+   사라지든, 작업량 패널을 펼치거나 접든, 입력창이 여러 줄로 늘어나든
+   안내 문구는 항상 정확히 그만큼만 피해서 표시된다. */
+.t2-aic-chat-empty-hint {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 0;
+    bottom: var(--t2-aic-chat-bottom-h, 150px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--t2-aic-text-faint);
+    pointer-events: none;
+    text-align: center;
+    transition: bottom 0.12s ease;
+}
+.t2-aic-chat-empty-hint .material-icons { font-size: 36px; opacity: 0.55; }
+.t2-aic-chat-empty-hint p { margin: 0; font-size: 12.5px; line-height: 1.6; max-width: 360px; }
+
+/* 하단 입력 영역 — Tool list + 채팅 입력란을 하나로 묶는다. 절대 줄어들지
+   않게(flex:0 0 auto) 고정. 상단 보더로 메시지 영역과 분리. */
+.t2-aic-chat-bottom {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 20px 14px;
+    border-top: 1px solid var(--t2-aic-border);
+    background: var(--t2-aic-surface);
+}
+
+/* 개별 메시지 — v6.0.0: 아바타/이름 라벨 없이, 정렬과 배경 유무만으로
+   화자를 구분한다(클로드 웹과 동일한 관습). 사용자 = 오른쪽 말풍선,
+   AI = 배경 없는 왼쪽 정렬 텍스트. */
+.t2-aic-chat-msg {
+    display: flex;
+    max-width: 100%;
+    animation: t2AicSlideUp 0.22s var(--t2-aic-ease);
+}
+.t2-aic-chat-msg.is-user { justify-content: flex-end; }
+.t2-aic-chat-msg.is-assistant { justify-content: flex-start; }
+
+.t2-aic-chat-msg-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    max-width: 88%;
+}
+.t2-aic-chat-msg.is-user .t2-aic-chat-msg-col { align-items: flex-end; }
+.t2-aic-chat-msg.is-assistant .t2-aic-chat-msg-col { align-items: flex-start; max-width: 100%; }
+
+.t2-aic-chat-msg-content {
+    min-width: 0;
+    max-width: 100%;
+    font-size: 13.5px;
+    line-height: 1.62;
+    word-break: break-word;
+    color: var(--t2-aic-text);
+}
+.t2-aic-chat-msg.is-user .t2-aic-chat-msg-content {
+    background: var(--t2-aic-surface-muted);
+    padding: 9px 14px;
+    border-radius: 16px 16px 3px 16px;
+}
+.t2-aic-chat-msg.is-assistant .t2-aic-chat-msg-content {
+    padding: 1px 0;
+}
+
+/* v16.5.0: 모델 표시줄(왼쪽)과 복사 버튼(오른쪽)만 한 줄에 나란히 —
+   모델 정보가 없는 사용자 메시지는 justify-content가 자동으로
+   오른쪽(복사 버튼)만 남기며 접힌다(flex라 빈 요소는 폭을 차지하지
+   않음). T2E 서명 아이콘은 여기 섞지 않고 별도 줄로 맨 아래 그대로 둔다. */
+.t2-aic-chat-msg-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+.t2-aic-chat-msg-meta.has-model {
+    justify-content: space-between;
+    width: 100%;
+}
+.t2-aic-chat-msg-meta .t2-aic-chat-model { margin-top: 0; }
+.t2-aic-msg-copy-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px;
+    border: none; background: transparent;
+    border-radius: var(--t2-aic-radius-sm);
+    color: var(--t2-aic-text-faint);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.1s var(--t2-aic-ease-soft);
+}
+.t2-aic-msg-copy-btn .material-icons { font-size: 14.5px; line-height: 1; }
+.t2-aic-msg-copy-btn:hover { background: var(--t2-aic-surface-muted); color: var(--t2-aic-text-soft); }
+.t2-aic-msg-copy-btn:active { transform: scale(0.9); }
+.t2-aic-msg-copy-btn.is-copied { color: var(--t2-aic-success); }
+.t2-aic-msg-copy-btn.is-copy-failed { color: var(--t2-aic-danger); }
+
+/* 말풍선/본문 내부 경량 마크다운 요소 */
+.t2-aic-chat-msg-content p { margin: 0 0 8px; }
+.t2-aic-chat-msg-content p:last-child { margin-bottom: 0; }
+.t2-aic-chat-msg-content b, .t2-aic-chat-msg-content strong { font-weight: 700; }
+.t2-aic-chat-msg-content i, .t2-aic-chat-msg-content em { font-style: italic; }
+.t2-aic-chat-msg-content s { text-decoration: line-through; }
+.t2-aic-chat-msg-content code {
+    background: var(--t2-aic-surface-muted);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+}
+.t2-aic-chat-msg-content a { color: var(--t2-aic-text-soft); text-decoration: underline; word-break: break-all; }
+.t2-aic-chat-msg-content ul, .t2-aic-chat-msg-content ol { margin: 4px 0 8px; padding-left: 20px; }
+.t2-aic-chat-msg-content li { margin: 2px 0; }
+.t2-aic-chat-msg-content pre.t2-aic-chat-codeblock {
+    background: var(--t2-aic-surface-muted);
+    border: 1px solid var(--t2-aic-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin: 8px 0;
+    overflow-x: auto;
+    font-size: 11.5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    line-height: 1.55;
+}
+.t2-aic-chat-msg-content pre.t2-aic-chat-codeblock code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+/* 인라인 시각 자료(v6.6.0) — 'visualize' Tool이 채팅 답변 안에 바로
+   붙이는 이미지/링크 카드/막대·선 그래프. 클로드 웹의 아티팩트·인라인
+   시각화와 같은 자리를 채우는 lite 버전이라, 별도 패널 없이 답변 텍스트
+   바로 아래 자연스럽게 이어진다. */
+.t2-aic-inline-visual {
+    margin-top: 10px;
+    border-radius: var(--t2-aic-radius-md);
+    border: 1px solid var(--t2-aic-border);
+    background: var(--t2-aic-surface-subtle);
+    overflow: hidden;
+}
+.t2-aic-inline-visual-image img {
+    display: block;
+    width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+    background: var(--t2-aic-surface-muted);
+}
+.t2-aic-inline-visual-caption {
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--t2-aic-text-muted);
+}
+.t2-aic-inline-visual-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: background .15s var(--t2-aic-ease-soft);
+}
+.t2-aic-inline-visual-link:hover { background: var(--t2-aic-surface-muted); }
+.t2-aic-inline-visual-link-icon { color: var(--t2-aic-accent-text); font-size: 18px; flex-shrink: 0; }
+.t2-aic-inline-visual-link-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.t2-aic-inline-visual-link-title {
+    font-size: 13px; font-weight: 600; color: var(--t2-aic-text);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.t2-aic-inline-visual-link-host { font-size: 11px; color: var(--t2-aic-text-faint); }
+.t2-aic-inline-visual-link-open { font-size: 16px; color: var(--t2-aic-text-faint); flex-shrink: 0; }
+.t2-aic-inline-visual-chart { padding: 12px 12px 6px; }
+.t2-aic-inline-chart-svg { display: block; width: 100%; height: auto; }
+.t2-aic-inline-chart-bar { fill: var(--t2-aic-accent); }
+.t2-aic-inline-chart-line { fill: none; stroke: var(--t2-aic-accent-strong); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.t2-aic-inline-chart-dot { fill: var(--t2-aic-accent-strong); }
+.t2-aic-inline-chart-axis { stroke: var(--t2-aic-border-strong); stroke-width: 1; }
+.t2-aic-inline-chart-label { fill: var(--t2-aic-text-faint); font-size: 9px; }
+
+/* 로딩(타이핑 인디케이터) — 배경 없는 순수 점 세 개 */
+.t2-aic-chat-typing { display: inline-flex; gap: 4px; align-items: center; padding: 6px 0; }
+.t2-aic-chat-typing span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--t2-aic-text-faint);
+    animation: t2AicShimmer 1.2s ease-in-out infinite;
+}
+.t2-aic-chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+.t2-aic-chat-typing span:nth-child(3) { animation-delay: 0.30s; }
+
+/* 에러 — 더는 말풍선 배경에 기대지 않으므로, 카드 자체가 스스로 경고
+   표면을 갖는다(플레인 텍스트 흐름 안에 놓이는 작은 알림 카드). */
+.t2-aic-chat-error {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 12px;
+    border-radius: var(--t2-aic-radius-md);
+    background: var(--t2-aic-danger-surface);
+    border: 1px solid var(--t2-aic-danger-border);
+    color: var(--t2-aic-danger);
+}
+.t2-aic-chat-error .material-icons { font-size: 16px; flex-shrink: 0; }
+
+/* 편집 제안 카드 — 채팅 응답 중 "이 부분 문서에 반영해도 될까요?" 제안이
+   함께 왔을 때 답변 아래에 이어 표시된다. 버튼을 눌러야만 T2LLM.apply()가
+   호출된다 — 채팅 자체만으로는 문서가 절대 자동으로 바뀌지 않는다. */
+.t2-aic-chat-edit-card {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-md);
+    background: var(--t2-aic-surface-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.t2-aic-chat-edit-head {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 700;
+    color: var(--t2-aic-text);
+}
+.t2-aic-chat-edit-head .material-icons { font-size: 15px; }
+.t2-aic-chat-edit-card .t2-aic-btn { align-self: flex-start; padding: 6px 12px; font-size: 12.5px; }
+.t2-aic-chat-model { margin-top: 8px; font-size: 10.5px; color: var(--t2-aic-text-faint); }
+
+/* 입력 컴포저(v5.0.0) — 클로드 웹 채팅의 입력창을 뼈대로 삼는다: 카드 하나
+   안에 textarea가 위, 아이콘 액션 행이 아래. 카드 자체가 focus-within일 때
+   포인트 컬러 테두리로 반응해 "지금 입력 중"이라는 상태를 보여준다. */
+.t2-aic-chat-composer {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-md);
+    background: var(--t2-aic-surface-subtle);
+    padding: 12px 12px 9px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+/* v13.1.0: 포커스 링을 무채색(gray)에서 브랜드 오렌지 톤으로 — "지금
+   입력 중"이라는 상태가 앱의 유일한 포인트 컬러와 바로 연결되도록. */
+.t2-aic-chat-composer:focus-within {
+    border-color: var(--t2-aic-accent-border);
+    box-shadow: 0 0 0 3px var(--t2-aic-accent-surface);
+}
+
+.t2-aic-chat-input {
+    width: 100%;
+    min-height: 24px;
+    max-height: 140px;
+    resize: none;
+    border: none;
+    outline: none;
+    padding: 4px 4px 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    font-family: inherit;
+    color: var(--t2-aic-text);
+    background: transparent;
+    box-sizing: border-box;
+}
+.t2-aic-chat-input::placeholder { color: var(--t2-aic-text-faint); }
+
+/* 아이콘 액션 행 — 왼쪽 "+"(Skill), 오른쪽 Tool 트리거 + 전송(원형).
+   클로드 입력창의 "+ … 모델 선택 … 전송" 구조를 그대로 가져오되, 모델
+   선택 자리에는 (여기선 모델을 고를 필요가 없으므로) Tool 트리거를 둔다.
+   같은 32px 원형 버튼 세 개가 나란히 놓이므로, 아이콘 크기를 18px로
+   통일해 시각적 무게가 흔들리지 않게 했다. 트리거 배지가 붙는 오른쪽
+   두 버튼 사이는 간격을 살짝 더 벌려 배지가 전송 버튼과 겹치지 않게
+   여유를 둔다. */
+.t2-aic-composer-actions { display: flex; align-items: center; gap: 6px; }
+.t2-aic-composer-spacer { flex: 1 1 auto; }
+
+.t2-aic-chat-plus {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: var(--t2-aic-radius-sm);
+    border: none; background: transparent;
+    color: var(--t2-aic-text-muted); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+}
+.t2-aic-chat-plus:hover { background: var(--t2-aic-surface-muted); color: var(--t2-aic-text); }
+.t2-aic-chat-plus .material-icons { font-size: 18px; line-height: 1; }
+
+.t2-aic-send-fab {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: var(--t2-aic-radius-sm); padding: 0;
+    background: var(--t2-aic-brand-mark);
+    color: #fff; border: none; display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.t2-aic-send-fab:not([disabled]):not([data-mode="stop"]):hover { background: var(--t2-aic-brand-mark-strong); }
+.t2-aic-send-fab .material-icons { font-size: 18px; line-height: 1; }
+.t2-aic-send-fab:active { transform: scale(0.94); }
+.t2-aic-send-fab[disabled] { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+.t2-aic-send-fab[data-mode="stop"] {
+    background: var(--t2-aic-text-soft);
+    animation: t2AicPulseRing 1.7s ease-in-out infinite;
+}
+.t2-aic-send-fab[data-mode="stop"] .material-icons { font-size: 15px; }
+
+.t2-aic-chat-char-count {
+    font-size: 10.5px; color: var(--t2-aic-text-faint); white-space: nowrap; padding: 0 2px;
+}
+.t2-aic-chat-char-count.is-warning { color: var(--t2-aic-warning); }
+.t2-aic-chat-char-count.is-danger { color: var(--t2-aic-danger); }
+
+.t2-aic-chat-quick { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.t2-aic-chat-quick-btn {
+    border: 1px solid var(--t2-aic-border);
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text-muted);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.t2-aic-chat-quick-btn:hover { background: var(--t2-aic-surface-subtle); }
+
+/* ── 작업량/Thinking 설정 패널 — 접고 펼 수 있는 컨테이너 ─────────────────
+   기본은 현재 설정을 요약한 얇은 한 줄(.t2-aic-workload-summary)만 보여
+   준다. 이 요약 줄 자체는 카드처럼 보이지 않도록 테두리/배경이 없는
+   "조용한 텍스트 줄"로 두고(퀵 액션 칩 바로 아래 자연스럽게 이어지도록),
+   실제 컨트롤 묶음(세그먼트/스위치)이 필요할 때만 펼쳐지는
+   .t2-aic-workload-details 쪽에만 옅은 카드 표면을 준다 — 접혀 있을 때도
+   패널 자체 테두리 + 요약 줄 테두리가 겹쳐 이중 박스로 보이던 문제를
+   없앤 것. */
+.t2-aic-workload-panel { margin: 4px 0 8px; }
+.t2-aic-workload-summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 26px;
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    cursor: pointer;
+    padding: 0 8px;
+    color: var(--t2-aic-text-faint);
+    text-align: left;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.t2-aic-workload-summary:hover { background: var(--t2-aic-surface-subtle); color: var(--t2-aic-text-muted); }
+.t2-aic-workload-summary-icon { font-size: 13px; flex-shrink: 0; opacity: 0.8; }
+.t2-aic-workload-summary-text {
+    font-size: 11px;
+    font-weight: 500;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.t2-aic-workload-chevron {
+    font-size: 15px;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: transform 0.15s;
+}
+.t2-aic-workload-panel.is-expanded .t2-aic-workload-chevron { transform: rotate(180deg); }
+.t2-aic-workload-details {
+    margin-top: 4px;
+    padding: 8px 9px;
+    box-sizing: border-box;
+    border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-sm);
+    background: var(--t2-aic-surface-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.t2-aic-workload-details[hidden] { display: none; }
+
+/* ── 작업량(workload) 선택 — 낮음(기본)/중간/높음/Max ─────────────────────
+   클로드의 "effort" 선택과 같은 개념. 실제로 callChatApi()를 몇 번 더
+   호출해 이어붙일지를 정한다(1/3/5/7회). 좁은 화면에서도 줄바꿈이
+   자연스럽도록 자체 줄로 둔다(Thinking 스위치는 별도의 아래 줄). */
+.t2-aic-workload-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.t2-aic-workload-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--t2-aic-text-muted);
+    flex-shrink: 0;
+}
+.t2-aic-workload-seg {
+    display: inline-flex;
+    padding: 2px;
+    background: var(--t2-aic-surface-muted);
+    border-radius: 7px;
+    gap: 2px;
+    flex-shrink: 0;
+}
+.t2-aic-workload-btn {
+    border: none;
+    background: transparent;
+    color: var(--t2-aic-text-muted);
+    border-radius: 5px;
+    padding: 3px 8px;
+    font-size: 10.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.t2-aic-workload-btn:hover:not(.is-active) { color: var(--t2-aic-text); }
+.t2-aic-workload-btn.is-active {
+    background: var(--t2-aic-surface);
+    color: var(--t2-aic-text);
+    box-shadow: 0 1px 3px rgba(24,24,27,0.12);
+}
+/* v20.0.0: 남은 요청 한도로는 다 못 쓰는 작업량 단계 — 아예 고를 수 없게
+   막고(disabled), 흐리게 표시해 "지금은 선택 불가"임을 한눈에 알 수 있게
+   한다. title 툴팁(getWorkloadUnaffordableReason)이 구체적인 이유를
+   설명해준다. */
+.t2-aic-workload-btn.is-disabled,
+.t2-aic-workload-btn:disabled {
+    color: var(--t2-aic-text-faint);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.t2-aic-workload-btn.is-disabled:hover,
+.t2-aic-workload-btn:disabled:hover { color: var(--t2-aic-text-faint); }
+/* v14.0.0: 선택된 작업량 단계의 실제 API 호출 횟수("x1"~"x7")를 세그먼트
+   바로 오른쪽에 덜 강조되는 색으로 보여준다. --t2-aic-text-faint는
+   라이트/다크 테마 변수가 이미 각각 정의돼 있어(#9ca3af / #666666)
+   별도 미디어쿼리 없이 html[data-t2editor-theme="dark"]에서 자동으로
+   맞는 색으로 바뀐다. */
+.t2-aic-workload-usage {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--t2-aic-text-faint);
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+/* ── 작업량/Thinking 정보(ⓘ) 버튼 ─────────────────────────────────────────
+   라벨/토글 옆에 작게 붙는 정보 아이콘. 누르면 openSimpleInfoPopup()으로
+   짧은 설명 팝업이 뜬다(showSkillInfoPopup/openDisclaimerPopup과 동일한
+   오버레이 패턴 재사용). */
+.t2-aic-info-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px;
+    border: none; background: none; cursor: pointer;
+    color: var(--t2-aic-text-faint);
+    flex-shrink: 0;
+    padding: 0;
+}
+.t2-aic-info-btn:hover { color: var(--t2-aic-text-soft); }
+.t2-aic-info-btn .material-icons { font-size: 14px; }
+
+/* ── 사고(Thinking) 모드 토글 — 클로드의 Thinking on/off 스위치와 같은
+   자리. 작업량 세그먼트와 한 줄에 몰아넣으면 좁은 화면에서 줄바꿈이
+   지저분해지므로 자체 줄(.t2-aic-thinking-row)로 분리한다. */
+.t2-aic-thinking-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.t2-aic-thinking-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: none; background: none; cursor: pointer;
+    padding: 2px 0;
+    color: var(--t2-aic-text-muted);
+    font-size: 10.5px; font-weight: 500;
+    flex-shrink: 0;
+}
+.t2-aic-thinking-toggle:hover { color: var(--t2-aic-text-soft); }
+.t2-aic-thinking-toggle .material-icons { font-size: 14px; }
+.t2-aic-thinking-toggle.is-active { color: var(--t2-aic-accent); }
+.t2-aic-thinking-toggle-switch {
+    display: inline-flex; align-items: center;
+    width: 24px; height: 14px;
+    border-radius: 999px;
+    background: var(--t2-aic-surface-muted);
+    position: relative;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+.t2-aic-thinking-toggle.is-active .t2-aic-thinking-toggle-switch { background: var(--t2-aic-accent); }
+.t2-aic-thinking-toggle-knob {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    transition: transform 0.15s;
+}
+.t2-aic-thinking-toggle.is-active .t2-aic-thinking-toggle-knob { transform: translateX(10px); }
+
+/* v15.0.0: 실시간 스트리밍 중인 답변 텍스트 블록 — 아직 완성되지 않았다는
+   느낌을 은은한 좌측 강조선으로 표시한다(완성된 답변의 일반 텍스트와는
+   시각적으로 살짝 구분). */
+.t2-aic-chat-answer-streaming {
+    border-left: 2px solid var(--t2-aic-border);
+    padding-left: 8px;
+}
+
+/* v16.0.0: 사고 세그먼트 사이사이에 끼는 "중간 답변" 조각들 — 최종 정리된
+   답변과 헷갈리지 않도록 살짝 옅게, 위아래 사고 블록과 리듬이 이어지도록
+   여백을 좁게 준다. */
+.t2-aic-mid-answer {
+    border-left: 2px solid var(--t2-aic-border);
+    padding-left: 8px;
+    margin: 2px 0;
+    opacity: 0.92;
+}
+
+/* v16.0.0: 사고/중간 답변 과정과 최종 정리된 답변을 명확히 나누는 구분선. */
+.t2-aic-final-divider {
+    height: 1px;
+    margin: 10px 0;
+    background: var(--t2-aic-border);
+    opacity: 0.7;
+}
+
+/* 채팅 모드에서 Tool 섹션을 조금 더 컴팩트하게 — 절대 줄어들지 않게 */
+.t2-aic-tools-section-compact { gap: 6px; flex: 0 0 auto; }
+.t2-aic-tools-section-compact .t2-aic-tools-title { font-size: 11px; }
+
+/* ── Tool 목록 접기/펼치기 (채팅 모드) ────────────────────────────────────
+   노출된 Tool 알약 행이 여러 개면 가로로 길게 늘어져 입력창 위 공간을
+   많이 차지한다. toprow를 클릭하면 알약 행 전체를 접었다/펼쳤다 할 수
+   있다(팝업 버튼 영역은 클릭 전파를 막아 제외). */
+.t2-aic-tools-section-compact .t2-aic-tools-toprow {
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 0;
+    border-radius: 4px;
+    transition: background 0.12s ease;
+}
+.t2-aic-tools-section-compact .t2-aic-tools-toprow:hover { background: var(--t2-aic-surface-subtle); }
+
+.t2-aic-tools-toprow-actions { display: flex; align-items: center; gap: 4px; }
+
+.t2-aic-tools-collapse-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px;
+    border: none;
+    background: transparent;
+    color: var(--t2-aic-text-muted);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+.t2-aic-tools-collapse-btn:hover { background: var(--t2-aic-surface-muted); color: var(--t2-aic-text); }
+.t2-aic-tools-collapse-btn .material-icons { font-size: 18px; transition: transform 0.18s ease; }
+.t2-aic-tools-section-compact.is-collapsed .t2-aic-tools-collapse-btn .material-icons { transform: rotate(0deg); }
+.t2-aic-tools-section-compact:not(.is-collapsed) .t2-aic-tools-collapse-btn .material-icons { transform: rotate(180deg); }
+
+.t2-aic-tools-pills-wrap {
+    overflow: hidden;
+    max-height: 240px;
+    transition: max-height 0.22s ease, opacity 0.18s ease, margin-top 0.22s ease;
+    opacity: 1;
+    margin-top: 6px;
+}
+.t2-aic-tools-section-compact:not(.is-collapsed) .t2-aic-tools-pills-wrap { overflow-y: auto; overflow-x: hidden; }
+.t2-aic-tools-section-compact.is-collapsed .t2-aic-tools-pills-wrap { max-height: 0; opacity: 0; margin-top: 0; }
+.t2-aic-tools-section-compact.is-collapsed { gap: 0; }
+
+/* 채팅 모드 푸터의 "새 대화" 버튼은 우측이 아니라 좌측에 두는 게 자연스럽다. */
+.t2-aic-footer:has(.t2-aic-chat-clear) { justify-content: flex-start; }
+.t2-aic-footer:has(.t2-aic-tools-trigger) { justify-content: space-between; align-items: center; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   스킬(Skill) 탭
+   ══════════════════════════════════════════════════════════════════════ */
+.t2-aic-skills-wrap { }
+.t2-aic-skills-scroll { flex: 1; overflow-y: auto; padding: 16px 4px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+.t2-aic-skills-intro {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--t2-aic-surface); border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-md); padding: 10px 12px;
+    color: var(--t2-aic-text-muted); font-size: 12.5px; line-height: 1.5;
+}
+.t2-aic-skills-intro .material-icons { color: var(--t2-aic-text-soft); font-size: 18px; margin-top: 1px; flex-shrink: 0; }
+.t2-aic-skills-intro p { margin: 0; }
+
+.t2-aic-skills-list { display: flex; flex-direction: column; gap: 8px; }
+
+.t2-aic-skill-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border: 1px solid var(--t2-aic-border);
+    border-radius: var(--t2-aic-radius-md); background: var(--t2-aic-surface);
+}
+.t2-aic-skill-row.is-active { border-color: var(--t2-aic-border-strong); }
+
+/* v13.0.0: 정사각형 체크박스 대신 아이콘 하나로만 on/off를 표현
+   (붙여넣은 디자인의 "박스 없이 아이콘만" 방향에 맞춤). */
+.t2-aic-skill-toggle {
+    flex-shrink: 0; width: 20px; height: 20px; margin-top: 1px;
+    border: none; background: none; padding: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--t2-aic-text-faint);
+}
+.t2-aic-skill-toggle:hover { color: var(--t2-aic-text-muted); }
+.t2-aic-skill-toggle .material-icons { font-size: 19px; line-height: 1; }
+.t2-aic-skill-row.is-active .t2-aic-skill-toggle { color: var(--t2-aic-text); }
+
+
+.t2-aic-skill-row-main { flex: 1; min-width: 0; }
+.t2-aic-skill-row-name {
+    font-size: 13px; font-weight: 600; color: var(--t2-aic-text);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.t2-aic-skill-badge {
+    font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 999px;
+    text-transform: none;
+}
+.t2-aic-skill-badge.is-server { background: var(--t2-aic-surface-muted); color: var(--t2-aic-text-soft); }
+.t2-aic-skill-badge.is-user { background: var(--t2-aic-success-surface); color: var(--t2-aic-success); }
+.t2-aic-skill-row-desc { font-size: 12px; color: var(--t2-aic-text-muted); margin-top: 2px; line-height: 1.45; }
+
+.t2-aic-skill-row-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.t2-aic-skill-row-actions button {
+    width: 26px; height: 26px; border-radius: 6px; border: none; background: transparent;
+    color: var(--t2-aic-text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.t2-aic-skill-row-actions button:hover { background: var(--t2-aic-surface-subtle); color: var(--t2-aic-text); }
+.t2-aic-skill-row-actions .material-icons { font-size: 17px; }
+
+.t2-aic-skills-create-row { display: flex; justify-content: center; }
+.t2-aic-skills-create-row .t2-aic-btn { padding: 8px 16px; }
+
+.t2-aic-skill-builder {
+    border: 1px solid var(--t2-aic-border); border-radius: var(--t2-aic-radius-md);
+    background: var(--t2-aic-surface-subtle); padding: 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.t2-aic-skill-panel-head { display: flex; align-items: center; justify-content: space-between; }
+.t2-aic-skill-panel-head strong { font-size: 13.5px; color: var(--t2-aic-text); }
+.t2-aic-skill-panel-close {
+    border: none; background: transparent; cursor: pointer; color: var(--t2-aic-text-muted);
+    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 6px;
+}
+.t2-aic-skill-panel-close:hover { background: var(--t2-aic-border); }
+.t2-aic-skill-panel-close .material-icons { font-size: 17px; }
+
+.t2-aic-skill-draftcard input,
+.t2-aic-skill-draftcard textarea {
+    width: 100%; box-sizing: border-box; border: 1px solid var(--t2-aic-border-strong);
+    border-radius: var(--t2-aic-radius-sm); padding: 8px 10px; font-size: 12.5px;
+    font-family: var(--t2-aic-font); color: var(--t2-aic-text); background: var(--t2-aic-surface);
+    resize: vertical;
+}
+.t2-aic-skill-draftcard input:disabled,
+.t2-aic-skill-draftcard textarea:disabled { color: var(--t2-aic-text-muted); background: var(--t2-aic-surface-subtle); }
+.t2-aic-skill-draft-body { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+.t2-aic-skill-form-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.t2-aic-skill-form-actions .t2-aic-btn { padding: 7px 14px; font-size: 12.5px; }
+
+.t2-aic-record-bar .material-icons { color: var(--t2-aic-danger); animation: t2AicRecordPulse 1.4s ease-in-out infinite; }
+@keyframes t2AicRecordPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* ── 스킬 빌더: 새 스킬 만들기/수정을 위한 하나로 통일된 미니 대화창 ────── */
+.t2-aic-skill-builder-messages {
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: 220px; overflow-y: auto; padding: 2px;
+}
+.t2-aic-skill-builder-msg {
+    font-size: 12.5px; line-height: 1.5; padding: 7px 10px; border-radius: var(--t2-aic-radius-sm);
+    max-width: 92%; word-break: break-word;
+}
+.t2-aic-skill-builder-msg.is-user {
+    align-self: flex-end; background: var(--t2-aic-text); color: var(--t2-aic-surface);
+}
+.t2-aic-skill-builder-msg.is-assistant {
+    align-self: flex-start; background: var(--t2-aic-surface); border: 1px solid var(--t2-aic-border);
+    color: var(--t2-aic-text);
+}
+.t2-aic-skill-builder-msg p:first-child { margin-top: 0; }
+.t2-aic-skill-builder-msg p:last-child { margin-bottom: 0; }
+
+.t2-aic-skill-builder-composer {
+    display: flex; align-items: flex-end; gap: 6px;
+    border: 1px solid var(--t2-aic-border-strong); border-radius: var(--t2-aic-radius-md);
+    padding: 6px 6px 6px 10px; background: var(--t2-aic-surface);
+}
+.t2-aic-skill-builder-input {
+    flex: 1; border: none; outline: none; resize: none; background: transparent;
+    font-family: var(--t2-aic-font); font-size: 12.5px; color: var(--t2-aic-text);
+    max-height: 90px; padding: 6px 0; line-height: 1.4;
+}
+.t2-aic-skill-builder-record {
+    flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--t2-aic-border-strong);
+    background: var(--t2-aic-surface); color: var(--t2-aic-danger); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+.t2-aic-skill-builder-record .material-icons { font-size: 16px; }
+.t2-aic-skill-builder-record.is-recording { background: var(--t2-aic-danger); color: var(--t2-aic-surface); border-color: var(--t2-aic-danger); }
+.t2-aic-skill-builder-send {
+    flex-shrink: 0; width: 32px; height: 32px; padding: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+}
+.t2-aic-skill-builder-send .material-icons { font-size: 16px; }
+.t2-aic-skill-builder-hint { font-size: 11px; color: var(--t2-aic-text-muted); margin: -2px 0 0; }
+
+.t2-aic-skill-draftcard {
+    border: 1px solid var(--t2-aic-border-strong); background: var(--t2-aic-surface-subtle);
+    border-radius: var(--t2-aic-radius-md); padding: 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.t2-aic-skill-draftcard-head {
+    display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--t2-aic-text);
+}
+.t2-aic-skill-draftcard-head .material-icons { font-size: 16px; }
+
+/* ── v5.0.0: Tool 트리거 — 아이콘 하나 + 필요할 때만 뜨는 작은 배지 ─────
+   예전엔 "Tool 3/5개 사용중" 문구가 입력창 위 한 줄을 통째로 차지했다.
+   지금은 이 아이콘 버튼 하나로 줄이고, 실제로 켜진 Tool이 있을 때만 작은
+   숫자 배지가 오른쪽 위에 붙는다. write/rearrange의 footer와 chat의
+   컴포저 액션 행, 두 곳에서 동일한 마크업을 공유한다. */
+.t2-aic-tools-trigger {
+    position: relative;
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: var(--t2-aic-radius-sm);
+    border: none; background: transparent;
+    color: var(--t2-aic-text-muted); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+}
+.t2-aic-tools-trigger:hover { background: var(--t2-aic-surface-muted); color: var(--t2-aic-text); }
+.t2-aic-tools-trigger .material-icons { font-size: 18px; line-height: 1; }
+.t2-aic-tools-trigger.is-empty { color: var(--t2-aic-text-faint); }
+.t2-aic-tools-trigger-badge {
+    position: absolute; top: -2px; right: -2px;
+    min-width: 14px; height: 14px; padding: 0 3px;
+    border-radius: 999px;
+    background: var(--t2-aic-text-soft); color: #fff;
+    font-size: 9px; font-weight: 700; line-height: 14px; text-align: center;
+    box-shadow: 0 0 0 2px var(--t2-aic-surface);
+}
+
+/* ── v4.0.0: "+" Tool/Skill 통합 바텀시트 ─────────────────────────────── */
+.t2-aic-plus-sheet-overlay, .t2-aic-intro-overlay {
+    position: fixed; inset: 0; z-index: 10050;
+    background: var(--t2-aic-overlay);
+    display: flex; align-items: flex-end; justify-content: center;
+    font-family: var(--t2-aic-font);
+}
+.t2-aic-plus-sheet, .t2-aic-intro-panel {
+    width: 100%; max-width: 480px; max-height: 82vh;
+    background: var(--t2-aic-surface); color: var(--t2-aic-text);
+    border-radius: var(--t2-aic-radius-lg) var(--t2-aic-radius-lg) 0 0;
+    box-shadow: var(--t2-aic-modal-shadow);
+    display: flex; flex-direction: column; overflow: hidden;
+    animation: t2AicSlideUp 0.26s var(--t2-aic-ease);
+}
+.t2-aic-plus-sheet-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 14px 10px; border-bottom: 1px solid var(--t2-aic-border); flex-shrink: 0;
+}
+.t2-aic-plus-sheet-body { padding: 14px 16px 18px; overflow-y: auto; flex: 1 1 auto; }
+.t2-aic-plus-sheet-hint { margin: 0 0 10px; font-size: 12px; color: var(--t2-aic-text-muted); }
+
+/* ── v4.0.0: 소개(ⓘ) 패널 ─────────────────────────────────────────────── */
+.t2-aic-intro-head { display: flex; align-items: center; gap: 8px; padding: 2px 14px 10px; flex-shrink: 0; }
+.t2-aic-intro-head h3 { margin: 0; font-size: 16px; font-weight: 700; flex: 1; }
+.t2-aic-intro-head .t2-aic-title-icon { font-size: 22px !important; }
+.t2-aic-intro-seg { display: flex; gap: 4px; padding: 0 14px 10px; border-bottom: 1px solid var(--t2-aic-border); flex-shrink: 0; }
+.t2-aic-intro-body { padding: 16px 18px 22px; overflow-y: auto; }
+.t2-aic-intro-section p { margin: 0 0 12px; font-size: 13px; line-height: 1.65; color: var(--t2-aic-text-soft); }
+.t2-aic-intro-feature { display: flex; gap: 10px; margin-bottom: 16px; }
+.t2-aic-intro-feature .material-icons { color: var(--t2-aic-text-soft); font-size: 20px; margin-top: 2px; }
+.t2-aic-intro-feature h4 { margin: 0 0 4px; font-size: 13.5px; font-weight: 700; }
+.t2-aic-intro-feature p { margin: 0; }
+.t2-aic-intro-powered {
+    font-size: 12px !important; color: var(--t2-aic-text-muted) !important;
+    padding-top: 10px; border-top: 1px dashed var(--t2-aic-border);
+}
+.t2-aic-intro-lede { color: var(--t2-aic-text) !important; font-weight: 600; }
+.t2-aic-intro-dev-lede { font-style: italic; color: var(--t2-aic-text-muted) !important; }
+.t2-aic-dev-block { margin-bottom: 16px; padding: 12px; background: var(--t2-aic-surface-subtle); border-radius: var(--t2-aic-radius-md); border: 1px solid var(--t2-aic-border); }
+.t2-aic-dev-block h4 { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; font-size: 12.5px; font-weight: 700; color: var(--t2-aic-text); }
+.t2-aic-dev-block h4 .material-icons { font-size: 16px; }
+.t2-aic-dev-block p { margin: 0; }
+.t2-aic-dev-block code, .t2-aic-intro-dev-foot code {
+    background: var(--t2-aic-surface-muted); border-radius: 4px; padding: 1px 5px; font-size: 11.5px;
+}
+.t2-aic-intro-dev-foot { font-size: 12px !important; }
+
+/* ── v4.0.0: Skill 가져오기(.json → localStorage) ─────────────────────── */
+.t2-aic-skill-import-row { margin: -4px 0 12px; }
+.t2-aic-skill-import-btn { width: 100%; justify-content: center; }
+
+/* v13.1.0: 원형/사각 아이콘 버튼 전반에 눌림 피드백 통일 — 개별 클래스마다
+   따로 적어주지 않고 여기 한 곳에서 일괄 적용한다. */
+.t2-aic-tools-caret:active,
+.t2-aic-tools-trigger:active,
+.t2-aic-chat-plus:active,
+.t2-aic-tools-collapse-btn:active,
+.t2-aic-info:active,
+.t2-aic-close:active,
+.t2-aic-skill-toggle:active,
+.t2-aic-tools-popup-info:active,
+.t2-aic-mode-btn:active {
+    transform: scale(0.92);
+}
+.t2-aic-tools-caret,
+.t2-aic-tools-trigger,
+.t2-aic-chat-plus,
+.t2-aic-tools-collapse-btn,
+.t2-aic-info,
+.t2-aic-close,
+.t2-aic-skill-toggle,
+.t2-aic-tools-popup-info,
+.t2-aic-mode-btn {
+    transition: transform 0.1s var(--t2-aic-ease-soft), background 0.15s ease, color 0.15s ease;
+}
+
+/* v13.1.0: 스크롤 영역 공통 — 브라우저 기본 두꺼운 스크롤바 대신 얇고
+   은은한 커스텀 스크롤바로 통일(클로드/노션류 프리미엄 앱의 관습). 평소엔
+   거의 보이지 않다가 hover 시에만 살짝 진해진다. */
+.t2-aic-body,
+.t2-aic-chat-messages,
+.t2-aic-tools-popup-list,
+.t2-aic-dsl-preview,
+.t2-aic-diff-shell,
+.t2-aic-skills-scroll,
+.t2-aic-intro-body,
+.t2-aic-plus-sheet-body,
+.t2-aic-tools-pills-wrap,
+.t2-aic-skill-builder-messages {
+    scrollbar-width: thin;
+    scrollbar-color: var(--t2-aic-border-strong) transparent;
+}
+.t2-aic-body::-webkit-scrollbar,
+.t2-aic-chat-messages::-webkit-scrollbar,
+.t2-aic-tools-popup-list::-webkit-scrollbar,
+.t2-aic-dsl-preview::-webkit-scrollbar,
+.t2-aic-diff-shell::-webkit-scrollbar,
+.t2-aic-skills-scroll::-webkit-scrollbar,
+.t2-aic-intro-body::-webkit-scrollbar,
+.t2-aic-plus-sheet-body::-webkit-scrollbar,
+.t2-aic-tools-pills-wrap::-webkit-scrollbar,
+.t2-aic-skill-builder-messages::-webkit-scrollbar {
+    width: 6px; height: 6px;
+}
+.t2-aic-body::-webkit-scrollbar-track,
+.t2-aic-chat-messages::-webkit-scrollbar-track,
+.t2-aic-tools-popup-list::-webkit-scrollbar-track,
+.t2-aic-dsl-preview::-webkit-scrollbar-track,
+.t2-aic-diff-shell::-webkit-scrollbar-track,
+.t2-aic-skills-scroll::-webkit-scrollbar-track,
+.t2-aic-intro-body::-webkit-scrollbar-track,
+.t2-aic-plus-sheet-body::-webkit-scrollbar-track,
+.t2-aic-tools-pills-wrap::-webkit-scrollbar-track,
+.t2-aic-skill-builder-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+.t2-aic-body::-webkit-scrollbar-thumb,
+.t2-aic-chat-messages::-webkit-scrollbar-thumb,
+.t2-aic-tools-popup-list::-webkit-scrollbar-thumb,
+.t2-aic-dsl-preview::-webkit-scrollbar-thumb,
+.t2-aic-diff-shell::-webkit-scrollbar-thumb,
+.t2-aic-skills-scroll::-webkit-scrollbar-thumb,
+.t2-aic-intro-body::-webkit-scrollbar-thumb,
+.t2-aic-plus-sheet-body::-webkit-scrollbar-thumb,
+.t2-aic-tools-pills-wrap::-webkit-scrollbar-thumb,
+.t2-aic-skill-builder-messages::-webkit-scrollbar-thumb {
+    background: var(--t2-aic-border-strong);
+    border-radius: 999px;
+}
+.t2-aic-body::-webkit-scrollbar-thumb:hover,
+.t2-aic-chat-messages::-webkit-scrollbar-thumb:hover,
+.t2-aic-tools-popup-list::-webkit-scrollbar-thumb:hover,
+.t2-aic-dsl-preview::-webkit-scrollbar-thumb:hover,
+.t2-aic-diff-shell::-webkit-scrollbar-thumb:hover,
+.t2-aic-skills-scroll::-webkit-scrollbar-thumb:hover,
+.t2-aic-intro-body::-webkit-scrollbar-thumb:hover,
+.t2-aic-plus-sheet-body::-webkit-scrollbar-thumb:hover,
+.t2-aic-tools-pills-wrap::-webkit-scrollbar-thumb:hover,
+.t2-aic-skill-builder-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--t2-aic-text-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .t2-aic-modal, .t2-aic-tools-popup, .t2-aic-pick-bar, .t2-aic-chat-msg,
+    .t2-aic-plus-sheet, .t2-aic-intro-panel, .t2-aic-info-popup {
+        animation: none;
+    }
+}
+
+/* ── Desktop: 바텀시트 → 가운데 뜨는 카드로 되돌린다 ───────────────────── */
+@media (min-width: 761px) {
+    .t2-aic-overlay { align-items: center; }
+    .t2-aic-modal {
+        width: 92%; max-width: 720px; max-height: 86vh; height: auto;
+        border-radius: var(--t2-aic-radius-lg);
+    }
+    .t2-aic-modal.is-chat-mode { height: 86vh; min-height: 520px; max-width: 760px; }
+    .t2-aic-sheet-handle { display: none; }
+    .t2-aic-plus-sheet-overlay, .t2-aic-intro-overlay { align-items: center; }
+    .t2-aic-plus-sheet, .t2-aic-intro-panel { border-radius: var(--t2-aic-radius-lg); max-height: 74vh; }
+}
+
+/* ── Small screens (기존 세부 조정 유지) ──────────────────────────────── */
+@media (max-width: 560px) {
+    .t2-aic-diff-head, .t2-aic-diff-row { grid-template-columns: 26px 1fr 26px 1fr; font-size: 11.5px; }
+    .t2-aic-pick-bar {
+        left: 12px; right: 12px; transform: none;
+        width: auto; max-width: none;
+        flex-wrap: wrap;
+    }
+    .t2-aic-pick-bar-text { white-space: normal; flex: 1 1 100%; }
+    .t2-aic-chat-msg-col { max-width: 92%; }
+    .t2-aic-chat-msg.is-assistant .t2-aic-chat-msg-col { max-width: 100%; }
+    .t2-aic-chat-quick-btn { font-size: 10.5px; padding: 3px 8px; }
+}

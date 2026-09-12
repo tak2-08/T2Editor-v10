@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "insertTable",
+      "plugin": "table",
+      "ariaLabel": "insert table block",
+      "order": 14,
+      "icon": { "type": "material-icons-outlined", "name": "table_chart" }
+    }
+  ]
+}

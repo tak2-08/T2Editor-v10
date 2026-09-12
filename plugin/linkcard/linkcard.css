@@ -1,0 +1,225 @@
+/* Path: T2Editor/plugin/linkcard/linkcard.css */
+/*
+ * 이 파일은 "에디터 안에서만" 로드된다 — 게시물 보기 화면(에디터가 없는 곳)
+ * 에는 실려가지 않는다. 그쪽 렌더링은 css/content.css가 담당한다:
+ * editor.lib.php가 게시 시 콘텐츠에 t2-media-block 클래스가 있으면
+ * <link href=".../css/content.css">를 콘텐츠 자체에 자동으로 붙여 주므로
+ * (image/code/table/drawing 블록과 동일한 방식), 스킨에 별도 스크립트나
+ * 스타일시트를 수동 설치할 필요가 없다. content.css에도 이 파일과 같은 값의
+ * .t2-linkcard-* 규칙이 들어있다 — 두 파일은 "같은 스타일의 두 사본"이며,
+ * 하나를 고치면 다른 쪽도 맞춰 고쳐야 한다.
+ *
+ * .t2-media-block / .t2-media-controls 의 위치·hover 노출 동작은
+ * css/core.css 에 이미 공통 정의되어 있으므로(모든 미디어 블록 공용)
+ * 여기서는 카드 자체의 내부 레이아웃만 정의한다.
+ *
+ * [INLINE-STYLE] linkcard.js 가 카드를 만들 때 레이아웃/색상 값을 style
+ * 속성으로도 함께 박아 넣는다 — content.css의 <link>가 어떤 이유로든(정제기가
+ * <link> 태그 자체를 걷어내는 등) 살아남지 못하는 극단적인 경우를 대비한
+ * 최후의 보루다. 평소에는 content.css/이 파일의 클래스 선택자가 이미 같은
+ * 값을 정의하므로 인라인 스타일은 사실상 "덮어쓰는 대상이 없는" 상태다.
+ * 그래도 이 파일을 지우지 않는 이유는 두 가지다:
+ *   1) hover·로딩 펄스 애니메이션·반응형(@media)처럼 애초에 인라인으로는
+ *      표현할 수 없는 동작을 여전히 담당한다.
+ *   2) 다크테마 오버라이드(.t2-linkcard-link 등)는 인라인(라이트 테마 고정
+ *      값)을 "덮어써야" 하므로 아래에 !important 를 붙여 우선순위를 강제로
+ *      뒤집어 놓았다. !important 없이는 다크테마 규칙이 인라인 스타일에
+ *      막혀 절대 적용되지 않는다.
+ */
+
+.t2-linkcard-block {
+    margin: 8px 0;
+    position: relative;
+}
+
+.t2-linkcard-link {
+    display: flex;
+    align-items: stretch;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    min-height: 96px;
+}
+
+.t2-linkcard-link:hover {
+    border-color: #c7c7c7;
+    background: #fafafa;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+}
+
+.t2-linkcard-thumb {
+    flex: 0 0 144px;
+    width: 144px;
+    background: #f3f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.t2-linkcard-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.t2-linkcard-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(1, 135, 254, .12), rgba(1, 135, 254, .04));
+}
+
+.t2-linkcard-placeholder span {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(1, 135, 254, .18);
+    color: #0187fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.t2-linkcard-body {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* [CMS-FILTER-FIX] linkcard.js가 CSS 미로딩 환경(정제기가 style/class를
+   걷어낸 게시물 보기 화면 등) 대비용으로 domain/title/desc 사이에 <br>을
+   함께 심어 둔다. 이 스타일시트가 정상적으로 로드된 상태(에디터 안, 또는
+   linkcard.css를 스킨에 포함시킨 게시물 보기 화면)에서는 flex+gap이 이미
+   간격을 담당하므로 <br>이 만드는 여분의 줄바꿈은 숨긴다. */
+.t2-linkcard-body br {
+    display: none;
+}
+
+.t2-linkcard-domain {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #8a8a8a;
+    font-size: 12px;
+}
+
+.t2-linkcard-domain .t2-linkcard-domain-icon {
+    font-size: 14px;
+}
+
+.t2-linkcard-domain span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.t2-linkcard-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.t2-linkcard-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 로딩 중: 얇은 펄스 애니메이션으로 "가져오는 중"임을 표시.
+   자리표시자 원형 배지와 텍스트는 이미 채워져 있으므로 완전히 빈 상태로
+   보이지 않는다. */
+.t2-linkcard-loading .t2-linkcard-title {
+    color: #999;
+    font-weight: 500;
+}
+
+.t2-linkcard-loading .t2-linkcard-placeholder {
+    animation: t2-linkcard-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes t2-linkcard-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .45; }
+}
+
+@media (max-width: 480px) {
+    .t2-linkcard-link { min-height: 0; }
+    .t2-linkcard-thumb { flex-basis: 96px; width: 96px; }
+    .t2-linkcard-title { font-size: 14px; }
+    .t2-linkcard-desc { display: none; }
+}
+
+/* [INLINE-STYLE] 아래 다크테마 규칙에 !important 가 붙은 이유는 파일
+   상단 주석 참고 — linkcard.js 가 박아 넣은 라이트 테마 인라인 스타일을
+   에디터 화면에서만 덮어써야 하기 때문이다(저장되는 HTML 자체는 항상
+   라이트 테마 값 그대로 나간다 — 외부 게시판은 에디터의 다크모드 상태를
+   알 방법이 없으므로 이건 의도된 동작). */
+html[data-t2editor-theme="dark"] .t2-linkcard-link {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+}
+html[data-t2editor-theme="dark"] .t2-linkcard-link:hover {
+    background: #313131 !important;
+    border-color: #555 !important;
+}
+html[data-t2editor-theme="dark"] .t2-linkcard-thumb {
+    background: #232323 !important;
+}
+html[data-t2editor-theme="dark"] .t2-linkcard-title {
+    color: #eee !important;
+}
+html[data-t2editor-theme="dark"] .t2-linkcard-desc,
+html[data-t2editor-theme="dark"] .t2-linkcard-domain {
+    color: #aaa !important;
+}
+
+/* [FIX] content.css와 동일한 재정의 (해당 파일 상단 주석 참고). 에디터
+   화면 자체에는 이 문제를 일으키는 범용 img!important 규칙이 없지만(core.css는
+   border-radius만 지정), 스킨/외부 CSS가 유사한 규칙을 얹는 경우를 대비해
+   두 파일을 동일하게 유지한다. */
+.t2-linkcard-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+}
+
+.t2-linkcard-domain-icon {
+    width: 14px !important;
+    height: 14px !important;
+    max-width: 14px !important;
+    min-width: 14px !important;
+    flex: 0 0 14px !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 3px !important;
+}

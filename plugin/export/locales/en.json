@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "code": "en",
+    "plugin": "export",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "export": {
+    "modal_title": "Export document",
+    "format_label": "Format",
+    "format_html": "HTML",
+    "format_pdf": "PDF",
+    "format_md": "Markdown",
+    "filename_label": "Filename",
+    "filename_placeholder": "document",
+    "btn_export": "Export",
+    "exporting": "Exporting...",
+    "export_success": "Export complete",
+    "export_failed": "Export failed",
+    "prompt_html_title": "Enter the title of the HTML file to export:",
+    "default_title": "Document title",
+    "fallback_title": "T2Editor Export",
+    "powered_by": "Created with T2Editor",
+    "css_video_label": "Video:",
+    "html_downloaded": "HTML file has been downloaded.",
+    "prompt_md_filename": "Enter Markdown filename:",
+    "pdf_not_supported": "PDF export will be supported later.",
+    "html_skin_authored_on": "Authored on:",
+    "html_skin_exported_date": "Exported date:",
+    "console_template_load_failed": "Failed to load export template:"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "code": "ja",
+    "plugin": "link",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "link": {
+    "modal_title": "リンク追加",
+    "modal_title_edit": "リンク編集",
+    "url_label": "URL",
+    "url_placeholder": "https://example.com",
+    "text_label": "リンクテキスト",
+    "text_placeholder": "リンクの説明（任意）",
+    "target_label": "新しいタブで開く",
+    "select_text_first": "リンクを追加する前にテキストを選択してください。",
+    "invalid_url": "正しいURL形式ではありません。",
+    "no_url": "URLを入力してください。",
+    "btn_insert": "リンク挿入",
+    "btn_update": "更新",
+    "btn_remove": "リンク削除",
+    "no_selection": "選択範囲が見つかりません。",
+    "no_text_selected": "テキストが選択されていません。",
+    "apply_error": "リンク適用中にエラーが発生しました。",
+    "remove_error": "リンク削除中にエラーが発生しました。"
+  }
+}

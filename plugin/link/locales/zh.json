@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "code": "zh",
+    "plugin": "link",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "link": {
+    "modal_title": "添加链接",
+    "modal_title_edit": "编辑链接",
+    "url_label": "URL",
+    "url_placeholder": "https://example.com",
+    "text_label": "链接文本",
+    "text_placeholder": "链接描述（可选）",
+    "target_label": "在新标签页打开",
+    "select_text_first": "请先选择文本再添加链接。",
+    "invalid_url": "URL 格式无效。",
+    "no_url": "请输入 URL。",
+    "btn_insert": "插入链接",
+    "btn_update": "更新",
+    "btn_remove": "移除链接",
+    "no_selection": "找不到选择范围。",
+    "no_text_selected": "未选择文本。",
+    "apply_error": "应用链接时出错。",
+    "remove_error": "移除链接时出错。"
+  }
+}

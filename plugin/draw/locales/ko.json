@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "code": "ko",
+    "plugin": "draw",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "draw": {
+    "modal_title": "그림 그리기",
+    "modal_title_edit": "그림 수정",
+    "tool_pen": "펜",
+    "tool_eraser": "지우개",
+    "tool_line": "선",
+    "tool_rect": "사각형",
+    "tool_circle": "원",
+    "tool_arrow": "화살표",
+    "tool_text": "텍스트",
+    "color_label": "색상",
+    "size_label": "크기",
+    "clear_all": "전체 지우기",
+    "drawing_loading": "그림을 그리는 중...",
+    "confirm_clear": "전체 내용을 지우시겠습니까?",
+    "confirm_delete": "이 그림을 삭제하시겠습니까?",
+    "delete_drawing": "그림 삭제",
+    "error_save": "그림 저장 중 오류:\n{error}",
+    "btn_insert": "이미지로 삽입",
+    "btn_add": "추가하기",
+    "btn_update": "수정 완료",
+    "btn_cancel": "취소",
+    "console_url_recovery_failed": "[T2Draw] URL 복구 실패, 블록 건너뜀:"
+  }
+}
