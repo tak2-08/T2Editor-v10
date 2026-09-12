@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "rearrangeContent",
+      "plugin": "ai_rearrange",
+      "ariaLabel": "content ai2",
+      "style": "color:#667eea",
+      "order": 19,
+      "icon": {
+        "type": "material-icons",
+        "name": "auto_fix_high",
+        "style": "animation: rainbow 2s infinite;"
+      }
+    }
+  ]
+}

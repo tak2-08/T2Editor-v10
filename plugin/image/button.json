@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "insertImage",
+      "plugin": "image",
+      "ariaLabel": "insert image",
+      "order": 12,
+      "icon": { "type": "material-icons", "name": "image" }
+    }
+  ]
+}

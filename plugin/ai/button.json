@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "insertAI",
+      "plugin": "ai",
+      "ariaLabel": "content ai",
+      "style": "color:#7c3aed",
+      "order": 18,
+      "icon": { "type": "material-icons", "name": "auto_awesome" }
+    }
+  ]
+}
