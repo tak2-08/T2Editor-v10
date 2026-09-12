@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "code": "ko",
+    "plugin": "meme",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "meme": {
+    "modal_title": "밈 검색",
+    "description": "밈 이미지를 검색하고 현재 커서 위치에 바로 삽입합니다.",
+    "powered_by": "powered by",
+    "search_placeholder": "태그 또는 키워드 검색...",
+    "btn_search": "검색",
+    "btn_insert": "삽입",
+    "register_meme": "짤 등록",
+    "no_results": "검색 결과가 없습니다",
+    "loading": "검색 중...",
+    "search_failed": "검색 실패",
+    "inserting_wait": "이미지 추가 중입니다. 잠시만 기다려주세요.",
+    "insert_failed": "밈 이미지를 추가하지 못했습니다. ({error})",
+    "insert_failed_short": "밈 이미지를 추가하지 못했습니다.",
+    "error_unknown": "오류",
+    "api_error": "API 오류",
+    "image_api_missing": "image 플러그인의 uploadImageFile API 를 찾을 수 없습니다.",
+    "invalid_image_url": "허용되지 않는 이미지 URL 입니다.",
+    "image_load_timeout": "Image 로드 타임아웃 (30s)",
+    "image_dim_unknown": "이미지 치수를 확인할 수 없습니다.",
+    "canvas_context_failed": "canvas 2d context 생성 실패",
+    "canvas_toblob_null": "canvas.toBlob 이 null 반환",
+    "image_load_failed_cors": "Image 로드 실패 (CORS 또는 네트워크)",
+    "console_invalid_object": "[T2MemePlugin] 잘못된 meme 객체:",
+    "console_image_add_failed": "[T2MemePlugin] 이미지 추가 실패:",
+    "err_image_load_timeout": "이미지 로드 타임아웃",
+    "err_image_dimension": "이미지 크기를 확인할 수 없습니다.",
+    "err_canvas_context": "canvas 컨텍스트 생성 실패",
+    "err_canvas_blob": "canvas.toBlob 이 null 반환",
+    "err_image_load_cors": "이미지 로드 실패 (CORS/네트워크)"
+  }
+}

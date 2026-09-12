@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "code": "ja",
+    "plugin": "meme",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "meme": {
+    "modal_title": "ミーム検索",
+    "description": "ミーム画像を検索し、現在のカーソル位置に直接挿入します。",
+    "powered_by": "powered by",
+    "search_placeholder": "タグまたはキーワードで検索...",
+    "btn_search": "検索",
+    "btn_insert": "挿入",
+    "register_meme": "ミーム登録",
+    "no_results": "検索結果がありません",
+    "loading": "検索中...",
+    "search_failed": "検索失敗",
+    "inserting_wait": "画像を追加しています。お待ちください。",
+    "insert_failed": "ミーム画像を追加できませんでした。({error})",
+    "insert_failed_short": "ミーム画像を追加できませんでした。",
+    "error_unknown": "エラー",
+    "api_error": "APIエラー",
+    "image_api_missing": "imageプラグインのuploadImageFile APIが見つかりません。",
+    "invalid_image_url": "許可されていない画像URLです。",
+    "image_load_timeout": "画像読み込みタイムアウト (30秒)",
+    "image_dim_unknown": "画像サイズを確認できません。",
+    "canvas_context_failed": "canvas 2dコンテキストの作成に失敗",
+    "canvas_toblob_null": "canvas.toBlobがnullを返しました",
+    "image_load_failed_cors": "画像読み込み失敗 (CORSまたはネットワーク)",
+    "console_invalid_object": "[T2MemePlugin] 無効なmemeオブジェクト:",
+    "console_image_add_failed": "[T2MemePlugin] 画像追加失敗:",
+    "err_image_load_timeout": "画像読み込みタイムアウト",
+    "err_image_dimension": "画像サイズを確認できません。",
+    "err_canvas_context": "canvasコンテキスト作成失敗",
+    "err_canvas_blob": "canvas.toBlobがnullを返しました",
+    "err_image_load_cors": "画像読み込み失敗 (CORS/ネットワーク)"
+  }
+}

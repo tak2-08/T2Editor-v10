@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Path: T2Editor/skin.xml -->
+<!-- Developer note: 스킨 ID·경로는 Rhymix 등록값과 연결되므로 디렉터리명 변경 시 함께 수정한다. -->
+<skin version="0.2">
+    <title xml:lang="ko">T2Editor 10.5.0</title>
+    <title xml:lang="en">T2Editor 10.5.0</title>
+    <description xml:lang="ko">T2Editor 10.5.0을 라이믹스 2.1.x의 에디터·첨부파일·자동저장·다중 인스턴스 구조에 연결하는 공식 호환 스킨입니다.</description>
+    <description xml:lang="en">Rhymix 2.1.x integration skin for T2Editor 10.5.0, including native attachments, autosave, and multiple editor instances.</description>
+    <version>10.5.0</version>
+    <date>2026-07-21</date>
+    <author link="https://dsclub.kr/service/editor">
+        <name xml:lang="ko">T2Editor</name>
+        <name xml:lang="en">T2Editor</name>
+    </author>
+    <colorset>
+        <color name="auto">
+            <title xml:lang="ko">자동 (레이아웃 따름)</title>
+            <title xml:lang="en">Auto</title>
+        </color>
+        <color name="light">
+            <title xml:lang="ko">라이트</title>
+            <title xml:lang="en">Light</title>
+        </color>
+        <color name="dark">
+            <title xml:lang="ko">다크</title>
+            <title xml:lang="en">Dark</title>
+        </color>
+    </colorset>
+</skin>
+
+<!-- T2Editor Coding-Agent Rule: Write only concise, high-value comments. Preserve "Path: T2Editor/..." comments; update them when files move—never delete them. -->

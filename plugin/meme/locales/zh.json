@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "code": "zh",
+    "plugin": "meme",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "meme": {
+    "modal_title": "表情包搜索",
+    "description": "搜索表情包图片并直接插入到当前光标位置。",
+    "powered_by": "powered by",
+    "search_placeholder": "按标签或关键词搜索...",
+    "btn_search": "搜索",
+    "btn_insert": "插入",
+    "register_meme": "注册表情包",
+    "no_results": "未找到结果",
+    "loading": "搜索中...",
+    "search_failed": "搜索失败",
+    "inserting_wait": "正在添加图片，请稍候。",
+    "insert_failed": "无法添加表情包图片。({error})",
+    "insert_failed_short": "无法添加表情包图片。",
+    "error_unknown": "错误",
+    "api_error": "API 错误",
+    "image_api_missing": "找不到 image 插件的 uploadImageFile API。",
+    "invalid_image_url": "不允许的图片 URL。",
+    "image_load_timeout": "图片加载超时 (30秒)",
+    "image_dim_unknown": "无法确定图片尺寸。",
+    "canvas_context_failed": "创建 canvas 2d 上下文失败",
+    "canvas_toblob_null": "canvas.toBlob 返回 null",
+    "image_load_failed_cors": "图片加载失败 (CORS 或网络)",
+    "console_invalid_object": "[T2MemePlugin] 无效的 meme 对象:",
+    "console_image_add_failed": "[T2MemePlugin] 图片添加失败:",
+    "err_image_load_timeout": "图片加载超时",
+    "err_image_dimension": "无法确定图片尺寸。",
+    "err_canvas_context": "创建 canvas 上下文失败",
+    "err_canvas_blob": "canvas.toBlob 返回 null",
+    "err_image_load_cors": "图片加载失败 (CORS/网络)"
+  }
+}

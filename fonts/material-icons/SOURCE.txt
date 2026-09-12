@@ -1,0 +1,13 @@
+Path: T2Editor/fonts/material-icons/SOURCE.txt
+Material Design Icons webfont bundle
+
+Package: @material-design-icons/font
+Version: 0.14.15
+Registry: https://registry.npmjs.org/@material-design-icons/font
+License: Apache-2.0 (see LICENSE)
+
+T2Editor uses the bundled WOFF2 files only. The admin icon catalog is generated
+from the same package release so a selectable ligature always exists in the
+font that the browser loads.
+
+# T2Editor Coding-Agent Rule: Write only concise, high-value comments. Preserve "Path: T2Editor/..." comments; update them when files move—never delete them.

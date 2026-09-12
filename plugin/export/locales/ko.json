@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "code": "ko",
+    "plugin": "export",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "export": {
+    "modal_title": "문서 내보내기",
+    "format_label": "형식",
+    "format_html": "HTML",
+    "format_pdf": "PDF",
+    "format_md": "Markdown",
+    "filename_label": "파일명",
+    "filename_placeholder": "document",
+    "btn_export": "내보내기",
+    "exporting": "내보내는 중...",
+    "export_success": "내보내기 완료",
+    "export_failed": "내보내기 실패",
+    "prompt_html_title": "내보낼 HTML 파일의 제목을 입력하세요:",
+    "default_title": "문서 제목",
+    "fallback_title": "T2Editor 내보내기",
+    "powered_by": "T2Editor로 작성됨",
+    "css_video_label": "비디오:",
+    "html_downloaded": "HTML 파일이 다운로드되었습니다.",
+    "prompt_md_filename": "마크다운 파일명을 입력하세요:",
+    "pdf_not_supported": "PDF 내보내기는 추후 지원 예정입니다.",
+    "html_skin_authored_on": "작성일:",
+    "html_skin_exported_date": "내보낸 날짜:",
+    "console_template_load_failed": "내보내기 템플릿 로드 실패:"
+  }
+}

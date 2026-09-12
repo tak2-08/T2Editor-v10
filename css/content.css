@@ -1,0 +1,244 @@
+/* Path: T2Editor/css/content.css */
+/* Developer note: 저장 본문용 선택자는 플러그인 블록 클래스와 맞춰야 하며 에디터 전용 조작 UI는 포함하지 않는다. */
+.t2-media-block{position:relative;margin:10px 0;padding:10px}.t2-media-block img,.t2-media-block iframe,.t2-media-block video{border-radius:15px!important;border:none!important;margin:0 auto!important;max-width:100%!important}.t2-media-block img{height:auto!important}.t2-media-block .t2-image-container{max-width:100%!important;box-sizing:border-box!important}.t2-code-block{background:#f5f5f5;padding:15px;border-radius:4px;font-family:'Consolas','Monaco',monospace;position:relative;margin:10px 0}.t2-code-block .code-placeholder{color:#888;cursor:text}.t2-code-block pre{margin:0;white-space:pre-wrap}.t2-code-block code{outline:none;display:block;min-height:1em;font-family:'Consolas','Monaco',monospace;line-height:1.5}.t2-bullet-block{margin-left:20px;padding-left:10px;border-left:2px solid #ccc}.t2-file-block{margin:10px 0}.file-container{width:100%;min-width:240px;max-width:380px;aspect-ratio:4/1;background:#fff;border-radius:12px;border:1px solid #cdcdcd;padding:0 20px;display:flex;align-items:center;font-family:'Roboto',Arial,sans-serif;transition:all 0.2s ease;box-sizing:border-box}.t2-file-block .file-container:hover{transform:translateY(-1px)}.t2-file-block .file-icon{position:relative;width:36px;height:45px;background-color:#E8B56F;border-radius:6px;margin-right:20px;flex-shrink:0;overflow:hidden}.t2-file-block .file-icon::before{content:'';position:absolute;top:0;right:0;width:33%;height:33%;background:linear-gradient(135deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,0) 100%)}.t2-file-block .file-icon::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:7px;border-color:#fff #fff transparent transparent}.t2-file-block .file-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;overflow:hidden}.t2-file-block .file-name{font-size:17px;font-weight:500;color:rgba(0,0,0,.87);margin:0 0 6px 0;letter-spacing:.15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}.t2-file-block .file-details{color:rgba(0,0,0,.6);font-size:12px;line-height:1.5;letter-spacing:.25px;display:flex;gap:12px}.t2-file-block .file-details span{display:inline-block;white-space:nowrap}.t2-file-block .file-download{margin-left:20px;color:#4a4a4a;cursor:pointer;text-decoration:none;transition:color 0.2s ease;flex-shrink:0;display:flex;align-items:center}.t2-file-block .file-download:hover{color:#2563eb}.audio-file-container{width:100%;min-width:240px;max-width:380px;aspect-ratio:4/1;background:#fff;border-radius:12px;border:1px solid #cdcdcd;padding:0 20px;display:flex;align-items:center;font-family:'Roboto',Arial,sans-serif;transition:opacity 0.2s ease;box-sizing:border-box;padding-right:12px}.audio-file-container:hover{opacity:.95}.audio-file-icon{width:36px;height:45px;background-color:#7C4DFF;border-radius:6px;margin-right:20px;position:relative;flex-shrink:0;overflow:hidden}.audio-file-icon::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;background:#fff;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E") center/contain no-repeat;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E") center/contain no-repeat;opacity:.9}.audio-file-icon::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:7px;border-color:#fff #fff transparent transparent}.audio-file-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;overflow:hidden}.audio-file-name{font-size:17px;font-weight:500;color:rgba(0,0,0,.87);margin:0 0 6px 0;letter-spacing:.15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}.audio-file-details{color:rgba(0,0,0,.6);font-size:12px;line-height:1.5;letter-spacing:.25px;display:flex;gap:12px}.audio-file-details span{display:inline-block;white-space:nowrap}.audio-duration{color:#7C4DFF;font-weight:500;min-width:45px;text-align:right;margin-left:auto}.audio-player{display:none}.table-responsive{display:block;width:100%;overflow-x:auto;margin-bottom:1.5rem;-webkit-overflow-scrolling:touch;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)}.t2-table.t2-table-large{min-width:800px}.t2-table{width:100%;border-collapse:separate;border-spacing:0;margin:16px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.08);border-radius:10px;overflow:hidden}.t2-table th,.t2-table td{border:1px solid #eaeaea;padding:10px 12px;vertical-align:top;position:relative;min-width:50px}.t2-table th{background-color:#f5f7fa;font-weight:600;color:#334155;text-align:left;border-bottom:2px solid #e2e8f0}.t2-table tr:first-child th:first-child{border-top-left-radius:10px}.t2-table tr:first-child th:last-child{border-top-right-radius:10px}.t2-table tr:last-child td:first-child{border-bottom-left-radius:10px}.t2-table tr:last-child td:last-child{border-bottom-right-radius:10px}
+/* 코드 블록 미디어 스타일 */
+.t2-media-block.t2-code-block {
+    position: relative;
+    margin: 10px 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.t2-media-block.t2-code-block > div:first-child {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.t2-media-block.t2-code-block pre {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.t2-media-block.t2-code-block code {
+    outline: none;
+    display: block;
+    min-height: 1em;
+    font-family: 'Consolas', 'Monaco', monospace;
+    line-height: 1.5;
+}
+
+.t2-media-block.t2-code-block .code-placeholder {
+    color: #888;
+    cursor: text;
+}
+
+.t2-media-block.t2-code-block:hover .t2-media-controls {
+    display: flex;
+}
+
+.t2-drawing-block {
+    margin: 15px 0;
+    position: relative;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.t2-drawing-block > div {
+    width: 100%;
+    text-align: center;
+}
+
+.t2-drawing-block img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* 링크카드 미디어 스타일 — code/drawing 블록과 동일한 방식: linkcard.js가
+   게시 시 남겨두는 t2-media-block 클래스 덕분에 editor.lib.php가 이 파일을
+   <link>로 게시물에 자동 첨부해 준다(별도 스크립트 설치 불필요). */
+.t2-media-block.t2-linkcard-block {
+    margin: 8px 0;
+    position: relative;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-link {
+    display: flex;
+    align-items: stretch;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 96px;
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-link:hover {
+    border-color: #c7c7c7;
+    background: #fafafa;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-thumb {
+    flex: 0 0 144px;
+    width: 144px;
+    background: #f3f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: 0;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(1, 135, 254, .12), rgba(1, 135, 254, .04));
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-placeholder span {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(1, 135, 254, .18);
+    color: #0187fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-body {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* linkcard.js가 style/class가 전부 걷어내지는 최악의 경우를 대비해
+   domain/title/desc 사이에 <br>을 심어 두는데, 이 CSS가 정상 적용된
+   상태(=지금 이 파일이 게시물에 붙어 있는 상태)에서는 flex+gap이 이미
+   간격을 담당하므로 <br>이 만드는 여분의 줄바꿈은 숨긴다. */
+.t2-media-block.t2-linkcard-block .t2-linkcard-body br {
+    display: none;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-domain {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #8a8a8a;
+    font-size: 12px;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-domain-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-domain span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .t2-media-block.t2-linkcard-block .t2-linkcard-link { min-height: 0; }
+    .t2-media-block.t2-linkcard-block .t2-linkcard-thumb { flex-basis: 96px; width: 96px; }
+    .t2-media-block.t2-linkcard-block .t2-linkcard-title { font-size: 14px; }
+    .t2-media-block.t2-linkcard-block .t2-linkcard-desc { display: none; }
+}
+
+/* 파일 상단의 범용 규칙
+   ".t2-media-block img, .t2-media-block iframe, .t2-media-block video { ... !important }"
+   은 image/video 블록의 "본문 이미지"를 겨냥한 것이지만, 셀렉터가 태그 단위
+   (.t2-media-block img)라서 링크카드 안의 <img>(썸네일·파비콘)에도 그대로
+   걸린다. 특히 margin:0 auto!important / height:auto!important 가
+   linkcard.js가 심어둔 인라인 사이즈(예: 파비콘 14x14, flex:0 0 14px)를
+   !important로 강제 덮어써서, 파비콘이 도메인 행 가운데로 밀리며 좌측
+   정렬이 깨지는 문제가 있었다(에디터 화면은 core.css에 이 !important 규칙이
+   없어서 증상이 재현되지 않았음 — 게시된 화면에서만 content.css를 통해 발생).
+   아래는 클래스 3개(.t2-media-block.t2-linkcard-block .t2-linkcard-thumb 등)로
+   범용 규칙보다 detail(specificity)을 높여 항상 이기도록 만든 재정의다. */
+.t2-media-block.t2-linkcard-block .t2-linkcard-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+}
+
+.t2-media-block.t2-linkcard-block .t2-linkcard-domain-icon {
+    width: 14px !important;
+    height: 14px !important;
+    max-width: 14px !important;
+    min-width: 14px !important;
+    flex: 0 0 14px !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 3px !important;
+}
+/* [VIDEO-CONTAINER-CAP] 게시물 보기에서도 비디오는 바깥 비디오 블록의
+   내부 너비를 넘지 않으며 최대 95%까지만 표시한다. */
+.t2-media-block.t2-video-block > div[data-t2-block="video"],
+.t2-media-block.t2-video-block > div[data-video-type],
+.t2-media-block[data-t2-block="video"] > div[data-width],
+.t2-media-block[data-t2-block="video"] > div[data-video-type] {
+    max-width: 95% !important;
+    box-sizing: border-box !important;
+}
+.t2-media-block.t2-video-block iframe,
+.t2-media-block.t2-video-block video,
+.t2-media-block[data-t2-block="video"] iframe,
+.t2-media-block[data-t2-block="video"] video {
+    max-width: 100% !important;
+    display: block !important;
+}
+
+/* T2Editor Coding-Agent Rule: Write only concise, high-value comments. Preserve "Path: T2Editor/..." comments; update them when files move—never delete them. */

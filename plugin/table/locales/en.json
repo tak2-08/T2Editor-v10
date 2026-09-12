@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "code": "en",
+    "plugin": "table",
+    "source": "plugin",
+    "version": "10.5.0"
+  },
+  "table": {
+    "modal_title": "Insert table",
+    "rows_label": "Rows",
+    "cols_label": "Columns",
+    "header_row_label": "Include header row",
+    "border_label": "Border",
+    "btn_insert": "Insert table",
+    "add_row": "Add row",
+    "add_col": "Add column",
+    "del_row": "Delete row",
+    "del_col": "Delete column",
+    "header_row": "Header row",
+    "header_col": "Header column",
+    "cols_count_label": "Columns:",
+    "rows_count_label": "Rows:",
+    "large_table_warning": "Large tables will have horizontal scroll.",
+    "width_label": "Table width:",
+    "width_full": "100% (full)",
+    "width_custom": "Custom",
+    "border_style_label": "Border style:",
+    "border_solid": "Solid",
+    "border_dashed": "Dashed",
+    "border_dotted": "Dotted",
+    "border_double": "Double",
+    "header_label": "Header {n}",
+    "cols_short_label": "Cols:",
+    "rows_short_label": "Rows:",
+    "cells_short_label": "Cells:",
+    "merge_cells": "Merge selected cells",
+    "merge_cells_hint": "Select the first cell, then Shift-click the last cell, or press Merge before selecting the last cell.",
+    "split_cell": "Split merged cell",
+    "delete_table": "Delete table",
+    "move_up": "Move up",
+    "move_down": "Move down"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "code": "ja",
+    "plugin": "code",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "code": {
+    "modal_title": "コードブロック",
+    "language_label": "言語",
+    "language_placeholder": "言語を選択",
+    "code_placeholder": "ここにコードを入力",
+    "btn_insert": "コード挿入",
+    "copy_code": "コードコピー",
+    "copied": "コピーしました"
+  }
+}

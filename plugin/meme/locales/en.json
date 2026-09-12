@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "code": "en",
+    "plugin": "meme",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "meme": {
+    "modal_title": "Meme search",
+    "description": "Search meme images and insert them directly at the cursor position.",
+    "powered_by": "powered by",
+    "search_placeholder": "Search by tag or keyword...",
+    "btn_search": "Search",
+    "btn_insert": "Insert",
+    "register_meme": "Register meme",
+    "no_results": "No results found",
+    "loading": "Searching...",
+    "search_failed": "Search failed",
+    "inserting_wait": "Adding image. Please wait.",
+    "insert_failed": "Failed to add meme image. ({error})",
+    "insert_failed_short": "Failed to add meme image.",
+    "error_unknown": "error",
+    "api_error": "API error",
+    "image_api_missing": "Cannot find uploadImageFile API of image plugin.",
+    "invalid_image_url": "Disallowed image URL.",
+    "image_load_timeout": "Image load timeout (30s)",
+    "image_dim_unknown": "Cannot determine image dimensions.",
+    "canvas_context_failed": "Failed to create canvas 2d context",
+    "canvas_toblob_null": "canvas.toBlob returned null",
+    "image_load_failed_cors": "Image load failed (CORS or network)",
+    "console_invalid_object": "[T2MemePlugin] Invalid meme object:",
+    "console_image_add_failed": "[T2MemePlugin] Failed to add image:",
+    "err_image_load_timeout": "Image load timeout",
+    "err_image_dimension": "Cannot determine image dimensions.",
+    "err_canvas_context": "Failed to create canvas context",
+    "err_canvas_blob": "canvas.toBlob returned null",
+    "err_image_load_cors": "Image load failed (CORS/network)"
+  }
+}

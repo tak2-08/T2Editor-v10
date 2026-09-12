@@ -1,0 +1,431 @@
+/* Path: T2Editor/css/core.css */
+/* Developer note: 색상·간격은 CSS 변수에서 조정하고 전역 CMS 요소로 선택자 범위를 넓히지 않는다. */
+
+/* T2Editor Core Styles */
+.t2-editor-container { margin: 20px auto; border: 1px solid #ccc; border-radius: 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; position: relative; }
+.t2-toolbar { --t2-toolbar-button-size:44px; --t2-toolbar-gap:6px; --t2-toolbar-row-gap:6px; --t2-toolbar-track-size:25px; --t2-toolbar-track-count:2; width:100%; max-width:100%; padding:10px; border-bottom:1px solid #e1e1e1; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px; overflow-x:hidden; box-sizing:border-box; background:#fcfcfc; position:sticky; top:0; z-index:100; border-radius:10px 10px 0 0; }
+.t2-toolbar[hidden] { display:none !important; }
+.t2-toolbar.t2-toolbar-balanced { display:grid; grid-template-columns:repeat(var(--t2-toolbar-track-count),var(--t2-toolbar-track-size)); grid-auto-flow:row; justify-content:center; justify-items:center; align-content:start; column-gap:0; row-gap:var(--t2-toolbar-row-gap); }
+.t2-toolbar.t2-toolbar-balanced > .t2-btn:not(.t2-hidden) { width:var(--t2-toolbar-button-size); min-width:var(--t2-toolbar-button-size); max-width:var(--t2-toolbar-button-size); grid-column:span 2; justify-self:center; margin:0; }
+
+/* Buttons */
+.t2-btn { border: none; background: #f5f5f5; color: #0187fe; padding: 5px; height:44px; width:44px; border-radius:12px; border:1px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; align-items: center; gap: 5px; transition: all 0.15s ease; }
+.t2-btn:hover { background: #e8e8e8; color: #0187fe; }
+.t2-btn:active { background: #e0e0e0; }
+.t2-btn.active { background: #0187fe; color: #fff; }
+.t2-btn:disabled { opacity: .5; cursor: not-allowed; color: #666; }
+.t2-btn:disabled:hover { background: #f5f5f5; color: #666; box-shadow: none; }
+
+/* Editor Content Area */
+.t2-editor { padding: 15px; outline: none; overflow-y: auto; line-height: 1.5; font-size: 16px; background: #fff; position: relative; border-radius: 0 0 10px 10px; height: var(--t2-editor-content-height, 350px); min-height: var(--t2-editor-content-height, 350px); max-height: none; resize: none; box-sizing: border-box; -webkit-user-select: text; user-select: text; overflow-wrap: anywhere; caret-color: auto; -webkit-text-size-adjust: 100%; touch-action: pan-y; }
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) { .t2-editor { resize: vertical; } }
+.t2-editor-fallback { width: 100%; height: var(--t2-editor-content-height, 350px); min-height: var(--t2-editor-content-height, 350px); resize: none; box-sizing: border-box; }
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) { .t2-editor-fallback { resize: vertical; } }
+.t2-editor p { margin: 0; padding: 0; min-height: 1.5em; }
+/* contenteditable 안의 BR을 block+margin으로 바꾸면 WebKit이 캐럿 위치와 실제
+   줄 상자를 다르게 계산해 블록 전후 입력/Enter가 불안정해질 수 있다. */
+.t2-editor br { display: inline; content: normal; margin: 0; }
+.t2-editor > p[data-t2-boundary] { min-height: 1.5em; cursor: text; }
+.t2-editor .t2-media-controls, .t2-editor .t2-move-controls { -webkit-user-select: none; user-select: none; }
+.t2-editor ::selection { background: #b3d4fc; text-shadow: none; }
+
+/* Font Size */
+.t2-font-size-list { position: absolute; background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 5px 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0, 0, 0, .1); min-width: 120px; user-select: none; -webkit-user-select: none; }
+.t2-font-size-option { padding: 5px 15px; cursor: pointer; background-color: transparent; transition: background-color 0.1s ease; }
+.t2-font-size-option:hover { background: #f5f5f5; }
+
+/* Color Picker */
+/* Container is position:fixed; only left/top/z-index come from JS. */
+.t2-color-picker-container {
+    position: fixed;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    width: 224px;
+    z-index: 10000;
+    animation: t2cpIn 0.14s ease;
+    box-sizing: border-box;
+}
+@keyframes t2cpIn {
+    from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* Hue quick-select row */
+.t2-cp-hue-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+.t2-cp-hue-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: transform 0.12s;
+}
+.t2-cp-hue-circle:hover { transform: scale(1.15); }
+
+/* Canvas + lightness-slider row */
+.t2-cp-main {
+    display: flex;
+    gap: 8px;
+    height: 140px;
+    margin-bottom: 8px;
+}
+.t2-cp-canvas {
+    flex: 1;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: crosshair;
+    touch-action: none;
+}
+.t2-cp-indicator {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* Vertical lightness slider */
+.t2-cp-l-slider {
+    width: 20px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+    touch-action: none;
+}
+
+/* Horizontal saturation slider */
+.t2-cp-s-slider {
+    width: 100%;
+    height: 20px;
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 8px;
+    touch-action: none;
+}
+
+/* Shared slider handle */
+.t2-cp-handle {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #ccc;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* Preview row: swatch + hex input */
+.t2-cp-preview {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.t2-cp-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+.t2-cp-hex-input {
+    flex: 1;
+    min-width: 0;
+    padding: 5px 6px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 12px;
+    color: #1f2937;
+    outline: none;
+    transition: border-color 0.12s;
+}
+.t2-cp-hex-input:focus { border-color: #0187fe; }
+
+/* Apply button */
+.t2-cp-apply {
+    width: 100%;
+    padding: 8px;
+    background: #0187fe;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    min-height: 34px;
+}
+.t2-cp-apply:hover { background: #0069d9; }
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .t2-color-picker-container {
+        width: min(260px, calc(100vw - 20px));
+        padding: 12px;
+    }
+    .t2-cp-hue-circle  { width: 26px; height: 26px; }
+    .t2-cp-main        { height: 150px; }
+    .t2-cp-handle      { width: 20px; height: 20px; }
+    .t2-cp-apply       { padding: 11px 8px; min-height: 44px; font-size: 14px; }
+}
+
+/* Common Media Wrappers & Controls */
+.t2-media-block { position: relative; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
+.t2-media-block img, .t2-media-block iframe, .t2-media-block video { border-radius: 10px; }
+.t2-media-controls { position: absolute; top: 0; right: 0; background: rgba(255, 255, 255, .9); padding: 5px; border-radius: 4px; display: none; user-select: none; pointer-events: all; z-index: 10; box-shadow: 0 2px 5px rgba(0, 0, 0, .1); }
+.t2-media-block:hover .t2-media-controls { display: flex; gap: 5px; }
+
+/* Shared Modal Overlay */
+.t2-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, .5); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); padding: 16px; box-sizing: border-box; overflow: auto; }
+.t2-modal-overlay *, .t2-modal-overlay *::before, .t2-modal-overlay *::after { box-sizing: border-box; }
+.t2-btn-group { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 24px; }
+
+/* Status Bar & Footer */
+.t2-editor-status { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; border-top: 1px solid #e1e1e1; background: #fefefe; font-size: 13px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border-radius: 0 0 10px 10px; }
+.t2-status-left { display: flex; align-items: center; gap: 5px; }
+
+/* Logo Styles Modified */
+.t2-logo { display: flex; align-items: center; border: none; border-radius: 4px; }
+.t2-logo a { text-decoration-line: none; color: inherit; }
+.t2-logo a:hover { color: inherit; text-decoration-line: none; color: inherit; }
+.t2-logo-prefix { background: #ff6600; color: #fff; padding: 4px; font-weight: 600; border: 1px solid #ff6600; border-radius: 4px 0 0 4px; }
+.t2-logo-suffix { padding:4px; font-weight: 600; border: 1px solid #CCC1B8; border-left: none; border-radius: 0 4px 4px 0; }
+/* End Modified */
+
+.t2-char-count { color: #666; }
+
+/* Auto Save Toggle */
+.t2-autosave-toggle { display: flex; align-items: center; gap: 5px; margin-left: 5px; user-select: none; cursor: pointer; height: 20px; }
+.t2-switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+.t2-switch input { opacity: 0; width: 0; height: 0; }
+.t2-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+.t2-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: #fff; transition: .4s; border-radius: 50%; }
+input:checked + .t2-slider { background-color: #2196F3; }
+input:checked + .t2-slider:before { transform: translateX(20px); }
+.t2-autosave-toggle:hover .t2-slider { opacity: .8; }
+.t2-autosave-text { font-size: 13px; color: #666; line-height: 20px; }
+
+/* Dark Mode Toggle */
+.t2-dark-mode-toggle { margin-left: auto; padding-left: 10px; display: flex; align-items: center; }
+.t2-dark-mode-btn { width: 25px; height: 25px; border-radius: 50%; background: #f5f5f5; color: #0187fe; border: 1px solid #ddd; box-shadow: 0 1px 3px rgba(0,0,0,.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; padding: 0; margin: 5px; }
+.t2-dark-mode-btn:hover { background: #e8e8e8; transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,.15); }
+.t2-dark-mode-btn:active { transform: translateY(0); box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+.t2-dark-mode-btn .material-icons { font-size: 18px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   [I18N] Translate Toggle — T2Editor 10.2.1-beta2+
+   ───────────────────────────────────────────────────────────────────────
+   다크모드 토글과 텍스트 수 표시 사이에 위치한 번역 버튼
+   - 클릭 시 언어 선택 드롭다운 메뉴 토글
+   - 기존 다크모드 토글 디자인 패턴 그대로 복제 (25x25px 원형 버튼)
+   ─────────────────────────────────────────────────────────────────────── */
+.t2-translate-toggle { position: relative; padding-left: 0; display: flex; align-items: center; }
+.t2-translate-btn {
+    width: 25px; height: 25px; border-radius: 50%;
+    background: #f5f5f5; color: #0187fe;
+    border: 1px solid #ddd; box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease; padding: 0; margin: 5px;
+}
+.t2-translate-btn:hover { background: #e8e8e8; transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,.15); }
+.t2-translate-btn:active { transform: translateY(0); box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+.t2-translate-btn .material-icons { font-size: 16px; }
+.t2-translate-btn.t2-active { background: #0187fe; color: #fff; border-color: #0187fe; }
+
+/* 언어 선택 드롭다운 메뉴 */
+.t2-translate-menu {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 5px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    min-width: 140px;
+    z-index: 10000;
+    overflow: hidden;
+}
+.t2-translate-menu[hidden] { display: none; }
+.t2-translate-menu-title {
+    padding: 10px 14px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #eee;
+}
+.t2-translate-menu-list { list-style: none; margin: 0; padding: 4px 0; }
+.t2-translate-menu-item {
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.t2-translate-menu-item:hover { background: #f5f5f5; }
+.t2-translate-menu-item.t2-active {
+    background: #e6f4ff;
+    color: #0187fe;
+    font-weight: 600;
+}
+.t2-translate-menu-item.t2-active::before {
+    content: "✓ ";
+    color: #0187fe;
+}
+/* [I18N] 자동 감지 옵션 — UI에서 숨김 (기능은 유지).
+   사유: 자동 감지는 초기 로드 시 이미 적용되므로 메뉴에 노출할 필요 없음.
+   display:none 으로 렌더링 자체를 생략하되, JS 리스너는 그대로 동작. */
+.t2-translate-menu-item-auto { display: none !important; }
+
+/* Common Utils */
+.t2-bullet-block { margin-left: 20px; padding-left: 10px; border-left: 2px solid #ccc; }
+/* 코어 파일 드래그앤드롭 업로드 */
+.t2-editor-container {
+    position: relative;
+}
+
+.t2-core-drop-overlay {
+    position: absolute;
+    z-index: 120;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    gap: 9px;
+    padding: 24px;
+    border: 2px dashed rgba(26, 115, 232, 0.78);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.74);
+    color: #202124;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(0.985);
+    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.t2-core-drop-active .t2-core-drop-overlay {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.t2-core-drop-active .t2-editor {
+    filter: blur(3px);
+    opacity: 0.42;
+    transition: filter 0.16s ease, opacity 0.16s ease;
+}
+
+.t2-core-drop-icon {
+    font-size: 52px !important;
+    color: #1a73e8;
+}
+
+.t2-core-drop-title {
+    font-size: clamp(18px, 3vw, 24px);
+    line-height: 1.25;
+}
+
+.t2-core-drop-hint,
+.t2-core-drop-size {
+    display: block;
+    max-width: 92%;
+    color: #5f6368;
+    font-size: 13px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.t2-core-drop-uploading .t2-editor {
+    cursor: progress;
+}
+
+[data-t2editor-theme="dark"] .t2-core-drop-overlay {
+    background: rgba(32, 33, 36, 0.78);
+    color: #e8eaed;
+    border-color: rgba(138, 180, 248, 0.9);
+}
+
+[data-t2editor-theme="dark"] .t2-core-drop-icon {
+    color: #8ab4f8;
+}
+
+[data-t2editor-theme="dark"] .t2-core-drop-hint,
+[data-t2editor-theme="dark"] .t2-core-drop-size {
+    color: #bdc1c6;
+}
+
+/* T2Editor first-run hard lock: the guide JS removes this class only after acknowledgement. */
+html.t2-first-run-pending .t2-editor-container {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+.t2-editor-meta-links {
+    position: absolute;
+    right: 5px;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    white-space: nowrap;
+}
+
+.t2-admin-link {
+    color: #bd4e5b !important;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: underline !important;
+    text-underline-offset: 2px;
+}
+
+.t2-admin-link:hover,
+.t2-admin-link:focus-visible {
+    color: #a63e4c !important;
+}
+
+.t2-debug-trigger {
+    color: #7a7a7a;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.t2-debug-trigger .material-icons-outlined {
+    font-size: 14px;
+}
+
+[data-t2editor-theme="dark"] .t2-admin-link {
+    color: #f09aa3 !important;
+}
+
+/* T2Editor Coding-Agent Rule: Write only concise, high-value comments. Preserve "Path: T2Editor/..." comments; update them when files move—never delete them. */

@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "code": "ja",
+    "plugin": "export",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "export": {
+    "modal_title": "ドキュメント書き出し",
+    "format_label": "形式",
+    "format_html": "HTML",
+    "format_pdf": "PDF",
+    "format_md": "Markdown",
+    "filename_label": "ファイル名",
+    "filename_placeholder": "document",
+    "btn_export": "書き出し",
+    "exporting": "書き出し中...",
+    "export_success": "書き出し完了",
+    "export_failed": "書き出し失敗",
+    "prompt_html_title": "書き出すHTMLファイルのタイトルを入力:",
+    "default_title": "ドキュメントタイトル",
+    "fallback_title": "T2Editor書き出し",
+    "powered_by": "T2Editorで作成",
+    "css_video_label": "動画:",
+    "html_downloaded": "HTMLファイルがダウンロードされました。",
+    "prompt_md_filename": "Markdownファイル名を入力:",
+    "pdf_not_supported": "PDF書き出しは今後サポート予定です。",
+    "html_skin_authored_on": "作成日:",
+    "html_skin_exported_date": "書き出し日:",
+    "console_template_load_failed": "エクスポートテンプレート読み込み失敗:"
+  }
+}

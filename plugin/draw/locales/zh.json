@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "code": "zh",
+    "plugin": "draw",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "draw": {
+    "modal_title": "绘图",
+    "modal_title_edit": "编辑绘图",
+    "tool_pen": "钢笔",
+    "tool_eraser": "橡皮擦",
+    "tool_line": "直线",
+    "tool_rect": "矩形",
+    "tool_circle": "圆形",
+    "tool_arrow": "箭头",
+    "tool_text": "文本",
+    "color_label": "颜色",
+    "size_label": "大小",
+    "clear_all": "全部清除",
+    "drawing_loading": "绘图中...",
+    "confirm_clear": "确定要清除所有内容吗？",
+    "confirm_delete": "确定要删除此绘图吗？",
+    "delete_drawing": "删除绘图",
+    "error_save": "保存绘图时出错：\n{error}",
+    "btn_insert": "作为图片插入",
+    "btn_add": "添加",
+    "btn_update": "更新",
+    "btn_cancel": "取消",
+    "console_url_recovery_failed": "[T2Draw] URL 恢复失败，跳过块:"
+  }
+}
