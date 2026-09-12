@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "createLink",
+      "plugin": "link",
+      "ariaLabel": "create link",
+      "order": 11,
+      "icon": { "type": "material-icons", "name": "link" }
+    }
+  ]
+}

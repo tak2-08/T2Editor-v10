@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "collab",
+      "plugin": "collab",
+      "ariaLabel": "collab",
+      "order": 22,
+      "icon": { "type": "material-icons", "name": "group" }
+    }
+  ]
+}

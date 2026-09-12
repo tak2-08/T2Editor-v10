@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "attachFile",
+      "plugin": "file",
+      "ariaLabel": "insert file block",
+      "order": 15,
+      "icon": { "type": "material-icons", "name": "attach_file" }
+    }
+  ]
+}

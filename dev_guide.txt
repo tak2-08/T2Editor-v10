@@ -1,0 +1,527 @@
+================================================================================
+  T2Editor v10.0.0 — 플러그인 구현 및 유지보수 가이드
+  대상: LLM 코더 & Human 코더
+================================================================================
+
+목차
+────────────────────────────────────────────────────────────────────────────────
+ 1. 아키텍처 개요
+ 2. 디렉토리 구조
+ 3. 핵심 원칙: "플러그인은 설정이 아니라 코드다"
+ 4. 새 플러그인 만들기 (Step-by-Step)
+ 5. button.json 스펙
+ 6. hooks.js 스펙
+ 7. editor.lib.php에서의 실행 흐름
+ 8. 기존 플러그인 수정 가이드
+ 9. 디버깅 & 트러블슈팅
+10. 금지 사항 & 안티패턴
+11. 보안 체크리스트
+12. 버전 업그레이드 호환성
+================================================================================
+
+
+1. 아키텍처 개요
+────────────────────────────────────────────────────────────────────────────────
+
+T2Editor v10은 "플러그인은 설정이 아니라 코드다" 원칙에 기반합니다.
+
+v9까지: editor.lib.php가 모든 플러그인의 submit/restore 로직을 인라인 JS로 보유
+         → 플러그인 추가/수정 시 editor.lib.php 수정 필수
+         → 중앙 집중형, 결합도 높음
+
+v10부터: 각 플러그인이 자신의 submit/restore 코드를 hooks.js로 직접 소유
+         → editor.lib.php는 T2EditorHooks.runSubmit/runRestore만 호출
+         → 플러그인 추가 시 editor.lib.php 수정 불필요 (hooks.js만 추가)
+         → 분산형, 결합도 낮음
+
+핵심 구성요소:
+  - js/hooks.js          : 훅 등록소 (immutable, 수정 금지)
+  - plugin/{name}/hooks.js : 플러그인 자체 submit/restore 코드
+  - plugin/{name}/button.json : 툴바 버튼 UI 데이터 (로직 없음)
+  - editor.lib.php        : PHP 렌더링 + 전역 처리 (STEP 1,3) + 훅 호출 (STEP 2)
+
+
+2. 디렉토리 구조
+────────────────────────────────────────────────────────────────────────────────
+
+t2editor/
+├── editor.lib.php              # 메인 PHP (절대 수정 불필요한 영역 명시)
+├── config/
+│   ├── t2_config.php           # 전역 설정
+│   ├── upload_config.php       # 업로드 설정
+│   └── get_upload_config.php   # 업로드 설정 API 엔드포인트
+├── js/
+│   ├── hooks.js                # [IMMUTABLE] 훅 등록소 — 절대 수정 금지
+│   ├── core.js                 # T2Editor 클래스
+│   ├── utils.js                # 유틸리티 함수
+│   └── toolbar.js              # 툴바 이벤트 바인딩
+├── css/
+│   ├── core.css                # 기본 스타일
+│   ├── dark.css                # 다크모드
+│   └── content.css             # 저장 콘텐츠 표시용
+├── plugin/
+│   ├── video/
+│   │   ├── video.js            # 플러그인 메인 로직
+│   │   ├── hooks.js            # submit/restore 훅 (v10 핵심)
+│   │   ├── button.json         # 툴바 버튼 정의
+│   │   └── video.css           # 플러그인 스타일
+│   ├── code/
+│   │   ├── code.js
+│   │   ├── hooks.js
+│   │   ├── button.json
+│   │   └── code.css
+│   ├── ... (나머지 플러그인 동일 구조)
+│   └── {new_plugin}/           # 새 플러그인 추가 시 이 구조 따를 것
+│       ├── {new_plugin}.js
+│       ├── hooks.js             # submit/restore 필요 시에만
+│       ├── button.json
+│       └── {new_plugin}.css
+├── fonts/
+├── vendor/
+└── readme.txt
+
+
+3. 핵심 원칙: "플러그인은 설정이 아니라 코드다"
+────────────────────────────────────────────────────────────────────────────────
+
+이 원칙이 의미하는 것:
+
+  가. 플러그인은 자신의 로직을 직접 소유한다
+     - submit 시 어떤 변환이 필요한지, restore 시 어떤 복원이 필요한지
+       → 모두 plugin/{name}/hooks.js에 코드로 작성
+     - editor.lib.php는 이를 대신 처리하지 않는다
+
+  나. button.json은 로직이 아닌 UI 데이터다
+     - 버튼 아이콘, 라벨, command 이름, 순서만 정의
+     - submit/restore 로직, 이벤트 핸들러 등은 포함하지 않는다
+
+  다. editor.lib.php는 중앙 처리소가 아니다
+     - 전역 공통 처리(.t2-move-controls 제거, 테이블 DB 포맷 변환)만 담당
+     - 플러그인별 처리는 T2EditorHooks.runSubmit/runRestore에 위임
+     - 새 플러그인 추가 시 editor.lib.php를 수정할 필요가 없다
+
+  라. 레거시 fallback은 존재하지 않는다
+     - H.has() 조건문 + else 레거시 분기 → v10에서 완전 제거됨
+     - 모든 플러그인은 hooks.js로 자체 처리하거나, 처리가 필요 없는 플러그인은
+       hooks.js를 아예 두지 않는다
+
+
+4. 새 플러그인 만들기 (Step-by-Step)
+────────────────────────────────────────────────────────────────────────────────
+
+예시: "highlight" 텍스트 하이라이트 플러그인 추가
+
+STEP 1: 플러그인 디렉토리 생성
+  mkdir -p plugin/highlight
+
+STEP 2: button.json 작성
+  plugin/highlight/button.json:
+  {
+    "buttons": [
+      {
+        "command": "applyHighlight",
+        "plugin": "highlight",
+        "icon": { "type": "material-icons", "name": "highlight" },
+        "ariaLabel": "apply highlight",
+        "order": 45
+      }
+    ]
+  }
+
+STEP 3: 메인 JS 작성
+  plugin/highlight/highlight.js:
+  - T2Editor에 플러그인 등록
+  - command 핸들러 구현 (applyHighlight)
+  - UI 모달/팝업 로직 (필요 시)
+  - onContentSet 콜백 (초기화 시 DOM 조작 필요 시)
+
+STEP 4: hooks.js 작성 (submit/restore 필요 시)
+  plugin/highlight/hooks.js:
+  (function () {
+      'use strict';
+
+      T2EditorHooks.onSubmit('highlight', function (tempDiv) {
+          // 저장 전: 에디터 전용 UI 요소 제거, data-* 동기화 등
+          tempDiv.querySelectorAll('.t2-highlight-block').forEach(function (block) {
+              var ctrl = block.querySelector('.t2-media-controls');
+              if (ctrl) ctrl.remove();
+          });
+      });
+
+      T2EditorHooks.onRestore('highlight', function (tempDiv) {
+          // 로드 시: DB 저장 포맷 → 에디터 표시 포맷 복원
+          tempDiv.querySelectorAll('.t2-highlight').forEach(function (el) {
+              // 에디터 전용 클래스/속성 복원 로직
+          });
+      });
+  })();
+
+STEP 5: CSS 작성
+  plugin/highlight/highlight.css:
+  - 에디터 내 표시 스타일
+  - 버튼/모달 스타일
+
+STEP 6: 등록 (editor.lib.php 수정)
+  $T2EDITOR_PLUGINS 배열에 'highlight' 추가:
+  $T2EDITOR_PLUGINS = [
+      'link', 'image', 'video', 'file', 'table', 'code',
+      'export', 'search', 'draw', 'collab', 'ai',
+      'ai_rearrange', 'clipurl', 'meme',
+      'highlight'  // ← 추가
+  ];
+
+  $T2EDITOR_PLUGIN_PRIORITY 배열에 우선순위 추가 (선택):
+  'highlight' => 10,
+
+  ★ editor.lib.php 수정은 이게 전부. submit/restore 로직은 hooks.js가 담당.
+
+STEP 7: 테스트
+  - 버튼이 툴바에 표시되는지 확인
+  - 하이라이트 적용 → 저장 → 새로고침 → 복원 되는지 확인
+  - 개발자 콘솔에서 T2EditorHooks.has('submit', 'highlight') 로 등록 확인
+
+
+5. button.json 스펙
+────────────────────────────────────────────────────────────────────────────────
+
+파일 위치: plugin/{name}/button.json
+필수 여부: 툴바 버튼이 있는 플러그인은 필수, 버튼 없는 플러그인은 생략 가능
+
+구조:
+{
+  "buttons": [
+    {
+      "command":     string,     // 필수 — 툴바 버튼의 data-command 값
+      "plugin":      string,     // 선택 — 미지정 시 디렉토리명 자동 할당
+      "icon":        string | object, // 필수 — 아이콘 정의
+      "ariaLabel":   string,     // 선택 — 접근성 라벨 (미지정 시 command 사용)
+      "order":       number,     // 선택 — 정렬 우선순위 (기본값 999)
+      "style":       string,     // 선택 — 인라인 CSS
+      "disabled":    boolean,    // 선택 — 초기 비활성화 여부
+      "extraAttributes": object  // 선택 — 추가 HTML 속성 { key: value }
+    }
+  ]
+}
+
+icon 형식:
+  1) 문자열 (shorthand): "undo" → <span class="material-icons">undo</span>
+  2) 객체 (full spec):
+     { "type": "material-icons", "name": "format_bold" }
+     { "type": "material-icons-outlined", "name": "info" }
+     { "type": "html", "html": "<svg>...</svg>" }
+     { "type": "material-icons", "name": "zoom_in", "style": "font-size:18px" }
+
+버튼 순서 결정 우선순위 (높은 것부터):
+  1. $T2EDITOR_BUTTON_ORDER (PHP 글로벌 오버라이드)
+  2. button.json의 order 필드
+  3. $T2EDITOR_PLUGIN_PRIORITY × 10
+  4. 기본값 999
+
+예시 (video 플러그인):
+{
+  "buttons": [
+    {
+      "command": "insertYouTube",
+      "icon": { "type": "material-icons", "name": "smart_display" },
+      "ariaLabel": "insert YouTube video",
+      "order": 10
+    },
+    {
+      "command": "insertVideo",
+      "icon": { "type": "material-icons", "name": "videocam" },
+      "ariaLabel": "insert video file",
+      "order": 20
+    }
+  ]
+}
+
+보안 참고:
+  - icon.type이 "html"일 때 icon.html 값은 필터링 없이 삽입됨
+  - button.json은 서버 사이드 개발자 통제 리소스이므로 허용
+  - 서드파티 button.json을 허용하는 경우 strip_tags() whitelist 적용 권장
+
+
+6. hooks.js 스펙
+────────────────────────────────────────────────────────────────────────────────
+
+파일 위치: plugin/{name}/hooks.js
+필수 여부: submit/restore 처리가 필요한 플러그인만 작성
+           (link, search, ai, ai_rearrange, meme, clipurl, collab, export는 불필요)
+
+기본 템플릿:
+(function () {
+    'use strict';
+
+    // ── Submit 훅 ─────────────────────────────────────────────────────
+    // 저장 버튼 클릭 시 실행. 에디터 DOM → DB 저장 포맷 변환.
+    T2EditorHooks.onSubmit('{pluginName}', function (tempDiv) {
+        // tempDiv: 에디터 콘텐츠가 복사된 임시 div
+        // 이 안에서:
+        //   - 에디터 전용 UI 제거 (.t2-media-controls 등)
+        //   - data-* 속성 동기화
+        //   - fallback anchor 생성/갱신
+        //   - XSS 위험 요소 정리
+    });
+
+    // ── Restore 훅 ────────────────────────────────────────────────────
+    // 콘텐츠 로드 시 실행. DB 저장 포맷 → 에디터 표시 포맷 변환.
+    T2EditorHooks.onRestore('{pluginName}', function (tempDiv) {
+        // tempDiv: 로드된 콘텐츠가 담긴 임시 div
+        // 이 안에서:
+        //   - 에디터 전용 클래스/속성 복원
+        //   - DB 포맷 → 에디터 포맷 DOM 변환
+        //   - contenteditable=false 설정
+        //   - <p> 래핑 해제
+    });
+})();
+
+API:
+  T2EditorHooks.onSubmit(pluginName, fn)
+    - pluginName: string — 플러그인 식별자
+    - fn: function(tempDiv) — submit 시 실행할 함수
+
+  T2EditorHooks.onRestore(pluginName, fn)
+    - pluginName: string — 플러그인 식별자
+    - fn: function(tempDiv) — restore 시 실행할 함수
+
+  T2EditorHooks.runSubmit(tempDiv)
+    - 등록된 모든 submit 훅을 순서대로 실행
+    - editor.lib.php에서만 호출 (플러그인에서 호출 금지)
+
+  T2EditorHooks.runRestore(tempDiv)
+    - 등록된 모든 restore 훅을 순서대로 실행
+    - editor.lib.php에서만 호출 (플러그인에서 호출 금지)
+
+  T2EditorHooks.has(type, pluginName)
+    - type: 'submit' | 'restore'
+    - 특정 플러그인이 훅을 등록했는지 확인
+    - 플러그인 간 협업 시 유용 (예: 다른 플러그인 존재 여부에 따른 조건 분기)
+
+주의사항:
+  - hooks.js는 반드시 IIFE로 감싸야 함 (전역 스코프 오염 방지)
+  - 'use strict' 선언 필수
+  - tempDiv는 에디터 DOM이 아니라 임시 복사본 → DOM 조작 안전
+  - try-catch는 hooks.js 내부에서 하지 않아도 됨 (runSubmit/runRestore가 감싸줌)
+  - 에러 발생 시 콘솔에 [T2EditorHooks] 오류 로그 출력, 다른 훅은 계속 실행
+
+
+7. editor.lib.php에서의 실행 흐름
+────────────────────────────────────────────────────────────────────────────────
+
+7-1. 콘텐츠 저장 (Submit Flow)
+─────────────────────────────
+
+get_editor_js()가 생성하는 _submitContent() 함수:
+
+  STEP 1: 전역 공통 처리 (항상 실행)
+    tempDiv.querySelectorAll('.t2-move-controls').forEach(ctrl => ctrl.remove());
+    → 모든 플러그인의 이동 컨트롤 제거
+
+  STEP 2: 플러그인 submit 훅 실행
+    T2EditorHooks.runSubmit(tempDiv);
+    → 등록된 순서대로 각 플러그인의 onSubmit 콜백 실행
+    → 레거시 fallback 없음: 훅이 없으면 아무 일도 안 함
+
+  STEP 3: 테이블 DB 저장 포맷 변환 (항상 실행)
+    .t2-table-wrapper → .table-responsive 변환
+    → DB 저장 포맷 규약이므로 플러그인 자율 영역이 아님
+    → table/hooks.js는 controls 제거만 담당, 이 변환은 editor.lib.php가 담당
+
+  Final: content.css 주입 + textarea 업데이트
+
+  ★ 중요: STEP 2에서 훅을 등록하지 않은 플러그인은 자동 스킵.
+    레거시 fallback 코드는 존재하지 않음.
+
+7-2. 콘텐츠 로드 (Restore Flow)
+─────────────────────────────
+
+editor_html()의 인라인 JS:
+
+  STEP 1: 플러그인 restore 훅 실행
+    T2EditorHooks.runRestore(tempDiv);
+    → 등록된 순서대로 각 플러그인의 onRestore 콜백 실행
+    → 레거시 fallback 없음
+
+  STEP 2: 에디터에 콘텐츠 설정
+    editor.setContent(tempDiv.innerHTML);
+
+  STEP 3: onContentSet fallback
+    setTimeout(function() {
+        for (let [name, plugin] of editor.plugins) {
+            if (plugin.onContentSet) plugin.onContentSet(tempDiv.innerHTML);
+        }
+    }, 100);
+    → image.js 등 onContentSet 기반 플러그인의 초기화 보장
+
+
+8. 기존 플러그인 수정 가이드
+────────────────────────────────────────────────────────────────────────────────
+
+8-1. submit 로직 수정
+────────────────────
+  수정 파일: plugin/{name}/hooks.js 의 onSubmit 콜백
+  수정하지 말 것: editor.lib.php
+
+  예: video 플러그인에 새로운 data 속성 동기화 추가
+    → plugin/video/hooks.js의 onSubmit 함수 안에 코드 추가
+    → editor.lib.php는 건드리지 않음
+
+8-2. restore 로직 수정
+─────────────────────
+  수정 파일: plugin/{name}/hooks.js 의 onRestore 콜백
+  수정하지 말 것: editor.lib.php
+
+  예: code 플러그인에 새로운 탐지 전략 추가
+    → plugin/code/hooks.js의 onRestore 함수 안에 querySelector 추가
+    → editor.lib.php는 건드리지 않음
+
+8-3. 버튼 추가/변경
+──────────────────
+  수정 파일: plugin/{name}/button.json
+  수정하지 말 것: editor.lib.php
+
+  예: video 플러그인에 "TikTok 삽입" 버튼 추가
+    → plugin/video/button.json의 buttons 배열에 항목 추가
+    → editor.lib.php는 건드리지 않음
+
+8-4. 툴바 순서 변경
+──────────────────
+  방법 1: button.json의 order 필드 수정 (플러그인 단위)
+  방법 2: $T2EDITOR_BUTTON_ORDER 배열로 전체 순서 오버라이드 (글로벌)
+  방법 3: $T2EDITOR_PLUGIN_PRIORITY 수정 (플러그인 그룹 단위)
+
+8-5. hooks.js가 없는 플러그인에 submit/restore 추가
+──────────────────────────────────────────────────
+  예: collab 플러그인에 submit 훅 추가 필요 시
+    1. plugin/collab/hooks.js 파일 생성
+    2. IIFE + T2EditorHooks.onSubmit() 작성
+    3. 끝 — editor.lib.php 수정 불필요, hooks.js는 자동 로드됨
+
+    ★ 자동 로드 조건: plugin/{name}/hooks.js 파일이 존재하면
+      editor.lib.php가 자동으로 <script> 태그를 생성함
+
+
+9. 디버깅 & 트러블슈팅
+────────────────────────────────────────────────────────────────────────────────
+
+9-1. 훅 등록 확인
+──────────────────
+  브라우저 콘솔:
+    T2EditorHooks.has('submit', 'video')   // true/false
+    T2EditorHooks.has('restore', 'code')   // true/false
+
+9-2. 스크립트 로딩 순서 확인
+─────────────────────────────
+  개발자 도구 → Network 탭 → JS 필터
+  순서: utils.js → hooks.js → core.js → plugin/*.js → plugin/hooks.js → toolbar.js
+
+  ★ hooks.js가 core.js보다 먼저 로드되어야 함
+    (플러그인 JS에서 T2EditorHooks.onSubmit을 호출하려면 hooks.js가 먼저 정의되어야 함)
+
+9-3. submit 결과 확인
+─────────────────────
+  브라우저 콘솔:
+    // 임시로 submit 결과 로깅
+    var orig = _submitContent;
+    _submitContent = function() {
+        orig();
+        console.log('Submit result:', document.getElementById('{id}').value);
+    };
+
+9-4. 자주 발생하는 문제
+──────────────────────
+
+  문제: 버튼이 툴바에 안 보임
+  원인 1: button.json이 없거나 JSON 파싱 에러
+  해결: 브라우저 콘솔에서 [T2Editor] {name}/button.json parse error 확인
+
+  문제: submit 시 데이터 손실
+  원인 1: hooks.js onSubmit이 data-* 속성 동기화를 누락
+  해결: hooks.js에서 필요한 data 속성을 block/container에 다시 기록
+
+  문제: restore 시 플러그인 블록이 편집 가능 상태
+  원인 1: onRestore에서 contenteditable=false 설정 누락
+  해결: block.setAttribute('contenteditable', 'false') 추가
+
+  문제: hooks.js가 실행되지 않음
+  원인 1: 파일명이 hooks.js가 아님 (대소문자 구분)
+  원인 2: IIFE로 감싸지 않아서 T2EditorHooks가 아직 정의되지 않은 시점에 실행
+  원인 3: 스크립트 로딩 순서 오류 (hooks.js가 plugin JS보다 먼저 로드되어야 함)
+  해결: 파일명 확인, IIFE 래핑 확인, Network 탭에서 로딩 순서 확인
+
+
+10. 금지 사항 & 안티패턴
+────────────────────────────────────────────────────────────────────────────────
+
+  ❌ editor.lib.php에 플러그인별 submit/restore 로직 추가
+     → 반드시 plugin/{name}/hooks.js에 작성
+
+  ❌ js/hooks.js 수정
+     → 훅 등록소는 immutable. API 변경 시 전체 플러그인에 영향
+
+  ❌ H.has() / T2EditorHooks.has()를 이용한 조건 분기 후 else 레거시 처리
+     → v10에서는 레거시 fallback이 존재하지 않음
+     → has()는 다른 플러그인 존재 여부 확인용으로만 사용
+
+  ❌ button.json에 로직 포함
+     → 버튼 정의만. submit/restore/이벤트 핸들러 금지
+
+  ❌ plugin/{name}/hooks.js 없이 editor.lib.php 인라인 JS로 submit/restore 처리
+     → 모든 플러그인 로직은 hooks.js로 이관 완료
+
+  ❌ security.json, restore.json 파일 생성
+     → v10에서 제거된 포맷. hooks.js로 대체됨
+
+  ❌ manifest_engine.js 참조
+     → v10에서 제거됨. hooks.js + button.json으로 대체
+
+  ❌ 다른 플러그인의 DOM 요소를 임의로 수정
+     → 각 플러그인은 자신의 블록(.t2-{name}-block)만 소유
+     → cross-plugin 수정은 onContentSet이나 커스텀 이벤트로 협업
+
+
+11. 보안 체크리스트
+────────────────────────────────────────────────────────────────────────────────
+
+  새 플러그인 작성 시 반드시 확인:
+
+  □ button.json의 icon.html은 서버 사이드 개발자만 통제하는가?
+    → 서드파티 JSON 허용 시 strip_tags() whitelist 적용
+
+  □ hooks.js onSubmit에서 XSS 위험 요소를 정리하는가?
+    → <code> 내용: textContent 재설정으로 innerHTML 주입 방지
+    → 사용자 입력이 포함된 속성: escape 처리
+
+  □ hooks.js onRestore에서 악성 콘텐츠 복원을 방지하는가?
+    → DB에 저장된 HTML을 그대로 innerHTML에 넣기 전에 검증
+
+  □ 플러그인 이름이 영숫자/언더스코어/하이픈만 사용하는가?
+    → _t2e_load_plugin_buttons()에서 정규식 검증됨
+    → 새 플러그인도 동일 규칙 준수
+
+  □ json_encode에 JSON_HEX_TAG | JSON_HEX_AMP 플래그를 사용하는가?
+    → </script> 탈출, HTML 엔티티 충돌 방지
+
+  □ 사용자 입력을 HTML 컨텍스트에 삽입 시 htmlspecialchars를 사용하는가?
+    → ENT_QUOTES | ENT_HTML5 | UTF-8
+
+
+12. 버전 업그레이드 호환성
+────────────────────────────────────────────────────────────────────────────────
+
+  v9 → v10 마이그레이션:
+    1. editor.lib.php의 인라인 submit/restore 코드를 각 플러그인 hooks.js로 이관
+    2. security.json → hooks.js onSubmit으로 대체
+    3. restore.json → hooks.js onRestore로 대체
+    4. manifest_engine.js → 제거 (button.json + hooks.js로 대체)
+    5. H.has() 조건문 + else 레거시 분기 → 제거
+
+  v10 내 호환성:
+    - button.json 스펙 변경 시 → 기존 필드 유지, 새 필드 추가만 (삭제 금지)
+    - hooks.js API 변경 시 → js/hooks.js만 수정, 모든 플러그인 hooks.js 검토
+    - editor.lib.php 글로벌 처리 변경 시 → STEP 1/3 영향도 분석 필수
+
+================================================================================
+  문의: dsclub2023@gmail.com
+  최신 버전: https://dsclub.kr/service/editor
+================================================================================
