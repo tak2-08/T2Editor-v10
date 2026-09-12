@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "insertCodeBlock",
+      "plugin": "code",
+      "ariaLabel": "insert code block",
+      "order": 16,
+      "icon": { "type": "material-icons", "name": "code" }
+    }
+  ]
+}

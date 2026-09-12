@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "insertYouTube",
+      "plugin": "video",
+      "ariaLabel": "insert video block",
+      "style": "color:#f04f48",
+      "order": 13,
+      "icon": { "type": "material-icons", "name": "smart_display" }
+    }
+  ]
+}

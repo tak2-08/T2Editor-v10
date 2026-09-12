@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "search",
+      "plugin": "search",
+      "ariaLabel": "web&content search",
+      "order": 17,
+      "icon": { "type": "material-icons", "name": "manage_search" }
+    }
+  ]
+}
