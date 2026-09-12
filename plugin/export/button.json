@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "exportHTML",
+      "plugin": "export",
+      "ariaLabel": "content export",
+      "order": 24,
+      "icon": { "type": "material-icons-outlined", "name": "ios_share" }
+    }
+  ]
+}

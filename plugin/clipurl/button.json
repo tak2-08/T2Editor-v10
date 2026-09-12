@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "createClipUrl",
+      "plugin": "clipurl",
+      "ariaLabel": "clip url",
+      "order": 21,
+      "icon": { "type": "material-icons", "name": "qr_code_2" }
+    }
+  ]
+}

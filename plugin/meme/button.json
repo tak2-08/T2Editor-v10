@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "insertMeme",
+      "plugin": "meme",
+      "ariaLabel": "insert meme",
+      "order": 20,
+      "icon": { "type": "material-icons", "name": "sentiment_very_satisfied" }
+    }
+  ]
+}
