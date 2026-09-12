@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "code": "zh",
+    "plugin": "export",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "export": {
+    "modal_title": "导出文档",
+    "format_label": "格式",
+    "format_html": "HTML",
+    "format_pdf": "PDF",
+    "format_md": "Markdown",
+    "filename_label": "文件名",
+    "filename_placeholder": "document",
+    "btn_export": "导出",
+    "exporting": "导出中...",
+    "export_success": "导出完成",
+    "export_failed": "导出失败",
+    "prompt_html_title": "请输入要导出的 HTML 文件标题：",
+    "default_title": "文档标题",
+    "fallback_title": "T2Editor 导出",
+    "powered_by": "由 T2Editor 创建",
+    "css_video_label": "视频：",
+    "html_downloaded": "HTML 文件已下载。",
+    "prompt_md_filename": "请输入 Markdown 文件名：",
+    "pdf_not_supported": "PDF 导出将在以后支持。",
+    "html_skin_authored_on": "创作于:",
+    "html_skin_exported_date": "导出日期:",
+    "console_template_load_failed": "加载导出模板失败:"
+  }
+}

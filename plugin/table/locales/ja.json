@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "code": "ja",
+    "plugin": "table",
+    "source": "plugin",
+    "version": "10.5.0"
+  },
+  "table": {
+    "modal_title": "表挿入",
+    "rows_label": "行",
+    "cols_label": "列",
+    "header_row_label": "ヘッダー行を含む",
+    "border_label": "枠線",
+    "btn_insert": "表挿入",
+    "add_row": "行追加",
+    "add_col": "列追加",
+    "del_row": "行削除",
+    "del_col": "列削除",
+    "header_row": "ヘッダー行",
+    "header_col": "ヘッダー列",
+    "cols_count_label": "列数:",
+    "rows_count_label": "行数:",
+    "large_table_warning": "大きな表は横スクロールが発生します。",
+    "width_label": "表の幅:",
+    "width_full": "100% (全体)",
+    "width_custom": "直接入力",
+    "border_style_label": "枠線スタイル:",
+    "border_solid": "実線",
+    "border_dashed": "破線",
+    "border_dotted": "点線",
+    "border_double": "二重線",
+    "header_label": "ヘッダー {n}",
+    "cols_short_label": "列:",
+    "rows_short_label": "行:",
+    "cells_short_label": "セル:",
+    "merge_cells": "選択したセルを結合",
+    "merge_cells_hint": "最初のセルを選択し、Shiftキーを押しながら最後のセルをクリックするか、結合ボタンを押してから最後のセルを選択します。",
+    "split_cell": "結合セルを分割",
+    "delete_table": "表削除",
+    "move_up": "上に移動",
+    "move_down": "下に移動"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "code": "ja",
+    "plugin": "draw",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "draw": {
+    "modal_title": "描画",
+    "modal_title_edit": "描画を編集",
+    "tool_pen": "ペン",
+    "tool_eraser": "消しゴム",
+    "tool_line": "直線",
+    "tool_rect": "長方形",
+    "tool_circle": "円",
+    "tool_arrow": "矢印",
+    "tool_text": "テキスト",
+    "color_label": "色",
+    "size_label": "サイズ",
+    "clear_all": "すべて消去",
+    "drawing_loading": "描画中...",
+    "confirm_clear": "すべての内容を消去しますか？",
+    "confirm_delete": "この描画を削除しますか？",
+    "delete_drawing": "描画を削除",
+    "error_save": "描画の保存中にエラーが発生しました:\n{error}",
+    "btn_insert": "画像として挿入",
+    "btn_add": "追加",
+    "btn_update": "更新",
+    "btn_cancel": "キャンセル",
+    "console_url_recovery_failed": "[T2Draw] URL復元失敗、ブロックをスキップ:"
+  }
+}

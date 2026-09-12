@@ -1,0 +1,2972 @@
+/* Path: T2Editor/plugin/collab/collab.css */
+/* Developer note: collab 선택자는 플러그인 루트 아래로 제한하고 공개 본문 표현이 필요하면 css/content.css도 함께 수정한다. */
+/* Collaboration UI tokens support desktop cards and mobile bottom sheets.
+ * Keep standard properties with WebKit fallbacks where Safari still requires them. */
+:root {
+    /* Brand / primary — Material Blue 600 톤 */
+    --t2c-primary: #1976d2;
+    --t2c-primary-dark: #1565c0;
+    --t2c-primary-soft: rgba(25, 118, 210, 0.10);
+    --t2c-primary-ring: rgba(25, 118, 210, 0.22);
+
+    /* Surfaces — Material elevation 0/1/2 */
+    --t2c-surface: #ffffff;
+    --t2c-surface-2: #f5f6f8;
+    --t2c-surface-3: #eceef1;
+
+    /* Text */
+    --t2c-text: #1f1f23;
+    --t2c-text-muted: #5a5d63;
+    --t2c-text-soft: #8a8e95;
+
+    /* Borders */
+    --t2c-border: #e3e5ea;
+    --t2c-border-strong: #cdd0d6;
+
+    /* Semantic */
+    --t2c-danger: #d93025;
+    --t2c-danger-dark: #b3261e;
+    --t2c-success: #1e8e3e;
+    --t2c-warning: #e8710a;
+
+    /* Shadows — Material elevation, flat & soft */
+    --t2c-shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.10), 0 4px 8px rgba(15, 23, 42, 0.06);
+    --t2c-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --t2c-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+
+    /* Radii — minimal & calm */
+    --t2c-radius-lg: 16px;
+    --t2c-radius-md: 12px;
+    --t2c-radius-sm: 8px;
+    --t2c-radius-xs: 6px;
+
+    /* Motion */
+    --t2c-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+html[data-t2editor-theme="dark"] {
+    --t2c-primary: #4a9eff;
+    --t2c-primary-dark: #3b8ee0;
+    --t2c-primary-soft: rgba(74, 158, 255, 0.16);
+    --t2c-primary-ring: rgba(74, 158, 255, 0.28);
+
+    --t2c-surface: #1f1f24;
+    --t2c-surface-2: #26272d;
+    --t2c-surface-3: #2e2f36;
+
+    --t2c-text: #e7e9ee;
+    --t2c-text-muted: #a8acb5;
+    --t2c-text-soft: #777a82;
+
+    --t2c-border: #353841;
+    --t2c-border-strong: #44474f;
+
+    --t2c-shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.30);
+    --t2c-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+    --t2c-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+}
+/* 다크 테마 토스트 — CSS 네이스팅 미지원 브라우저 호환을 위해 평탄화 */
+html[data-t2editor-theme="dark"] .t2-collab-toast-success { background: #1e8e3e; }
+html[data-t2editor-theme="dark"] .t2-collab-toast-error { background: #d93025; }
+
+/* Material Icons 글로벌 정규화 */
+/* 크로스 브라우저: line-height 기본값이 브라우저마다 달라 아이콘 수직 정렬이
+   어긋나는 현상 방지. 모든 .material-icons 에 line-height:1 강제. */
+.material-icons {
+    line-height: 1 !important;
+}
+
+/* 모달 오버레이 / 박스 */
+.t2-collab-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.42);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 99999;
+    padding: 16px;
+    animation: t2c-fade 0.25s var(--t2c-ease);
+}
+@keyframes t2c-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.t2-collab-modal {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    background: var(--t2c-surface);
+    color: var(--t2c-text);
+    border-radius: var(--t2c-radius-lg);
+    width: 100%;
+    max-width: 460px;
+    max-height: min(88vh, 760px);
+    overflow: hidden;
+    overflow-x: hidden;
+    box-shadow: var(--t2c-shadow-lg);
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex; flex-direction: column;
+    animation: t2c-pop 0.32s var(--t2c-ease);
+    position: relative;
+    box-sizing: border-box;
+}
+@keyframes t2c-pop {
+    from { transform: translateY(12px) scale(0.96); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Header */
+.t2-collab-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 22px 14px;
+    border-bottom: 1px solid var(--t2c-border);
+    flex-shrink: 0;
+    gap: 8px;
+    min-width: 0;
+}
+.t2-collab-title-wrap {
+    display: flex; align-items: center; gap: 10px;
+    min-width: 0; flex: 1;
+}
+.t2-collab-title-icon {
+    width: 38px; height: 38px;
+    border-radius: var(--t2c-radius-sm);
+    background: var(--t2c-primary-soft);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--t2c-primary);
+}
+.t2-collab-title-icon .material-icons {
+    font-size: 22px !important;
+}
+.t2-collab-header h3 {
+    margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    color: var(--t2c-text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.t2-collab-close-btn {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--t2c-text-muted);
+    width: 36px; height: 36px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background-color 0.18s var(--t2c-ease), color 0.18s var(--t2c-ease);
+    flex-shrink: 0;
+    padding: 0;
+}
+.t2-collab-close-btn .material-icons { font-size: 20px !important; }
+.t2-collab-close-btn:hover {
+    background: var(--t2c-surface-3); color: var(--t2c-text);
+}
+
+/* Pre / Info panes */
+.t2-collab-pane-pre {
+    padding: 18px 22px 22px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    min-height: 0;
+    box-sizing: border-box;
+    width: 100%;
+}
+/* pane-info 는 CSS 끝부분의 추가 스타일 참고 */
+
+/* Tabs (Material You 스타일 인디케이터) */
+.t2-collab-tabs {
+    position: relative;
+    display: flex; align-items: center;
+    background: var(--t2c-surface-2);
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 18px;
+}
+.t2-collab-tab {
+    flex: 1;
+    background: transparent; border: none;
+    color: var(--t2c-text-muted);
+    font-size: 13px; font-weight: 600;
+    padding: 9px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    position: relative; z-index: 1;
+    transition: color 0.2s var(--t2c-ease);
+}
+.t2-collab-tab .material-icons { font-size: 18px !important; }
+.t2-collab-tab.is-active { color: var(--t2c-primary); }
+.t2-collab-tab-indicator {
+    position: absolute; top: 4px; bottom: 4px;
+    background: var(--t2c-surface);
+    border-radius: 999px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: transform 0.32s var(--t2c-ease), width 0.32s var(--t2c-ease);
+    z-index: 0;
+}
+html[data-t2editor-theme="dark"] .t2-collab-tab-indicator { background: var(--t2c-surface-3); }
+
+/* Pane */
+.t2-collab-pane {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    animation: t2c-fadein 0.25s var(--t2c-ease);
+}
+.t2-collab-pane.is-active { display: flex; }
+@keyframes t2c-fadein {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.t2-collab-desc {
+    margin: 0 0 4px;
+    font-size: 13.5px; color: var(--t2c-text-muted); line-height: 1.5;
+}
+
+/* Fields */
+.t2-collab-field {
+    display: flex; flex-direction: column; gap: 6px;
+}
+.t2-collab-field-label {
+    font-size: 12px; font-weight: 600;
+    color: var(--t2c-text-muted);
+    letter-spacing: 0.02em;
+}
+.t2-collab-field input {
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--t2c-surface-2);
+    border: 1px solid transparent;
+    border-radius: var(--t2c-radius-md);
+    font-size: 14.5px; font-weight: 500;
+    color: var(--t2c-text);
+    box-sizing: border-box;
+    transition: border-color 0.2s var(--t2c-ease), background 0.2s var(--t2c-ease), box-shadow 0.2s var(--t2c-ease);
+    font-family: inherit;
+}
+.t2-collab-field input::placeholder { color: var(--t2c-text-soft); }
+.t2-collab-field input:focus {
+    outline: none;
+    border-color: var(--t2c-primary);
+    background: var(--t2c-surface);
+    box-shadow: 0 0 0 4px var(--t2c-primary-ring);
+}
+html[data-t2editor-theme="dark"] .t2-collab-field input:focus { background: var(--t2c-surface-3); }
+
+/* Checkbox */
+.t2-collab-checkbox {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--t2c-text-muted);
+    cursor: pointer; user-select: none;
+    padding: 6px 2px;
+}
+.t2-collab-checkbox input[type="checkbox"] {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px;
+    border: 2px solid var(--t2c-border-strong);
+    border-radius: 6px; cursor: pointer;
+    position: relative; flex: none;
+    transition: all 0.18s var(--t2c-ease);
+}
+.t2-collab-checkbox input[type="checkbox"]:checked {
+    background: var(--t2c-primary);
+    border-color: var(--t2c-primary);
+}
+.t2-collab-checkbox input[type="checkbox"]:checked::after {
+    content: ''; position: absolute;
+    left: 4px; top: 0px;
+    width: 5px; height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Buttons */
+.t2-collab-btn {
+    -webkit-appearance: none; appearance: none; border: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 18px;
+    border-radius: var(--t2c-radius-md);
+    font-size: 14px; font-weight: 600; letter-spacing: -0.005em;
+    cursor: pointer; user-select: none;
+    transition: transform 0.12s var(--t2c-ease),
+                box-shadow 0.2s var(--t2c-ease),
+                background-color 0.2s var(--t2c-ease),
+                color 0.2s var(--t2c-ease);
+    font-family: inherit;
+    min-height: 44px;
+}
+.t2-collab-btn .material-icons { font-size: 18px !important; }
+.t2-collab-btn:active { transform: scale(0.97); }
+.t2-collab-btn:disabled { cursor: not-allowed; opacity: 0.55; transform: none !important; }
+
+.t2-collab-btn-primary {
+    background: var(--t2c-primary); color: #fff;
+    box-shadow: var(--t2c-shadow-sm);
+}
+.t2-collab-btn-primary:hover:not(:disabled) {
+    background: var(--t2c-primary-dark);
+    box-shadow: var(--t2c-shadow-md);
+}
+.t2-collab-btn-stop {
+    background: var(--t2c-danger); color: #fff;
+    box-shadow: var(--t2c-shadow-sm);
+}
+.t2-collab-btn-stop:hover { background: var(--t2c-danger-dark); }
+.t2-collab-btn-leave {
+    background: var(--t2c-surface-2); color: var(--t2c-text);
+}
+.t2-collab-btn-leave:hover { background: var(--t2c-surface-3); }
+
+/* Icon button (round) */
+.t2-collab-icon-btn {
+    -webkit-appearance: none; appearance: none; border: none;
+    background: transparent;
+    color: var(--t2c-text-muted);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s var(--t2c-ease), color 0.18s var(--t2c-ease);
+    flex: none;
+}
+.t2-collab-icon-btn .material-icons { font-size: 18px !important; }
+.t2-collab-icon-btn:hover { background: var(--t2c-surface-3); color: var(--t2c-primary); }
+.t2-collab-icon-btn-danger:hover { background: rgba(226,59,59,0.12); color: var(--t2c-danger); }
+
+/* Busy / Spinner */
+.t2-collab-busy {
+    display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 18px 0 4px;
+}
+.t2-collab-spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--t2c-primary-soft);
+    border-top-color: var(--t2c-primary);
+    border-radius: 50%;
+    animation: t2c-spin 0.9s linear infinite;
+}
+@keyframes t2c-spin { to { transform: rotate(360deg); } }
+.t2-collab-busy-text {
+    margin: 0; font-size: 13px; color: var(--t2c-text-muted);
+}
+.t2-collab-spin { animation: t2c-spin 1s linear infinite; display: inline-block; }
+
+/* ===== Status card (info pane) =====
+   v2.1.1: 실시간 협업 모달 상단「방코드 / 참가링크 / QR」영역을
+           패널 자체가 세로스크롤 가능하게 자체 컬술 컨테이너로 승격시킨다.
+           - 모바일에서 QR 때문에 채움이 넘치면 그 영역만 스크롤됨
+           - 외부 페이지 스크롤과 별개로 동작 */
+.t2-collab-status-card {
+    background: var(--t2c-surface-2);
+    border: 1px solid var(--t2c-border);
+    border-radius: var(--t2c-radius-lg);
+    padding: 16px 16px 14px;
+    display: flex; flex-direction: column;
+    gap: 10px;
+    /* QR 제거로 공간 축소 + 피커 잘림 방지를 위해 overflow visible */
+    max-height: none; /* [v2.5.0] 제한 제거 — info pane이 스크롤 담당 */
+    overflow: visible; /* [v2.5.0] 상태 피커가 카드 밖에 표시되도록 */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    position: relative; /* [v2.4.0] 피커 absolute 위치 기준 */
+    /* 스크롤바 미세 조정 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--t2c-border-strong) transparent;
+}
+.t2-collab-status-card::-webkit-scrollbar { width: 8px; }
+.t2-collab-status-card::-webkit-scrollbar-thumb {
+    background: var(--t2c-border-strong);
+    border-radius: 4px;
+}
+.t2-collab-status-card::-webkit-scrollbar-track { background: transparent; }
+.t2-collab-status-row {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+}
+.t2-collab-label {
+    font-size: 11.5px; font-weight: 700;
+    color: var(--t2c-text-soft);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    flex: none;
+    min-width: 56px;
+}
+.t2-collab-code-wrap {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--t2c-surface);
+    padding: 6px 6px 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--t2c-border);
+    flex: 1; justify-content: space-between;
+    min-width: 0;
+}
+html[data-t2editor-theme="dark"] .t2-collab-code-wrap { background: var(--t2c-surface-3); }
+.t2-collab-disp-code {
+    font-family: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+    font-size: 16px; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--t2c-text);
+}
+.t2-collab-link-wrap {
+    flex: 1; display: flex; align-items: center; gap: 4px;
+    background: var(--t2c-surface);
+    border: 1px solid var(--t2c-border);
+    border-radius: 999px;
+    padding: 4px 4px 4px 12px;
+    min-width: 0;
+}
+html[data-t2editor-theme="dark"] .t2-collab-link-wrap { background: var(--t2c-surface-3); }
+.t2-collab-share-link {
+    border: none; background: transparent;
+    flex: 1; min-width: 0;
+    color: var(--t2c-text-muted);
+    font-size: 12.5px;
+    padding: 4px 0;
+    font-family: inherit;
+}
+.t2-collab-share-link:focus { outline: none; color: var(--t2c-text); }
+
+/* QR — [v2.2.0] 인라인 QR은 모든 화면에서 숨김, QR 팝업으로 대체 */
+.t2-collab-qr-row {
+    display: none !important;  /* 데스크톱/모바일 모두 인라인 QR 숨김 */
+}
+.t2-collab-qr-box {
+    position: relative;
+    width: 168px; height: 168px;
+    background: #fff;
+    border-radius: var(--t2c-radius-md);
+    border: 1px solid var(--t2c-border);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+}
+html[data-t2editor-theme="dark"] .t2-collab-qr-box { background: #fff; }
+.t2-collab-qr-loading {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    color: #5f6368;
+}
+.t2-collab-qr-loading .material-icons { font-size: 36px !important; opacity: 0.6; }
+.t2-collab-qr-loading small { font-size: 11px; }
+.t2-collab-qr-img {
+    width: 100%; height: 100%; object-fit: contain;
+    display: block;
+}
+.t2-collab-qr-dl {
+    position: absolute; top: 6px; right: 6px;
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.18s var(--t2c-ease);
+}
+.t2-collab-qr-dl:hover { transform: scale(1.06); }
+.t2-collab-qr-dl .material-icons { font-size: 16px !important; color: #333; }
+.t2-collab-qr-tip {
+    margin: 0; font-size: 12px; color: var(--t2c-text-muted); text-align: center;
+}
+
+/* Meta row */
+.t2-collab-meta-row {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    border-top: 1px dashed var(--t2c-border);
+    padding-top: 12px;
+}
+.t2-collab-self-color {
+    width: 14px; height: 14px; border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
+    flex: none;
+}
+.t2-collab-disp-nick {
+    font-weight: 600; color: var(--t2c-text); font-size: 13.5px;
+}
+
+/* Mode badge */
+.t2-collab-mode-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11.5px; font-weight: 600;
+    background: var(--t2c-surface-3); color: var(--t2c-text-muted);
+    margin-left: auto;
+}
+.t2-collab-mode-badge .material-icons { font-size: 14px !important; }
+.t2-collab-mode-p2p { background: rgba(46, 125, 50, 0.14); color: #2e7d32; }
+.t2-collab-mode-php { background: rgba(239, 108, 0, 0.14); color: #ef6c00; }
+html[data-t2editor-theme="dark"] .t2-collab-mode-p2p { background: rgba(129, 199, 132, 0.18); color: #81c784; }
+html[data-t2editor-theme="dark"] .t2-collab-mode-php { background: rgba(255, 183, 77, 0.18); color: #ffb74d; }
+
+/* Section title */
+.t2-collab-section-title {
+    display: flex; align-items: center; gap: 8px;
+    margin: 20px 0 8px;
+    font-size: 13px; font-weight: 700; color: var(--t2c-text-muted);
+    letter-spacing: -0.005em;
+}
+.t2-collab-section-title .material-icons { font-size: 18px !important; }
+
+/* Users list */
+.t2-collab-users-list {
+    list-style: none; margin: 0; padding: 4px;
+    border-radius: var(--t2c-radius-md);
+    background: var(--t2c-surface-2);
+    border: 1px solid var(--t2c-border);
+    max-height: 320px; overflow-y: auto;  /* [v2.2.0] 220→320: QR 제거로 확보한 공간 반영 */
+    /* 스크롤 가시성 개선 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--t2c-border-strong) transparent;
+    position: relative;
+}
+.t2-collab-users-list::-webkit-scrollbar { width: 6px; }
+.t2-collab-users-list::-webkit-scrollbar-thumb {
+    background: var(--t2c-border-strong);
+    border-radius: 3px;
+}
+.t2-collab-users-list::-webkit-scrollbar-track { background: transparent; }
+.t2-collab-user-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--t2c-radius-sm);
+    transition: background 0.18s var(--t2c-ease);
+    min-height: 44px; /* 모바일 터치 타겟 최소 높이 */
+}
+.t2-collab-user-item:hover { background: var(--t2c-surface-3); }
+/* 새 참가자 하이라이트 애니메이션 */
+.t2-collab-user-item.t2c-user-enter {
+    animation: t2c-user-enter 0.6s var(--t2c-ease);
+}
+@keyframes t2c-user-enter {
+    0%   { background: var(--t2c-primary-soft); transform: translateX(-4px); }
+    40%  { background: var(--t2c-primary-soft); }
+    100% { background: transparent; transform: translateX(0); }
+}
+.t2-collab-user-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex: none;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
+}
+.t2-collab-user-name {
+    flex: 1; min-width: 0;
+    font-size: 13.5px; font-weight: 600; color: var(--t2c-text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.t2-collab-user-badges { display: inline-flex; gap: 4px; }
+.t2-collab-badge {
+    font-size: 10.5px; font-weight: 700;
+    padding: 2px 7px; border-radius: 999px;
+    letter-spacing: 0.02em;
+}
+.t2-collab-badge-me { background: var(--t2c-primary-soft); color: var(--t2c-primary); }
+.t2-collab-badge-host { background: rgba(255,180,77,0.18); color: #ef6c00; }
+html[data-t2editor-theme="dark"] .t2-collab-badge-host { color: #ffb74d; }
+.t2-collab-user-actions { display: inline-flex; gap: 2px; }
+.t2-collab-user-empty {
+    text-align: center; padding: 18px 8px;
+    color: var(--t2c-text-soft); font-size: 13px;
+}
+
+/* Actions row */
+.t2-collab-actions-row {
+    display: flex; gap: 10px; margin-top: 18px;
+    justify-content: flex-end;
+}
+
+/* Remote Cursor Layer */
+.t2-collab-cursor-layer {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 5;
+}
+.t2-collab-remote-caret {
+    position: absolute; top: 0; left: 0;
+    width: 2px; height: 18px;
+    background: var(--t2c-primary);
+    border-radius: 1px;
+    pointer-events: none;
+    will-change: transform;
+    transition: transform 0.12s var(--t2c-ease);
+    box-shadow: 0 0 0 0.5px rgba(255,255,255,0.4);
+}
+.t2-collab-remote-caret::before {
+    content: '';
+    position: absolute; top: -3px; left: -2px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: inherit;
+}
+.t2-collab-remote-caret.is-pulse {
+    animation: t2c-caret-pulse 1.4s var(--t2c-ease);
+}
+@keyframes t2c-caret-pulse {
+    0%   { box-shadow: 0 0 0 0 currentColor; }
+    50%  { box-shadow: 0 0 0 14px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+.t2-collab-remote-label {
+    position: absolute; top: 0; left: 0;
+    background: var(--t2c-primary);
+    color: #fff;
+    font-size: 11px; font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 0 6px 6px 6px; /* 커서 아래 왼쪽 상단 꼭지 → 커서에 달린 느낌 */
+    pointer-events: none;
+    white-space: nowrap;
+    transform-origin: top left;
+    opacity: 0;
+    transform: translate(0, 0) scale(0.9);
+    transition: opacity 0.25s var(--t2c-ease), transform 0.25s var(--t2c-ease);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 2;
+    max-width: 160px; overflow: hidden; text-overflow: ellipsis;
+}
+.t2-collab-remote-label.is-active {
+    opacity: 0.85; transform: translate(0,0) scale(1); /* 15% 투명 → 아래 콘텐츠도 보임 */
+}
+.t2-collab-remote-selection {
+    position: absolute; top: 0; left: 0;
+    pointer-events: none;
+    background: var(--t2c-primary-soft);
+    border-radius: 2px;
+    mix-blend-mode: multiply;
+    will-change: transform, width, height;
+}
+html[data-t2editor-theme="dark"] .t2-collab-remote-selection {
+    mix-blend-mode: screen;
+}
+
+/* Toast (fallback) */
+.t2-collab-toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translate(-50%, 20px);
+    background: rgba(31, 35, 40, 0.96);
+    color: #fff; font-size: 13px; font-weight: 500;
+    padding: 10px 16px; border-radius: 999px;
+    box-shadow: var(--t2c-shadow-md);
+    opacity: 0;
+    transition: opacity 0.25s var(--t2c-ease), transform 0.25s var(--t2c-ease);
+    z-index: 100000;
+}
+.t2-collab-toast.is-visible {
+    opacity: 1; transform: translate(-50%, 0);
+}
+.t2-collab-toast-success { background: #1c7c34; }
+.t2-collab-toast-error   { background: #c63030; }
+
+/* Body lock when modal open (mobile-friendly) */
+body.t2-collab-modal-open { overflow: hidden; }
+
+/* Mobile (≤640px): Bottom-sheet */
+@media (max-width: 640px) {
+    .t2-collab-modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+    .t2-collab-modal {
+        max-width: 100%;
+        width: 100%;
+        max-height: 94vh;
+        border-radius: 20px 20px 0 0;
+        animation: t2c-slide-up 0.34s var(--t2c-ease);
+        padding-top: 8px;
+    }
+    .t2-collab-modal::before {
+        content: '';
+        display: block;
+        width: 40px; height: 4px;
+        background: var(--t2c-border-strong);
+        border-radius: 2px;
+        margin: 4px auto 6px;
+        flex-shrink: 0;
+    }
+    .t2-collab-header {
+        padding: 8px 16px 10px;
+    }
+    .t2-collab-header h3 { font-size: 16px; }
+    .t2-collab-pane-pre { padding: 12px 16px 28px; }
+    .t2-collab-btn { padding: 11px 14px; font-size: 14px; min-height: 42px; }
+    .t2-collab-field input { padding: 13px 14px; font-size: 16px; }
+
+    /* 모바일 퍼스트: 유저 리스트 세로 폭 확대 (flex:1 처리는 하단 공통 블록에서) */
+    .t2-collab-users-list {
+        padding-bottom: 8px;
+    }
+    .t2-collab-user-item {
+        padding: 10px 12px;
+        min-height: 48px;
+    }
+    .t2-collab-user-name { font-size: 14px; }
+
+    /* 모바일: 액션 버튼 영역 축소 (하단 sticky는 하단 공통 블록에서 처리) */
+    .t2-collab-actions-row {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 6px;
+        margin-top: 0;
+    }
+    .t2-collab-actions-row .t2-collab-btn {
+        width: auto;
+        flex: 1;
+        min-width: 0;
+        padding: 10px 12px;
+        font-size: 13px;
+        min-height: 40px;
+        gap: 4px;
+    }
+    .t2-collab-actions-row .t2-collab-btn .material-icons { font-size: 16px !important; }
+
+    /* 모바일: 상태카드 접이식 (하단 최적화 블록에서 상세 처리) */
+    /* 상태카드 접기/펼치기 세부 스타일은 하단 '모바일 퍼스트' 블록에서 처리됨 */
+    /* QR 행은 전역에서 이미 숨김 — 모바일 중복 규칙 제거 */
+    /* 인라인 QR 토글 버튼도 전역에서 불필요 */
+
+    .t2-collab-status-row { flex-direction: row; }
+    .t2-collab-disp-code { font-size: 16px; }
+    .t2-collab-mode-badge { margin-left: 0; }
+    /* 상태 패널 내부: 새 레이아웃에서는 마스크 불필요 */
+    .t2c-info-pane[data-infopane="status"] {
+        padding: 0 12px 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    }
+    .t2c-info-tabs { margin: 0 12px 8px; }
+
+    /* 모바일: 섹션 타이틀 간격 축소 */
+    .t2-collab-section-title {
+        margin: 12px 0 6px;
+        font-size: 12px;
+    }
+}
+@keyframes t2c-slide-up {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+}
+
+/* Small-tablet adjustments */
+@media (min-width: 641px) and (max-width: 880px) {
+    .t2-collab-modal { max-width: 440px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .t2-collab-modal, .t2-collab-modal-overlay,
+    .t2-collab-pane, .t2-collab-spinner,
+    .t2-collab-remote-caret, .t2-collab-remote-label,
+    .t2-collab-user-item.t2c-user-enter,
+    .t2-collab-users-list.t2c-scroll-hint::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* QR 토글 버튼 (모바일에서만 표시) */
+.t2c-qr-toggle {
+    display: none; /* 데스크톱에서는 숨김 */
+    align-items: center; justify-content: center; gap: 4px;
+    background: var(--t2c-surface-2); border: 1px solid var(--t2c-border);
+    border-radius: var(--t2c-radius-xs);
+    padding: 6px 12px; cursor: pointer;
+    font-size: 12px; font-weight: 600; color: var(--t2c-text-muted);
+    font-family: inherit;
+    transition: background 0.18s, color 0.18s;
+    width: 100%;
+}
+.t2c-qr-toggle:hover { background: var(--t2c-surface-3); color: var(--t2c-primary); }
+.t2c-qr-toggle .material-icons { font-size: 16px !important; }
+
+/* Lock button */
+.t2-collab-btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--t2c-border-strong);
+    color: var(--t2c-text-muted);
+}
+.t2-collab-btn-outline:hover { background: var(--t2c-surface-2); color: var(--t2c-text); }
+.t2-collab-btn-outline.is-locked {
+    border-color: var(--t2c-danger);
+    color: var(--t2c-danger);
+}
+.t2c-editor-locked {
+    cursor: not-allowed;
+    opacity: 0.72;
+    pointer-events: none;
+}
+
+/* Info 내부 탭 (상태 / 채팅) */
+.t2c-info-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--t2c-surface-2);
+    border-radius: var(--t2c-radius-sm);
+    padding: 3px;
+    margin: 0 22px 14px;
+    flex-shrink: 0;
+}
+@media (max-width: 640px) {
+    .t2c-info-tabs { margin: 0 18px 12px; }
+}
+.t2c-info-tab {
+    flex: 1;
+    background: transparent; border: none;
+    color: var(--t2c-text-muted);
+    font-size: 13px; font-weight: 600;
+    padding: 8px 10px;
+    border-radius: var(--t2c-radius-xs);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+    position: relative;
+    transition: background 0.18s var(--t2c-ease), color 0.18s var(--t2c-ease);
+    font-family: inherit;
+}
+.t2c-info-tab .material-icons { font-size: 17px !important; }
+.t2c-info-tab.is-active {
+    background: var(--t2c-surface);
+    color: var(--t2c-primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+}
+html[data-t2editor-theme="dark"] .t2c-info-tab.is-active { background: var(--t2c-surface-3); }
+
+/* 읽지 않은 채팅 배지 */
+.t2c-chat-unread {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 18px; height: 18px;
+    background: var(--t2c-danger);
+    color: #fff;
+    font-size: 10px; font-weight: 700;
+    border-radius: 999px;
+    padding: 0 4px;
+    margin-left: 2px;
+}
+
+/* 채팅 패널 */
+.t2c-chat-msgs.t2c-drag-over {
+    background: var(--t2c-primary-soft);
+    border: 2px dashed var(--t2c-primary);
+    border-radius: var(--t2c-radius-sm);
+}
+/* 메시지 말풍선 */
+.t2c-msg-wrap {
+    display: flex; flex-direction: column; gap: 2px;
+    max-width: 80%;
+}
+.t2c-msg-me { align-self: flex-end; align-items: flex-end; }
+.t2c-msg-other { align-self: flex-start; align-items: flex-start; }
+.t2c-msg-nick {
+    font-size: 11px; font-weight: 700;
+    margin-bottom: 2px;
+    padding: 0 4px;
+}
+.t2c-msg-bubble {
+    padding: 8px 12px;
+    border-radius: 16px;
+    font-size: 13.5px; line-height: 1.45;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    overflow: hidden;
+}
+.t2c-msg-me .t2c-msg-bubble {
+    background: var(--t2c-primary);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+.t2c-msg-other .t2c-msg-bubble {
+    background: var(--t2c-surface-2);
+    color: var(--t2c-text);
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--t2c-border);
+}
+.t2c-msg-time {
+    font-size: 10.5px; color: var(--t2c-text-soft);
+    padding: 0 4px;
+}
+/* 파일 버블 */
+.t2c-msg-file {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px !important;
+    min-width: 180px;
+    max-width: 100%;
+    overflow: hidden;
+    background: var(--t2c-surface-3) !important;
+    color: var(--t2c-text) !important;
+    border: 1px solid var(--t2c-border) !important;
+    box-sizing: border-box;
+}
+.t2c-file-icon { font-size: 26px !important; color: var(--t2c-primary); flex: none; }
+.t2c-file-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; overflow: hidden; max-width: calc(100% - 80px); }
+.t2c-file-name { font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.t2c-file-size { font-size: 11px; color: var(--t2c-text-muted); }
+.t2c-dl-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--t2c-primary); color: #fff;
+    text-decoration: none; flex: none;
+    transition: transform 0.15s var(--t2c-ease), background 0.15s;
+}
+.t2c-dl-btn:hover { background: var(--t2c-primary-dark); transform: scale(1.04); }
+.t2c-dl-btn .material-icons { font-size: 18px !important; }
+.t2c-dl-progress {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--t2c-surface-3); flex: none;
+}
+.t2c-dl-progress .material-icons { font-size: 18px !important; color: var(--t2c-text-muted); }
+
+/* 타이핑 인디케이터 */
+.t2c-typing-bar {
+    min-height: 22px;
+    padding: 0 14px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--t2c-text-muted);
+    flex-shrink: 0;
+}
+.t2c-typing-dots {
+    display: inline-flex; gap: 3px; align-items: center; flex-shrink: 0;
+}
+.t2c-typing-dots span {
+    display: block; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--t2c-text-soft);
+    animation: t2c-typing 1.2s infinite;
+}
+.t2c-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.t2c-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes t2c-typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* 채팅 입력창 */
+.t2c-chat-input-row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--t2c-border);
+    flex-shrink: 0;
+    background: var(--t2c-surface);
+}
+.t2c-attach-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 50%;
+    cursor: pointer; flex: none;
+    color: var(--t2c-text-muted);
+    transition: background 0.18s var(--t2c-ease), color 0.18s;
+}
+.t2c-attach-btn:hover { background: var(--t2c-surface-2); color: var(--t2c-primary); }
+.t2c-attach-btn .material-icons { font-size: 20px !important; }
+.t2c-attach-btn .t2c-file-input { display: none; }
+.t2c-attach-btn.is-disabled { opacity: 0.38; pointer-events: none; }
+.t2c-chat-txt {
+    flex: 1; min-width: 0;
+    background: var(--t2c-surface-2);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    padding: 9px 14px;
+    font-size: 13.5px; color: var(--t2c-text);
+    font-family: inherit;
+    transition: border-color 0.18s, box-shadow 0.18s;
+}
+.t2c-chat-txt:focus {
+    outline: none;
+    border-color: var(--t2c-primary);
+    box-shadow: 0 0 0 3px var(--t2c-primary-ring);
+}
+.t2c-chat-txt::placeholder { color: var(--t2c-text-soft); }
+.t2c-send-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--t2c-primary); border: none;
+    color: #fff; cursor: pointer; flex: none;
+    transition: transform 0.15s var(--t2c-ease), background 0.18s;
+}
+.t2c-send-btn:hover { background: var(--t2c-primary-dark); transform: scale(1.03); }
+.t2c-send-btn .material-icons { font-size: 18px !important; }
+
+/* 채팅 헤더 (채널 탭 + 검색 토글) */
+.t2c-chat-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 14px 4px;
+    border-bottom: 1px solid var(--t2c-border);
+    flex-shrink: 0;
+    gap: 6px;
+    min-width: 0;
+}
+.t2c-ch-tabs {
+    display: flex; align-items: center; gap: 4px;
+    flex: 1; min-width: 0; overflow: hidden;
+}
+.t2c-ch-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: transparent; border: none; cursor: pointer;
+    font-size: 12.5px; font-weight: 600; font-family: inherit;
+    color: var(--t2c-text-muted);
+    padding: 5px 9px; border-radius: 20px;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+}
+.t2c-ch-btn .material-icons { font-size: 15px !important; }
+.t2c-ch-btn.is-active { background: var(--t2c-primary-soft); color: var(--t2c-primary); }
+.t2c-ch-btn:not(.is-active):hover { background: var(--t2c-surface-2); color: var(--t2c-text); }
+
+/* DM pill */
+.t2c-dm-pill {
+    display: none; align-items: center; gap: 4px;
+    background: var(--t2c-primary-soft); color: var(--t2c-primary);
+    border-radius: 20px; padding: 4px 6px 4px 10px;
+    font-size: 12px; font-weight: 700;
+    max-width: 160px; min-width: 0;
+}
+.t2c-dm-pill .material-icons { font-size: 13px !important; flex-shrink: 0; }
+.t2c-dm-pill-nick { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.t2c-dm-close-btn {
+    background: transparent; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 50%;
+    color: var(--t2c-primary); padding: 0; flex-shrink: 0;
+}
+.t2c-dm-close-btn .material-icons { font-size: 14px !important; }
+.t2c-dm-close-btn:hover { background: var(--t2c-primary); color: #fff; }
+
+/* 검색 토글 버튼 */
+.t2c-search-toggle-btn {
+    background: transparent; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    color: var(--t2c-text-muted); flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+}
+.t2c-search-toggle-btn .material-icons { font-size: 18px !important; }
+.t2c-search-toggle-btn:hover { background: var(--t2c-surface-2); color: var(--t2c-text); }
+.t2c-search-toggle-btn.is-active { color: var(--t2c-primary); background: var(--t2c-primary-soft); }
+
+/* 검색 바 */
+.t2c-search-bar {
+    display: none; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    background: var(--t2c-surface-2);
+    border-bottom: 1px solid var(--t2c-border);
+    flex-shrink: 0;
+}
+.t2c-search-icon { color: var(--t2c-text-muted); font-size: 17px !important; flex-shrink: 0; }
+.t2c-search-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-size: 13px; color: var(--t2c-text); font-family: inherit;
+}
+.t2c-search-input::placeholder { color: var(--t2c-text-soft); }
+.t2c-search-count {
+    font-size: 11px; color: var(--t2c-primary); font-weight: 700;
+    white-space: nowrap; flex-shrink: 0;
+}
+.t2c-search-close-btn {
+    background: transparent; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    color: var(--t2c-text-muted); padding: 0; flex-shrink: 0;
+}
+.t2c-search-close-btn .material-icons { font-size: 16px !important; }
+.t2c-search-close-btn:hover { background: var(--t2c-surface-3); }
+
+/* 검색 하이라이트 */
+mark.t2c-highlight {
+    background: hsl(50 100% 75% / 0.55);
+    color: inherit; border-radius: 2px; padding: 0 1px;
+}
+html[data-t2editor-theme="dark"] mark.t2c-highlight { background: hsl(50 100% 40% / 0.45); }
+
+/* 버블 레이아웃 개선 (reply + actions) */
+.t2c-bubble-row {
+    display: flex; align-items: flex-end; gap: 4px;
+}
+.t2c-msg-me .t2c-bubble-row { flex-direction: row; }   /* actions 왼쪽 */
+.t2c-msg-other .t2c-bubble-row { flex-direction: row; } /* actions 오른쪽 */
+
+.t2c-bubble-col {
+    display: flex; flex-direction: column; gap: 2px; min-width: 0;
+}
+
+/* 답장 액션 버튼 */
+.t2c-msg-actions {
+    display: flex; flex-direction: column; gap: 2px;
+    opacity: 0; transition: opacity 0.15s;
+    flex-shrink: 0;
+    position: relative;   /* [v3.2.4] 유지 — 다른 absolute 자식(있다면) 기준 */
+}
+.t2c-msg-wrap:hover .t2c-msg-actions { opacity: 1; }
+.t2c-action-btn {
+    background: var(--t2c-surface-2); border: 1px solid var(--t2c-border);
+    border-radius: 50%; width: 26px; height: 26px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--t2c-text-muted);
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0; padding: 0;
+}
+.t2c-action-btn .material-icons { font-size: 14px !important; }
+.t2c-action-btn:hover { background: var(--t2c-primary-soft); color: var(--t2c-primary); border-color: var(--t2c-primary); }
+
+/* DM 태그 */
+.t2c-dm-tag {
+    display: inline-flex; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 700; color: var(--t2c-primary);
+    margin-bottom: 1px;
+}
+.t2c-dm-tag .material-icons { font-size: 11px !important; }
+
+/* DM 메시지 말풍선 테두리 강조 */
+.t2c-msg-dm .t2c-msg-bubble { border: 1px solid var(--t2c-primary) !important; }
+
+/* 사용자 목록 DM 배지 */
+.t2c-user-dm-btn { position: relative; }
+.t2c-dm-user-badge {
+    position: absolute; top: -4px; right: -4px;
+    background: var(--t2c-danger); color: #fff;
+    font-size: 9px; font-weight: 700;
+    border-radius: 999px; padding: 1px 3px;
+    min-width: 14px; text-align: center; line-height: 1.4;
+    pointer-events: none;
+}
+
+/* 답장 인용 (말풍선 위) */
+.t2c-reply-quote {
+    display: flex; align-items: stretch; gap: 7px;
+    background: var(--t2c-surface-3);
+    border-radius: 8px 8px 0 0;
+    padding: 5px 9px;
+    cursor: pointer;
+    max-width: 100%;
+    border: 1px solid var(--t2c-border);
+    border-bottom: none;
+    position: relative;
+    overflow: hidden;
+}
+.t2c-reply-quote-bar {
+    width: 3px; border-radius: 3px; flex-shrink: 0;
+    background: var(--t2c-primary);
+}
+.t2c-reply-quote-body {
+    display: flex; flex-direction: column; gap: 1px;
+    min-width: 0; flex: 1;
+}
+.t2c-reply-quote-nick {
+    font-size: 11px; font-weight: 700; color: var(--t2c-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.t2c-reply-quote-text {
+    font-size: 11.5px; color: var(--t2c-text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* 말풍선이 reply-quote 에 달릴 때 상단 radius 제거 */
+.t2c-bubble-col .t2c-reply-quote + .t2c-msg-bubble {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-top: none !important;
+}
+
+/* 답장 미리보기 (입력창 위) */
+.t2c-reply-preview {
+    display: none; align-items: center; gap: 8px;
+    padding: 7px 12px;
+    background: var(--t2c-primary-soft);
+    border-top: 1px solid var(--t2c-border);
+    border-left: 3px solid var(--t2c-primary);
+    flex-shrink: 0;
+}
+.t2c-reply-preview-bar { display: none; } /* 구조용, 실제 bar는 border-left */
+.t2c-reply-preview-body {
+    flex: 1; min-width: 0;
+    display: flex; flex-direction: column; gap: 1px;
+}
+.t2c-reply-preview-nick {
+    font-size: 11.5px; font-weight: 700; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+}
+.t2c-reply-preview-text {
+    font-size: 12px; color: var(--t2c-text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.t2c-reply-cancel-btn {
+    background: transparent; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    color: var(--t2c-text-muted); flex-shrink: 0; padding: 0;
+}
+.t2c-reply-cancel-btn .material-icons { font-size: 16px !important; }
+.t2c-reply-cancel-btn:hover { background: var(--t2c-surface-3); }
+
+/* 이전 세션 구분자 */
+.t2c-cache-sep {
+    display: flex; align-items: center; gap: 8px;
+    margin: 8px 0;
+    color: var(--t2c-text-soft); font-size: 11px;
+}
+.t2c-cache-sep::before, .t2c-cache-sep::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--t2c-border);
+}
+.t2c-cache-sep span { white-space: nowrap; padding: 0 4px; }
+
+/* 모바일 추가 조정 */
+@media (max-width: 640px) {
+    .t2c-chat-header { padding: 5px 10px 4px; }
+    .t2c-action-btn { width: 28px; height: 28px; } /* 터치 타겟 */
+    .t2c-msg-actions { opacity: 1; } /* 모바일: 항상 표시 */
+    /* 모바일에서 리액션 트리거 버튼 가시성 강화 */
+    .t2c-action-btn.t2c-react-trigger {
+        background: var(--t2c-primary-soft);
+        border-color: var(--t2c-primary);
+        color: var(--t2c-primary);
+    }
+}
+
+
+/* 모바일 채팅 조정 */
+@media (max-width: 640px) {
+    .t2c-chat-msgs { padding: 6px 10px; }
+    .t2c-chat-input-row { padding: 8px 10px 12px; gap: 4px; }
+    .t2c-msg-wrap { max-width: 88%; }
+    .t2c-chat-txt { font-size: 16px; } /* iOS 줌 방지 */
+}
+
+/* pane-info: flex 컨테이너로 표시 시 올바른 스크롤 체인 */
+.t2-collab-pane-info {
+    display: none; /* JS에서 display:flex 로 전환 */
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    padding-top: 10px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* 내부 탭 패널 공통 */
+.t2c-info-pane {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+.t2c-info-pane.is-active { display: flex; }
+
+/* 상태 패널: 세로 스크롤 허용 */
+.t2c-info-pane[data-infopane="status"] {
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 22px 22px;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--t2c-border-strong) transparent;
+}
+.t2c-info-pane[data-infopane="status"].is-active { display: flex; }
+
+/* 모바일 퍼스트: 상태 패널 레이아웃 최적화 */
+/* 유저 리스트가 가능한 많은 세로 공간을 차지하도록
+   상태카드는 접이식 + 액션바는 하단 고정 + 유저리스트만 스크롤 */
+@media (max-width: 640px) {
+    .t2c-info-pane[data-infopane="status"] {
+        padding: 0 12px 0;
+        gap: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 상태카드: 모바일에서는 접기/펼치기 가능, 기본 접힘 */
+    .t2-collab-status-card {
+        max-height: 320px; /* [v2.1.5] 축소: QR 오버레이 분리로 공간 절약 */
+        overflow: visible; /* [v2.4.0] 상태 피커 잘림 방지 — 피커가 카드 밖으로 나갈 수 있게 */
+        transition: max-height 0.3s var(--t2c-ease);
+        flex-shrink: 0;
+        gap: 8px;
+        padding: 12px 12px 10px;
+        position: relative; /* [v2.4.0] 피커 absolute 위치 기준 */
+    }
+    .t2-collab-status-card.t2c-status-collapsed {
+        max-height: 54px; /* [v2.1.5] 컴팩트 바 내 QR 버튼(32px) + 패딩(22px) = 54px */
+        overflow: hidden;
+    }
+    /* 접힌 상태카드: 코드 + 모드 배지만 한 줄에 표시 */
+    .t2-collab-status-card.t2c-status-collapsed .t2-collab-status-row,
+    .t2-collab-status-card.t2c-status-collapsed .t2-collab-qr-row,
+    .t2-collab-status-card.t2c-status-collapsed .t2c-qr-toggle,
+    .t2-collab-status-card.t2c-status-collapsed .t2-collab-meta-row {
+        display: none;
+    }
+    /* 접힘 상태에서도 상태 피커는 표시 (position:fixed이므로 카드 영역과 무관) */
+    .t2-collab-status-card.t2c-status-collapsed .t2c-status-compact-bar {
+        display: flex;
+    }
+    /* 컴팩트 바: 상태점 + QR 버튼 + 펼치기 */
+    .t2c-status-compact-bar {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        width: 100%;
+        cursor: pointer;
+    }
+    .t2c-status-compact-left {
+        display: flex; align-items: center; gap: 6px;
+        min-width: 0; flex: 1;
+    }
+    .t2c-compact-status-dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        flex-shrink: 0; cursor: pointer;
+        transition: transform 0.15s;
+    }
+    .t2c-compact-status-dot:active { transform: scale(1.3); }
+    .t2c-compact-status-label {
+        font-size: 11px; font-weight: 600; color: var(--t2c-text-muted);
+        flex-shrink: 0;
+    }
+    .t2c-status-compact-code {
+        font-family: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+        font-size: 14px; font-weight: 700; letter-spacing: 0.08em;
+        color: var(--t2c-text);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .t2c-compact-right {
+        display: flex; align-items: center; gap: 4px;
+        flex-shrink: 0;
+    }
+    .t2c-compact-qr-btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 32px; height: 32px;
+        background: var(--t2c-surface-3); border: 1px solid var(--t2c-border);
+        border-radius: 8px; cursor: pointer;
+        color: var(--t2c-text-muted);
+        transition: background 0.15s, color 0.15s;
+        padding: 0;
+    }
+    .t2c-compact-qr-btn:hover { background: var(--t2c-primary-soft); color: var(--t2c-primary); }
+    .t2c-compact-qr-btn .material-icons { font-size: 18px !important; }
+    .t2c-status-expand-hint {
+        display: inline-flex; align-items: center; gap: 2px;
+        font-size: 11px; color: var(--t2c-text-soft); font-weight: 500;
+    }
+    .t2c-status-expand-hint .material-icons { font-size: 14px !important; }
+
+    /* 유저 리스트: 남은 공간 모두 차지 + 내부 스크롤 */
+    .t2-collab-users-list {
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 스크롤 힌트: 하단 그림자 깜박임으로 스크롤 가능성 암시 */
+    .t2-collab-users-list.t2c-scroll-hint::after {
+        content: '';
+        position: sticky;
+        bottom: 0;
+        display: block;
+        height: 24px;
+        background: linear-gradient(to bottom, transparent, var(--t2c-surface-2));
+        animation: t2c-scroll-shadow 1.2s var(--t2c-ease) 2;
+        pointer-events: none;
+    }
+    @keyframes t2c-scroll-shadow {
+        0%   { opacity: 0; }
+        30%  { opacity: 1; }
+        70%  { opacity: 1; }
+        100% { opacity: 0; }
+    }
+
+    /* 액션바: 하단 고정 + 압축 레이아웃 */
+    .t2-collab-actions-row {
+        flex-shrink: 0;
+        background: var(--t2c-surface);
+        border-top: 1px solid var(--t2c-border);
+        margin: 6px -12px 0;
+        padding: 8px 12px 10px;
+        z-index: 5;
+    }
+    .t2-collab-actions-row .t2-collab-btn {
+        flex: none;
+        padding: 8px 10px;
+        font-size: 12px;
+        min-height: 36px;
+        gap: 3px;
+    }
+    .t2-collab-actions-row .t2-collab-btn .material-icons { font-size: 15px !important; }
+    /* 나가기 버튼: 모바일에서는 텍스트 숨기고 아이콘만 */
+    .t2c-lock-label { display: none; }
+
+    /* 섹션 타이틀: 참가자 수 배지 추가 */
+    .t2c-participant-count {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-width: 18px; height: 18px;
+        background: var(--t2c-primary-soft); color: var(--t2c-primary);
+        font-size: 10px; font-weight: 700;
+        border-radius: 999px; padding: 0 5px;
+        margin-left: 4px;
+    }
+    /* 섹션 타이틀 간격 축소 */
+    .t2-collab-section-title {
+        flex-shrink: 0;
+    }
+}
+/* 데스크톱에서는 참가자 수 배지 작게 */
+@media (min-width: 641px) {
+    .t2c-status-compact-bar { display: none !important; }
+    .t2c-participant-count {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-width: 18px; height: 18px;
+        background: var(--t2c-primary-soft); color: var(--t2c-primary);
+        font-size: 10px; font-weight: 700;
+        border-radius: 999px; padding: 0 5px;
+        margin-left: 4px;
+    }
+}
+
+/* 채팅 패널: 내부에서 scroller 관리 */
+.t2c-info-pane[data-infopane="chat"] {
+    overflow: hidden;
+}
+.t2c-chat-msgs {
+    flex: 1; min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 14px;
+    display: flex; flex-direction: column; gap: 6px;
+    scroll-behavior: smooth;
+}
+
+/* 자리비움 / 상태 시스템 */
+/* 아바타 래퍼 (색상 dot + presence dot 겹치기) */
+.t2c-avatar-wrap {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+}
+.t2c-self-avatar .t2-collab-self-color {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: inline-block;
+}
+
+/* Presence dot (상태 표시 점) */
+.t2c-presence-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block; flex-shrink: 0;
+    border: 2px solid var(--t2c-surface);
+    position: absolute; bottom: -1px; right: -1px;
+    pointer-events: none;
+}
+/* 유저 목록 아바타 래퍼 */
+.t2-collab-user-item .t2c-avatar-wrap { width: 28px; height: 28px; }
+.t2-collab-user-item .t2-collab-user-dot { width: 28px; height: 28px; border-radius: 50%; display: inline-block; }
+.t2-collab-user-item .t2c-presence-dot { width: 9px; height: 9px; border: 2px solid var(--t2c-surface); }
+
+/* 상태별 색상 */
+.t2c-s-online { background: #22c55e; }
+.t2c-s-away   { background: #f59e0b; }
+.t2c-s-busy   { background: #ef4444; }
+.t2c-s-dnd    { background: #94a3b8; }
+
+/* 상태 변경 버튼 (meta-row 안) */
+.t2-collab-meta-row {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 10px 0 4px;
+}
+.t2c-status-btn {
+    display: inline-flex; align-items: center; gap: 3px;
+    background: var(--t2c-surface-2); border: 1px solid var(--t2c-border);
+    border-radius: 20px; padding: 4px 10px 4px 8px;
+    font-size: 12px; font-weight: 600; color: var(--t2c-text-muted);
+    cursor: pointer; font-family: inherit;
+    transition: background 0.15s, border-color 0.15s;
+}
+.t2c-status-btn:hover { background: var(--t2c-surface-3); border-color: var(--t2c-primary); color: var(--t2c-primary); }
+.t2c-status-label { font-size: 12px; }
+.t2c-status-chevron { font-size: 16px !important; transition: transform 0.2s; }
+
+/* 상태 드롭다운 — [v2.5.0] position:fixed로 변경하여 카드 overflow/max-height 영향 완전 차단 */
+.t2c-status-picker {
+    display: none;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--t2c-surface);
+    border: 1px solid var(--t2c-border);
+    border-radius: var(--t2c-radius-sm);
+    box-shadow: var(--t2c-shadow-lg);
+    overflow: visible;
+    position: fixed; /* [v2.5.0] fixed: 상위 overflow/max-height/clip 영향 완전 무시 */
+    z-index: 100000; /* [v2.5.0] 모든 요소 위에 표시 */
+    min-width: 180px;
+    max-height: 280px; /* [v2.5.0] 4개 항목 모두 표시 가능 */
+    overflow-y: auto; /* [v2.5.0] 필요시 스크롤 */
+}
+.t2c-status-opt {
+    display: flex; align-items: center; gap: 9px;
+    padding: 10px 14px;
+    background: transparent; border: none;
+    font-size: 13.5px; font-weight: 500; color: var(--t2c-text);
+    cursor: pointer; font-family: inherit; text-align: left;
+    transition: background 0.12s;
+}
+.t2c-status-opt .t2c-presence-dot { position: static; border: none; width: 10px; height: 10px; }
+.t2c-status-opt:hover  { background: var(--t2c-surface-2); }
+.t2c-status-opt.is-active { background: var(--t2c-primary-soft); color: var(--t2c-primary); font-weight: 700; }
+
+/* 상태 배지 (busy/dnd) */
+.t2c-badge-busy { background: hsl(0 80% 94%); color: hsl(0 70% 45%); }
+.t2c-badge-dnd  { background: hsl(220 10% 92%); color: hsl(220 10% 45%); }
+html[data-t2editor-theme="dark"] .t2c-badge-busy { background: hsl(0 50% 25%); color: hsl(0 80% 75%); }
+html[data-t2editor-theme="dark"] .t2c-badge-dnd  { background: hsl(220 10% 25%); color: hsl(220 10% 70%); }
+
+/* 이모지 리액션 */
+/* 리액션 피커 팝오버 — [v3.2.4] position:fixed + JS 동적 위치 계산
+   부모 overflow:hidden/overflow-x:hidden 에 클리핑되지 않도록 fixed 사용.
+   위치는 _showReactPicker()에서 getBoundingClientRect 기반으로 설정. */
+.t2c-react-picker {
+    display: flex;
+    position: fixed;
+    background: var(--t2c-surface);
+    border: 1px solid var(--t2c-border);
+    border-radius: 24px;
+    padding: 5px 6px;
+    gap: 2px;
+    box-shadow: var(--t2c-shadow-md);
+    z-index: 100000;          /* [v3.2.4] 상태 피커와 동일 최상위 z-index */
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
+    animation: t2c-pop-react 0.18s var(--t2c-ease);
+}
+/* is-open 클래스 제거 — 피커는 JS에서 생성/제거하므로 항상 display:flex */
+@keyframes t2c-pop-react { from { opacity:0; transform:scale(0.8); } to { opacity:1; transform:scale(1); } }
+/* t2c-pop-small: translateX(-50%) 제거 — fixed+JS 위치 방식과 충돌 방지 */
+@keyframes t2c-pop-small { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
+.t2c-react-opt {
+    background: transparent; border: none; cursor: pointer;
+    font-size: 20px; padding: 3px 4px; border-radius: 8px;
+    transition: transform 0.1s, background 0.1s;
+    line-height: 1;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.t2c-react-opt:hover { transform: scale(1.12); background: var(--t2c-surface-2); }
+
+/* 리액션 pill */
+.t2c-reaction-row {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin-top: 4px;
+}
+.t2c-react-pill {
+    display: inline-flex; align-items: center; gap: 3px;
+    background: var(--t2c-surface-2);
+    border: 1.5px solid var(--t2c-border);
+    border-radius: 12px; padding: 2px 7px;
+    font-size: 13px; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    font-family: inherit;
+}
+.t2c-react-pill:hover { border-color: var(--t2c-primary); background: var(--t2c-primary-soft); }
+.t2c-react-pill.is-mine { background: var(--t2c-primary-soft); border-color: var(--t2c-primary); }
+.t2c-react-count { font-size: 11.5px; font-weight: 700; color: var(--t2c-text-muted); }
+
+/* .t2c-msg-actions position:relative 는 위에서 이미 선언됨 */
+
+/* 읽음 확인 */
+.t2c-msg-footer {
+    display: flex; align-items: center; gap: 4px;
+    padding: 0 4px;
+}
+.t2c-msg-time { font-size: 10.5px; color: var(--t2c-text-soft); }
+.t2c-read-check { display: inline-flex; color: var(--t2c-text-soft); }
+.t2c-read-check .material-icons { font-size: 14px !important; }
+.t2c-read-check.is-read { color: var(--t2c-primary); }
+
+/* 날짜 구분자 */
+.t2c-date-sep {
+    display: flex; align-items: center; gap: 8px;
+    margin: 12px 0 4px;
+    color: var(--t2c-text-soft); font-size: 11px; font-weight: 600;
+}
+.t2c-date-sep::before, .t2c-date-sep::after {
+    content: ''; flex: 1; height: 1px; background: var(--t2c-border);
+}
+.t2c-date-sep span { white-space: nowrap; padding: 0 4px; }
+
+/* 메시지 그룹핑 */
+.t2c-msg-grouped { margin-top: 2px !important; }
+.t2c-msg-grouped .t2c-msg-nick,
+.t2c-msg-grouped .t2c-dm-tag { display: none; }
+
+/* 스크롤-투-바텀 FAB */
+.t2c-info-pane[data-infopane="chat"] { position: relative; }
+.t2c-scroll-btn {
+    position: absolute; bottom: 68px; right: 12px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--t2c-primary); color: #fff;
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    z-index: 10;
+    transition: transform 0.15s, background 0.15s;
+}
+.t2c-scroll-btn:hover { transform: scale(1.04); background: var(--t2c-primary-dark); }
+.t2c-scroll-btn .material-icons { font-size: 20px !important; }
+.t2c-scroll-badge {
+    position: absolute; top: -5px; right: -5px;
+    background: var(--t2c-danger); color: #fff;
+    border-radius: 999px; min-width: 16px; height: 16px;
+    font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 3px; border: 1.5px solid var(--t2c-surface);
+}
+
+/* 빈 채팅 안내 */
+.t2c-msgs-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; color: var(--t2c-text-soft); padding: 24px;
+    text-align: center;
+}
+.t2c-msgs-empty .material-icons { font-size: 40px !important; opacity: 0.35; }
+.t2c-msgs-empty p { font-size: 13px; margin: 0; }
+
+/* 컨텍스트 메뉴 (롱프레스 / 우클릭) */
+.t2c-ctx-menu {
+    background: var(--t2c-surface);
+    border: 1px solid var(--t2c-border);
+    border-radius: var(--t2c-radius-sm);
+    box-shadow: var(--t2c-shadow-lg);
+    overflow: hidden;
+    min-width: 148px;
+    animation: t2c-pop-small 0.15s var(--t2c-ease);
+}
+.t2c-ctx-item {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 12px 16px;
+    background: transparent; border: none;
+    font-size: 13.5px; font-weight: 500; color: var(--t2c-text);
+    cursor: pointer; font-family: inherit; text-align: left;
+    transition: background 0.12s;
+    min-height: 48px;
+}
+.t2c-ctx-item .material-icons { font-size: 17px !important; color: var(--t2c-text-muted); }
+.t2c-ctx-item:hover { background: var(--t2c-surface-2); }
+
+/* 스와이프 답장 힌트 애니메이션 */
+@keyframes t2c-swipe-hint {
+    0%   { transform: translateX(0); }
+    30%  { transform: translateX(18px); }
+    60%  { transform: translateX(8px); }
+    100% { transform: translateX(0); }
+}
+.t2c-swipe-hint { animation: t2c-swipe-hint 0.4s var(--t2c-ease); }
+
+/* ============================================================
+   [v2.3.0] QR 팝업 오버레이 — 데스크톱/모바일 공통
+   모바일: 바텀시트 + 미니 상태 바 (참가자 리스트 가시성 확보)
+   데스크톱: 작은 카드형 팝업 (모달 전체 가림 방지)
+   ============================================================ */
+.t2c-qr-popup-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    animation: t2c-fade 0.2s var(--t2c-ease);
+}
+.t2c-qr-popup {
+    background: var(--t2c-surface);
+    border-radius: var(--t2c-radius-lg);
+    padding: 0;
+    width: calc(100% - 48px);
+    max-width: 320px;
+    box-shadow: var(--t2c-shadow-lg);
+    animation: t2c-pop 0.25s var(--t2c-ease);
+    overflow: hidden;
+}
+/* 미니 상태 바: QR 팝업 상단에 내 상태 + 연결 모드 + 참가자 수 표시 */
+.t2c-qr-status-bar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    background: var(--t2c-surface-2);
+    border-bottom: 1px solid var(--t2c-border);
+    font-size: 12px; color: var(--t2c-text-muted); font-weight: 500;
+}
+.t2c-qr-status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    flex-shrink: 0;
+}
+.t2c-qr-status-label {
+    font-weight: 600;
+}
+.t2c-qr-status-sep {
+    opacity: 0.4;
+}
+.t2c-qr-status-mode {
+    font-weight: 600; color: var(--t2c-primary);
+}
+.t2c-qr-status-count-wrap {
+    display: inline-flex; align-items: center; gap: 4px;
+}
+.t2c-qr-status-count {
+    font-weight: 700; color: var(--t2c-primary);
+}
+.t2c-qr-popup-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--t2c-border);
+    font-size: 15px; font-weight: 700; color: var(--t2c-text);
+}
+.t2c-qr-popup-header .material-icons {
+    font-size: 20px !important; color: var(--t2c-primary);
+}
+.t2c-qr-popup-header span:nth-child(2) { flex: 1; }
+.t2c-qr-popup-close {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--t2c-text-muted);
+    width: 32px; height: 32px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    padding: 0;
+}
+.t2c-qr-popup-close:hover { background: var(--t2c-surface-3); }
+.t2c-qr-popup-close .material-icons { font-size: 20px !important; }
+.t2c-qr-popup-body {
+    padding: 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.t2c-qr-popup-qr-box {
+    position: relative;
+    width: 200px; height: 200px;
+    background: #fff;
+    border-radius: var(--t2c-radius-md);
+    border: 1px solid var(--t2c-border);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+}
+html[data-t2editor-theme="dark"] .t2c-qr-popup-qr-box { background: #fff; }
+.t2c-qr-popup-tip {
+    margin: 0; font-size: 12px; color: var(--t2c-text-muted); text-align: center;
+}
+/* QR 팝업 안의 QR 이미지/다운로드 버튼은 기존 클래스 재사용 */
+.t2c-qr-popup-qr-box .t2-collab-qr-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.t2c-qr-popup-qr-box .t2-collab-qr-dl { position: absolute; top: 6px; right: 6px; }
+.t2c-qr-popup-qr-box .t2-collab-qr-loading { color: #5f6368; }
+.t2c-qr-popup-qr-box .t2-collab-qr-loading .material-icons { font-size: 36px !important; opacity: 0.6; }
+.t2c-qr-popup-qr-box .t2-collab-qr-loading small { font-size: 11px; }
+
+/* 데스크톱: QR 팝업 + QR 버튼 표시 */
+@media (min-width: 641px) {
+    .t2c-compact-qr-btn { display: none !important; }
+    .t2c-compact-status-dot { display: none !important; }
+    .t2c-compact-status-label { display: none !important; }
+    .t2c-expanded-qr-btn { display: inline-flex !important; }
+}
+/* 모바일: QR 팝업을 바텀시트로 + 높이 제한으로 참가자 리스트 가시성 확보 */
+@media (max-width: 640px) {
+    .t2c-qr-popup-overlay {
+        align-items: flex-end;  /* 바텀시트 */
+        background: rgba(0,0,0,0.2);
+    }
+    .t2c-qr-popup {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 20px 20px 0 0;
+        animation: t2c-slide-up 0.3s var(--t2c-ease);
+        /* 팝업 높이 제한: 상태 리스트/참가자 일부 노출 */
+        max-height: 60vh;
+    }
+    .t2c-expanded-qr-btn { display: inline-flex !important; }
+    .t2c-compact-qr-btn { display: inline-flex !important; }
+}
+
+/* 채팅 탭 헤더 QR 버튼 + 액션 그룹 */
+.t2c-chat-header-actions {
+    display: flex; align-items: center; gap: 2px;
+    flex-shrink: 0;
+}
+.t2c-chat-qr-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+    background: transparent; border: none; cursor: pointer;
+    border-radius: 50%;
+    color: var(--t2c-text-muted);
+    transition: background 0.15s, color 0.15s;
+    padding: 0;
+}
+.t2c-chat-qr-btn:hover { background: var(--t2c-surface-3); color: var(--t2c-primary); }
+.t2c-chat-qr-btn .material-icons { font-size: 20px !important; }
+
+/* 모바일 safe-area + 터치 최적화 */
+@supports (padding-bottom: env(safe-area-inset-bottom, 0px)) {
+    .t2c-chat-input-row {
+        padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    }
+    @media (max-width: 640px) {
+        .t2-collab-modal {
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+    }
+}
+@media (max-width: 640px) {
+    /* 터치 타겟 최소 44px */
+    .t2c-action-btn    { width: 36px; height: 36px; }
+    .t2c-attach-btn    { width: 44px; height: 44px; }
+    .t2c-send-btn      { width: 44px; height: 44px; }
+    .t2c-status-btn    { padding: 6px 12px 6px 10px; }
+    .t2c-status-opt    { padding: 13px 14px; }
+    /* 모바일: 액션 버튼 항상 표시 (hover 없음) */
+    .t2c-msg-actions   { opacity: 1; }
+    /* 리액션 피커: 모바일 반응형 — flex-wrap으로 이모지 줄바꿈, 뷰포트 내 클리핑 방지 */
+    .t2c-react-picker  {
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: calc(100vw - 16px);
+        padding: 6px 8px;
+    }
+    .t2c-react-opt {
+        min-width: 40px;
+        min-height: 40px;
+        font-size: 18px;
+    }
+    /* 상태 드롭다운: 모바일에서 좀더 큼직 + 절대 위치로 카드 밖에도 표시 */
+    .t2c-status-picker {
+        /* 모바일에서도 position:fixed 상속 — JS에서 위치 동적 계산 */
+        min-width: 200px;
+        max-height: 320px;
+        box-shadow: var(--t2c-shadow-lg);
+    }
+    /* 날짜 구분자 */
+    .t2c-date-sep { font-size: 11px; margin: 10px 0 2px; }
+    /* [C-PATCH 3] safe area insets for notched devices */
+    .t2-collab-modal {
+        max-height: calc(94vh - env(safe-area-inset-bottom, 0px));
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .t2c-chat-input-row {
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+    .t2-collab-actions-row {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+}
+
+/* ============================================================
+   v2.1.1: \uc790\uccb4 \uc2a4\ud06c\ub864 \uceec\uc8fc \uac15\ud654 (\ubaa8\ubc14\uc77c \uc6b0\uc120)
+   - \ubaa8\ub2ec \ud5e4\ub4dc \uc544\ub798\uc758 \"\uc2e4\uc2dc\uac04 \ud611\uc5c5\" \uc815\ubcf4 \uce74\ub4dc (\ubc29\ucf54\ub4dc/\ub9c1\ud06c/QR)
+     \ubc0f \ucc44\ud305 \uba54\uc2dc\uc9c0 \ubaa9\ub85d \uc601\uc5ed\uc744 \uc790\uccb4 \uc2a4\ud06c\ub864 \uceec\uc8fc\ub85c \uc138\ub2ec \uba85\uc2dc\u00b7\uace0\uc815\n   ============================================================ */
+
+/* \uc0c1\ud0dc \ud328\ub110 (\ub300\ub7c9 info pane) \uc790\uccb4: \ub0b4\ubd80 status-card / \ucc38\uc5ec\uc790 \ubaa9\ub85d \ubaa8\ub450 \ubcf4\uc774\uba74\uc11c\ub3c4\n   \uc138\ub85c\uc2a4\ud06c\ub864\uc774 \ud544\uc694\ud558\uba74 \uac01 \uc625\uc810\uc774 \uc790\uccb4 \uacf5\uac04\uc744 \uc7a1\uace0 \ud328\ub110\uc740 \uc560\ub9e4\ud558\uac8c \uacf5\uc720 */
+.t2c-info-pane[data-infopane="status"] {
+    /* \uae30\uc874 overflow-y:auto \uc720\uc9c0, \uadf8\ub7ec\ub098 \ub0b4\ubd80 status-card \uac00 \uba3c\uc800 \uc790\uccb4 \uc2a4\ud06c\ub864 */
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* status-card \ub0b4\ubd80\uc758 QR \uc601\uc5ed\uc774 \ub118\uce58\uc9c0 \uc54a\ub3c4\ub85d \ubcf4\uc815 */
+.t2-collab-status-card .t2-collab-qr-row {
+    flex-shrink: 0;
+}
+
+/* \ucc44\ud305 \uba54\uc2dc\uc9c0 \uc601\uc5ed: \uac15\uc81c\ub85c \uc790\uccb4 \uc2a4\ud06c\ub864 \uace0\uc815 + \uc678\ubd80 \uc2a4\ud06c\ub864 \uacf5\uc720 \uc548\ub428 */
+.t2c-chat-msgs {
+    /* \uc774\ubbf8 overflow-y: auto \uc784. \uba85\uc2dc\uc801\uc73c\ub85c overscroll-behavior contain \ucd94\uac00 */
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--t2c-border-strong) transparent;
+}
+.t2c-chat-msgs::-webkit-scrollbar { width: 8px; }
+.t2c-chat-msgs::-webkit-scrollbar-thumb {
+    background: var(--t2c-border-strong);
+    border-radius: 4px;
+}
+.t2c-chat-msgs::-webkit-scrollbar-track { background: transparent; }
+
+/* \ucc44\ud305 \ud328\ub110\uc740 \uc678\ubd80 \uc138\ub85c\uc2a4\ud06c\ub864\uc744 \uc77c\uccb4 \uc8fc\uc9c0 \uc54a\uace0
+   \uac15\uc81c\ub85c \ub0b4\ubd80 .t2c-chat-msgs \uac00 \ubaa8\ub4e0 \uc138\ub85c\uc2a4\ud06c\ub864\uc744 \ucc28\uc9c0\ud558\uac8c \uc720\uc9c0 */
+.t2c-info-pane[data-infopane="chat"].is-active {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* 정리: 중복 미디어쿼리 병합 — 기존 두 번째 @media (max-width: 640px) 블록이
+   첫 번째 블록의 status-card 높이를 덮어쓰던 문제 해결. 스크롤 힌트 background-image는
+   과도한 복잡도로 제거. status-card 높이는 위 첫 번째 모바일 블록에서만 정의. */
+@media (max-width: 640px) {
+    .t2c-info-pane[data-infopane="status"] {
+        padding-bottom: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    }
+    .t2c-chat-msgs {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+}
+
+/* dark theme \uc2a4\ud06c\ub864\ubc14 */
+html[data-t2editor-theme="dark"] .t2-collab-status-card {
+    scrollbar-color: var(--t2c-text-soft) transparent;
+}
+html[data-t2editor-theme="dark"] .t2-collab-status-card::-webkit-scrollbar-thumb {
+    background: var(--t2c-text-soft);
+}
+html[data-t2editor-theme="dark"] .t2c-chat-msgs {
+    scrollbar-color: var(--t2c-text-soft) transparent;
+}
+html[data-t2editor-theme="dark"] .t2c-chat-msgs::-webkit-scrollbar-thumb {
+    background: var(--t2c-text-soft);
+}
+
+/* ============================================================
+   v2.1.1: \ud638\uc2a4\ud2b8 \ub9c8\uc774\uadf8\ub808\uc774\uc158 / \ubc31\uc5c5 \uc0c1\ud0dc \ud45c\uc2dc (UI \uac74\ub4dc\ub9ac\ub294 \uc744)
+   - \ud638\uc2a4\ud2b8\uac00 \ubc31\uc5c5\uc744 \uc8fc\uace0\ubc1b\ub294 \uc911\uc784\uc744 \uba54\uc2dc\uc9c0 \ucd94\uac00\ub85c \ud45c\uc2dc\ud560 \uc218 \uc788\ub3c4\ub85d
+     \ub2e4\uc74c\uacfc \uac19\uc740 \uc720\ud2f8\ub9ac\ud2f0 \ud074\ub798\uc2a4 \ud55c\ubc88\ub9cc \uba85\uc2dc (JS \ucabd\uc5d0\uc11c \ud544\uc694 \uc2dc \ucd94\uac00 \uc0ac\uc6a9 \uac00\ub2a5)
+   ============================================================ */
+.t2c-backup-shield {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: hsla(150, 70%, 92%, 1);
+    color: hsl(150, 60%, 28%);
+    border-radius: 999px; padding: 2px 8px 2px 6px;
+    font-size: 11px; font-weight: 700;
+    margin-left: 6px;
+}
+.t2c-backup-shield .material-icons { font-size: 13px !important; }
+html[data-t2editor-theme="dark"] .t2c-backup-shield {
+    background: hsl(150 50% 22%); color: hsl(150 70% 78%);
+}
+
+/* 미디어 인라인 미리보기 (이미지/동영상) */
+.t2c-msg-media {
+    padding: 0 !important;
+    overflow: hidden;
+    background: var(--t2c-surface-3) !important;
+    color: var(--t2c-text) !important;
+    border: 1px solid var(--t2c-border) !important;
+    border-radius: 12px;
+    max-width: 100%;
+}
+.t2c-media-preview {
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.t2c-msg-image .t2c-media-preview {
+    max-height: 280px;
+    min-height: 80px;
+}
+.t2c-msg-video .t2c-media-preview {
+    max-height: 240px;
+    min-height: 80px;
+}
+.t2c-preview-img {
+    width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    display: block;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.t2c-preview-img:hover { opacity: 0.92; }
+.t2c-preview-video {
+    width: 100%;
+    max-height: 240px;
+    display: block;
+    outline: none;
+    background: #000;
+}
+/* 미디어 플레이스홀더 (전송 중) */
+.t2c-media-placeholder {
+    min-height: 120px;
+    background: var(--t2c-surface-2);
+    flex-direction: column;
+    gap: 8px;
+}
+.t2c-media-placeholder-icon {
+    font-size: 40px !important;
+    color: var(--t2c-text-soft);
+    opacity: 0.5;
+}
+/* 미디어 footer (파일명 + 다운로드) */
+.t2c-media-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--t2c-border);
+    background: var(--t2c-surface-2);
+    overflow: hidden;
+}
+.t2c-media-footer .t2c-file-info {
+    flex: 1; min-width: 0; overflow: hidden;
+    max-width: calc(100% - 60px);
+}
+.t2c-media-footer .t2c-file-name {
+    font-size: 12px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 100%;
+}
+.t2c-media-footer .t2c-file-size {
+    font-size: 10.5px; color: var(--t2c-text-muted);
+}
+.t2c-media-footer .t2c-dl-btn {
+    width: 28px; height: 28px;
+}
+.t2c-media-footer .t2c-dl-btn .material-icons { font-size: 16px !important; }
+
+/* 다크 모드 미디어 미리보기 */
+html[data-t2editor-theme="dark"] .t2c-media-preview { background: #1a1a1a; }
+html[data-t2editor-theme="dark"] .t2c-media-placeholder { background: var(--t2c-surface-3); }
+html[data-t2editor-theme="dark"] .t2c-media-footer { background: var(--t2c-surface-3); }
+
+/* 재생 불가 동영상 폴백 */
+/* [I18N] content 속성은 attr(data-t2-msg) 로 대체 — JS 가 i18n 번역 결과를 data-t2-msg 에 설정.
+   attr() 가 content 속성에서만 동작하므로, 폴백으로 영문 기본값을 함께 제공. */
+.t2c-media-unsupported .t2c-preview-video { display: none; }
+.t2c-media-unsupported .t2c-media-preview::after {
+    content: attr(data-t2-msg, 'This video cannot be played in this browser');
+    display: flex; align-items: center; justify-content: center;
+    min-height: 80px;
+    padding: 12px 16px;
+    font-size: 12px; color: var(--t2c-text-muted);
+    background: var(--t2c-surface-2);
+}
+
+/* 모바일 미디어 미리보기 조정 */
+@media (max-width: 640px) {
+    .t2c-msg-image .t2c-media-preview { max-height: 220px; }
+    .t2c-msg-video .t2c-media-preview { max-height: 180px; }
+    .t2c-preview-img { max-height: 220px; }
+    .t2c-preview-video { max-height: 180px; }
+    /* 모바일 파일 카드 파일명 ellipsis 보강 */
+    .t2c-msg-file { min-width: 0; }
+    .t2c-file-info { max-width: calc(100% - 78px); }
+    .t2c-media-footer .t2c-file-info { max-width: calc(100% - 52px); }
+}
+
+/* ============================================================
+ * 안정성 향상 모드 (Stability Mode)
+ * ============================================================ */
+
+/* 방 만들기 - 안정성 향상 모드 토글 */
+.t2-collab-stability-toggle {
+    align-items: flex-start;
+    background: var(--t2c-surface-2);
+    border-radius: var(--t2c-radius-md);
+    padding: 10px 12px;
+    gap: 10px;
+}
+.t2-collab-stability-toggle input[type="checkbox"] { margin-top: 2px; }
+.t2-collab-stability-toggle > span {
+    display: flex; flex-direction: column; gap: 4px;
+    font-weight: 600; color: var(--t2c-text);
+}
+.t2-collab-stability-hint {
+    font-size: 11.5px; font-weight: 400; line-height: 1.5;
+    color: var(--t2c-text-muted);
+}
+
+/* 참여 패널 안내 문구 */
+.t2-collab-join-hint {
+    display: flex; align-items: flex-start; gap: 6px;
+    margin: 0; padding: 8px 10px;
+    font-size: 11.5px; line-height: 1.5;
+    color: var(--t2c-text-muted);
+    background: var(--t2c-surface-2);
+    border-radius: var(--t2c-radius-sm);
+}
+.t2-collab-join-hint .material-icons { font-size: 15px !important; flex: none; margin-top: 1px; }
+
+/* 모드 배지 - 안정성 향상 모드 */
+.t2-collab-mode-stability {
+    background: rgba(1, 135, 254, 0.14); color: var(--t2c-primary);
+}
+html[data-t2editor-theme="dark"] .t2-collab-mode-stability {
+    background: rgba(77, 166, 255, 0.18); color: #4da6ff;
+}
+
+/* 안정성 향상 모드에서도 P2P 채널로 채팅·DM 지원 →
+   기존 채팅 비활성화 CSS 제거 (채팅 탭 / DM 버튼 정상 표시) */
+
+/* ============================================================
+ * 사용법 안내 모달
+ * ============================================================ */
+.t2-collab-help-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.42);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100000;
+    padding: 16px;
+    animation: t2c-fade 0.25s var(--t2c-ease);
+    overflow: hidden;           /* [v3.2.2] 스크롤 체인 방지 — 오버레이 레벨에서 스크롤 이벤트 전파 차단 */
+    overscroll-behavior: contain;
+}
+.t2-collab-help-modal {
+    background: var(--t2c-surface);
+    color: var(--t2c-text);
+    border-radius: var(--t2c-radius-lg);
+    width: 100%;
+    max-width: 480px;
+    max-height: min(86vh, 720px);
+    overflow: hidden;
+    box-shadow: var(--t2c-shadow-lg);
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex; flex-direction: column;
+    animation: t2c-pop 0.32s var(--t2c-ease);
+    box-sizing: border-box;
+}
+.t2-collab-help-content {
+    padding: 14px 16px 22px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    min-height: 0;
+    display: flex; flex-direction: column; gap: 8px;
+    overscroll-behavior: contain;   /* [v3.2.2] 스크롤 체인 방지 — 본문 스크롤이 배경으로 전파되지 않도록 */
+    touch-action: pan-y;            /* [v3.2.2] 세로 패닝만 허용 — 모바일 터치 스크롤 안정화 */
+    position: relative;             /* [v3.2.2] 스태킹 컨텍스트 명시 */
+    scroll-behavior: smooth;        /* [v3.2.2] 섹션 펼침 시 부드러운 스크롤 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--t2c-border-strong) transparent;
+}
+.t2-collab-help-content::-webkit-scrollbar { width: 6px; }
+.t2-collab-help-content::-webkit-scrollbar-thumb {
+    background: var(--t2c-border-strong);
+    border-radius: 3px;
+}
+.t2-collab-help-content::-webkit-scrollbar-track { background: transparent; }
+.t2-collab-help-section {
+    border: 1px solid var(--t2c-border);
+    border-radius: var(--t2c-radius-md);
+    overflow: hidden;
+    background: var(--t2c-surface-2);
+    flex-shrink: 0;    /* [v3.2.2] 플렉스 축소 방지 — 섹션이 찌그러지지 않고 부모가 스크롤되도록 */
+}
+.t2-collab-help-head {
+    -webkit-appearance: none; appearance: none; border: none; width: 100%;
+    background: transparent;
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 14px;
+    font-size: 14px; font-weight: 700;
+    color: var(--t2c-text);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+}
+.t2-collab-help-head .material-icons:first-child {
+    font-size: 19px !important; color: var(--t2c-primary); flex: none;
+}
+.t2-collab-help-title { flex: 1; }
+.t2-collab-help-chevron {
+    font-size: 20px !important; color: var(--t2c-text-muted);
+    transition: transform 0.22s var(--t2c-ease);
+    flex: none;
+}
+.t2-collab-help-section.is-open .t2-collab-help-chevron { transform: rotate(180deg); }
+.t2-collab-help-body {
+    display: none;
+    padding: 0 14px 14px 43px;
+    font-size: 13px; line-height: 1.65;
+    color: var(--t2c-text-muted);
+}
+.t2-collab-help-body p { margin: 0 0 8px; }
+.t2-collab-help-body p:last-child { margin-bottom: 0; }
+.t2-collab-help-body strong { color: var(--t2c-text); font-weight: 700; }
+.t2-collab-help-section.is-open .t2-collab-help-body { display: block; }
+
+@media (max-width: 640px) {
+    .t2-collab-help-overlay { align-items: flex-end; padding: 0; overflow: hidden; }
+    .t2-collab-help-modal {
+        max-width: 100%; max-height: 92vh;             /* [v3.2.2] 86→92vh: 좁은 화면에서 공간 활용 */
+        border-radius: 20px 20px 0 0;
+        animation: t2c-slide-up 0.32s var(--t2c-ease);
+        padding-top: 8px;                               /* [v3.2.2] 드래그 인디케이터 공간 */
+    }
+    /* 모바일 바텀시트 드래그 인디케이터 */
+    .t2-collab-help-modal::before {
+        content: '';
+        display: block;
+        width: 40px; height: 4px;
+        background: var(--t2c-border-strong);
+        border-radius: 2px;
+        margin: 4px auto 6px;
+        flex-shrink: 0;
+    }
+    /* 모바일 컴팩트 헤더 */
+    .t2-collab-help-modal .t2-collab-header {
+        padding: 8px 16px 10px;
+    }
+    .t2-collab-help-modal .t2-collab-header h3 {
+        font-size: 16px;
+    }
+    /* 모바일 컨텐츠 패딩 최적화 + 세이프에어리어 */
+    .t2-collab-help-content {
+        padding: 10px 14px calc(18px + env(safe-area-inset-bottom, 0px));
+        gap: 6px;
+    }
+    .t2-collab-help-head {
+        padding: 11px 12px;
+        font-size: 13.5px;
+    }
+    .t2-collab-help-body {
+        padding: 0 12px 12px 14px;
+        font-size: 12.5px;
+        line-height: 1.6;
+    }
+}
+
+/* v2.1.2: 호스트의 개별 사용자 편집 잠금, QR 캐싱·이미지 업로드, 모바일 유저 리스트 UX */
+/* 개별 사용자 편집 잠금 버튼 (방장 전용, user-item action) */
+.t2c-user-lock-btn { color: var(--t2c-text-muted); }
+.t2c-user-lock-btn:hover {
+    background: var(--t2c-primary-soft);
+    color: var(--t2c-primary);
+}
+.t2c-user-lock-btn.is-locked {
+    background: rgba(226, 59, 59, 0.10);
+    color: var(--t2c-danger);
+}
+.t2c-user-lock-btn.is-locked:hover {
+    background: rgba(226, 59, 59, 0.18);
+    color: var(--t2c-danger-dark);
+}
+.t2c-user-lock-btn .material-icons { font-size: 18px !important; }
+
+/* "잠김" 뱃지 (참가자 옆) */
+.t2c-badge-userlock {
+    background: rgba(226, 59, 59, 0.10);
+    color: var(--t2c-danger);
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 7px 2px 4px;
+}
+.t2c-badge-userlock .material-icons {
+    font-size: 12px !important;
+}
+html[data-t2editor-theme="dark"] .t2c-badge-userlock {
+    background: rgba(255, 130, 130, 0.16);
+    color: #ff9c9c;
+}
+
+/* Join 패널: QR 이미지 업로드 */
+.t2-collab-qr-upload-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px;
+    margin-top: -2px;
+}
+.t2-collab-qr-upload-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    border: 1.5px dashed var(--t2c-border-strong);
+    border-radius: var(--t2c-radius-md);
+    background: var(--t2c-surface-2);
+    color: var(--t2c-text);
+    font-size: 13.5px; font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s var(--t2c-ease), border-color 0.18s var(--t2c-ease), color 0.18s;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+.t2-collab-qr-upload-btn:hover {
+    background: var(--t2c-primary-soft);
+    border-color: var(--t2c-primary);
+    color: var(--t2c-primary);
+}
+.t2-collab-qr-upload-btn .material-icons { font-size: 20px !important; }
+.t2-collab-qr-upload-hint {
+    margin: 2px 0 0;
+    font-size: 11.5px; color: var(--t2c-text-soft);
+    text-align: center;
+}
+
+/* 이전 블록(status-card max-height:none, status pane overflow-y:auto,
+   users-list max-height:clamp)은 v2.1.5 모바일 퍼스트 레이아웃과 충돌하여 제거됨.
+   현재 라인 1247~1386 의 @media (max-width:640px) 블록이 동일 기능을 담당한다.
+   사용자 아이템/액션 버튼 스타일과 다크 테마 스크롤바만 유지. */
+@media (max-width: 640px) {
+    /* 사용자 아이템: 모바일 터치 타깃 키움 + 액션 버튼 잘림 방지 */
+    .t2-collab-user-item {
+        padding: 11px 10px;
+        gap: 9px;
+        flex-wrap: nowrap;
+    }
+    .t2-collab-user-name {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 14px;
+    }
+    .t2-collab-user-badges {
+        flex-wrap: wrap;
+        flex-shrink: 1;
+        row-gap: 2px;
+    }
+    .t2-collab-user-actions {
+        flex-shrink: 0;
+        gap: 4px;
+    }
+    .t2-collab-user-actions .t2-collab-icon-btn {
+        width: 32px; height: 32px;
+        min-width: 32px;
+    }
+}
+
+/* dark theme: user-list scrollbar */
+html[data-t2editor-theme="dark"] .t2-collab-users-list {
+    scrollbar-color: var(--t2c-text-soft) transparent;
+}
+html[data-t2editor-theme="dark"] .t2-collab-users-list::-webkit-scrollbar-thumb {
+    background: var(--t2c-text-soft);
+}
+
+/* 연결 안정성 · 동기화 · 무결성 UI 요소 */
+/* 체인 인디케이터 — 상태 카드 하단에 체인 높이/무결성 표시 */
+.t2c-chain-indicator {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0;
+    font-size: 11.5px; color: var(--t2c-text-muted);
+    flex-wrap: wrap;
+}
+.t2c-chain-height {
+    font-weight: 700;
+    font-family: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+    color: var(--t2c-text);
+    background: var(--t2c-surface-2);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+}
+
+/* 무결성 배지 — 체인 검증 상태 표시 */
+.t2c-integrity-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10.5px; font-weight: 700;
+    background: var(--t2c-surface-3);
+    color: var(--t2c-text-soft);
+    transition: background 0.2s var(--t2c-ease), color 0.2s var(--t2c-ease);
+}
+.t2c-integrity-badge.is-valid {
+    background: rgba(46, 125, 50, 0.14);
+    color: #2e7d32;
+}
+html[data-t2editor-theme="dark"] .t2c-integrity-badge.is-valid {
+    background: rgba(129, 199, 132, 0.18);
+    color: #81c784;
+}
+
+/* 동기화 진행률 바 — 체인 다운로드 진행 상태 */
+.t2c-sync-progress {
+    width: 100%;
+    height: 4px;
+    background: var(--t2c-surface-3);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+.t2c-sync-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--t2c-primary);
+    border-radius: 2px;
+    transition: width 0.3s var(--t2c-ease);
+    display: none;
+}
+.t2c-sync-label {
+    display: none;
+    font-size: 10.5px;
+    color: var(--t2c-primary);
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+/* 오프라인 배지 — 오프라인 상태 + 대기 중인 연산 수 */
+.t2c-offline-badge {
+    display: none;
+    align-items: center; gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 700;
+    background: rgba(239, 108, 0, 0.14);
+    color: #ef6c00;
+    animation: t2c-offline-pulse 2s ease-in-out infinite;
+}
+html[data-t2editor-theme="dark"] .t2c-offline-badge {
+    background: rgba(255, 183, 77, 0.18);
+    color: #ffb74d;
+}
+@keyframes t2c-offline-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.65; }
+}
+
+/* 연결 품질 정보 — 모드 배지 내 추가 정보 */
+.t2c-quality-info {
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-left: 4px;
+}
+
+/* 모바일 대응: 체인 인디케이터 */
+@media (max-width: 640px) {
+    .t2c-chain-indicator {
+        padding: 4px 0;
+        gap: 6px;
+    }
+    .t2c-chain-height {
+        font-size: 10px;
+        padding: 1px 6px;
+    }
+    .t2c-integrity-badge {
+        font-size: 9.5px;
+        padding: 1px 6px;
+    }
+    .t2c-offline-badge {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+}
+
+/* 보안/연결 정보 — 링크 버튼 + 팝업 + 서비스 카드 */
+/* 보안 정보 링크 행 (상태 카드 메타 행 아래) */
+.t2c-security-link-row {
+    display: flex;
+    justify-content: center;
+    padding: 6px 0 2px;
+}
+.t2c-security-link-btn {
+    -webkit-appearance: none; appearance: none; border: none; background: transparent;
+    display: inline-flex; align-items: center; gap: 5px;
+    cursor: pointer;
+    font-size: 12px; font-weight: 600; font-family: inherit;
+    color: var(--t2c-primary);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    padding: 4px 8px;
+    border-radius: var(--t2c-radius-xs);
+    transition: background 0.18s var(--t2c-ease), text-decoration-style 0.18s;
+}
+.t2c-security-link-btn .material-icons {
+    font-size: 15px !important;
+    opacity: 0.85;
+    line-height: 1;
+}
+.t2c-security-link-btn:hover {
+    background: var(--t2c-primary-soft);
+    text-decoration-style: solid;
+}
+
+/* 보안 팝업 오버레이 */
+.t2c-security-popup-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.38);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 50;
+    padding: 16px;
+    box-sizing: border-box;
+    animation: t2c-fade 0.2s var(--t2c-ease);
+}
+.t2c-security-popup {
+    background: var(--t2c-surface);
+    color: var(--t2c-text);
+    border-radius: var(--t2c-radius-lg);
+    width: calc(100% - 32px);
+    max-width: 420px;
+    max-height: 85%;
+    overflow: hidden;
+    box-shadow: var(--t2c-shadow-lg);
+    display: flex; flex-direction: column;
+    animation: t2c-pop 0.28s var(--t2c-ease);
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.t2c-security-popup-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--t2c-border);
+    flex-shrink: 0;
+}
+.t2c-security-popup-header .material-icons {
+    font-size: 22px !important; color: var(--t2c-primary);
+    flex: none;
+    line-height: 1;
+}
+.t2c-security-popup-header span:not(.material-icons) {
+    font-size: 16px; font-weight: 700;
+}
+.t2c-security-popup-close {
+    -webkit-appearance: none; appearance: none; border: none; background: transparent;
+    cursor: pointer; color: var(--t2c-text-muted);
+    width: 32px; height: 32px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-left: auto; padding: 0;
+    transition: background 0.18s var(--t2c-ease), color 0.18s;
+}
+.t2c-security-popup-close .material-icons { font-size: 18px !important; line-height: 1; }
+.t2c-security-popup-close:hover { background: var(--t2c-surface-3); color: var(--t2c-text); }
+
+/* 팝업 본문 */
+.t2c-security-popup-body {
+    padding: 16px 20px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    flex: 1; min-height: 0;
+    overscroll-behavior: contain;       /* [v3.2.2] 스크롤 체인 방지 */
+    touch-action: pan-y;                /* [v3.2.2] 모바일 세로 스크롤 안정화 */
+}
+.t2c-security-popup-body::-webkit-scrollbar { width: 6px; }         /* [v3.2.2] 크로스 브라우저 스크롤바 */
+.t2c-security-popup-body::-webkit-scrollbar-thumb {
+    background: var(--t2c-border-strong);
+    border-radius: 3px;
+}
+.t2c-security-popup-body::-webkit-scrollbar-track { background: transparent; }
+html[data-t2editor-theme="dark"] .t2c-security-popup-body {
+    scrollbar-color: var(--t2c-text-soft) transparent;
+}
+html[data-t2editor-theme="dark"] .t2c-security-popup-body::-webkit-scrollbar-thumb {
+    background: var(--t2c-text-soft);
+}
+
+/* 보안 개요 (상단 배너) */
+.t2c-security-overview {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    background: rgba(46, 125, 50, 0.08);
+    border: 1px solid rgba(46, 125, 50, 0.18);
+    border-radius: var(--t2c-radius-md);
+    margin-bottom: 16px;
+}
+html[data-t2editor-theme="dark"] .t2c-security-overview {
+    background: rgba(129, 199, 132, 0.1);
+    border-color: rgba(129, 199, 132, 0.2);
+}
+.t2c-security-shield-icon {
+    font-size: 28px !important;
+    color: #2e7d32;
+    flex: none;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(46, 125, 50, 0.10);
+    border-radius: 10px;
+    /* line-height: 1 → 글로벌 .material-icons 규칙(line 90)이 !important 로 커버 */
+}
+html[data-t2editor-theme="dark"] .t2c-security-shield-icon {
+    color: #81c784;
+    background: rgba(129, 199, 132, 0.12);
+}
+.t2c-security-overview-text {
+    min-width: 0; flex: 1;
+}
+.t2c-security-overview-text strong {
+    display: block;
+    font-size: 14px; font-weight: 700;
+    margin-bottom: 3px;
+}
+.t2c-security-overview-text p {
+    margin: 0;
+    font-size: 12px; color: var(--t2c-text-muted);
+    line-height: 1.5;
+}
+
+/* 서비스 카드 목록 */
+.t2c-security-services {
+    display: flex; flex-direction: column; gap: 10px;
+}
+
+/* 서비스 카드 */
+.t2c-service-card {
+    background: var(--t2c-surface-2);
+    border: 1px solid var(--t2c-border);
+    border-radius: var(--t2c-radius-sm);
+    padding: 12px 14px;
+    transition: border-color 0.18s var(--t2c-ease);
+}
+.t2c-service-card:hover {
+    border-color: var(--t2c-primary);
+}
+.t2c-service-card-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px;
+}
+.t2c-service-icon {
+    font-size: 20px !important;
+    color: var(--t2c-primary);
+    flex: none;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--t2c-primary-soft);
+    border-radius: 8px;
+    /* line-height: 1 → 글로벌 .material-icons 규칙(line 90)이 !important 로 커버 */
+}
+.t2c-service-card-title {
+    display: flex; flex-direction: column; gap: 1px; min-width: 0;
+}
+.t2c-service-card-title strong {
+    font-size: 13.5px; font-weight: 700;
+    white-space: normal;
+    word-break: break-word;
+}
+.t2c-service-card-sub {
+    font-size: 11px; color: var(--t2c-text-muted);
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.45;
+}
+
+/* 서비스 데이터 행 */
+.t2c-service-card-data {
+    display: flex; flex-direction: column; gap: 4px;
+}
+.t2c-service-data-row {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px;
+    padding: 3px 0;
+    gap: 8px;
+}
+.t2c-service-data-row > span:first-child {
+    color: var(--t2c-text-muted);
+    font-weight: 500;
+    flex-shrink: 0;
+}
+.t2c-service-data-row > span:last-child {
+    font-weight: 600;
+    color: var(--t2c-text);
+    text-align: right;
+    word-break: break-all;
+    font-family: 'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+}
+
+/* 서비스 상태 라벨 */
+.t2c-svc-ok {
+    color: #2e7d32; font-weight: 700;
+}
+html[data-t2editor-theme="dark"] .t2c-svc-ok { color: #81c784; }
+.t2c-svc-warn {
+    color: #ef6c00; font-weight: 700;
+}
+html[data-t2editor-theme="dark"] .t2c-svc-warn { color: #ffb74d; }
+.t2c-svc-err {
+    color: #e23b3b; font-weight: 700;
+}
+html[data-t2editor-theme="dark"] .t2c-svc-err { color: #ef9a9a; }
+
+/* 모바일 대응: 보안 팝업 */
+@media (max-width: 640px) {
+    .t2c-security-popup-overlay {
+        align-items: flex-end;
+        padding: 0;
+        overflow: hidden;                  /* [v3.2.2] 스크롤 체인 방지 */
+        overscroll-behavior: contain;
+    }
+    .t2c-security-popup {
+        max-width: 100%;
+        width: 100%;
+        max-height: 90%;
+        border-radius: 20px 20px 0 0;
+        animation: t2c-slide-up 0.32s var(--t2c-ease);
+    }
+    .t2c-security-popup::before {
+        content: '';
+        display: block;
+        width: 40px; height: 4px;
+        background: var(--t2c-border-strong);
+        border-radius: 2px;
+        margin: 4px auto 6px;          /* [v3.2.2] 다른 바텀시트와 통일 */
+        flex-shrink: 0;
+    }
+    .t2c-security-popup-header {
+        padding: 8px 16px 10px;
+    }
+    .t2c-security-popup-body {
+        padding: 12px 16px calc(18px + env(safe-area-inset-bottom, 0px));  /* [v3.2.2] 세이프에어리어 하단 패딩 */
+    }
+    .t2c-security-overview {
+        padding: 10px 12px;
+    }
+    .t2c-security-shield-icon {
+        font-size: 22px !important;
+        width: 36px; height: 36px;
+        border-radius: 8px;
+    }
+    .t2c-service-card {
+        padding: 10px 12px;
+    }
+    .t2c-service-icon {
+        width: 28px; height: 28px;
+        font-size: 17px !important;
+    }
+    .t2c-service-card-title strong {
+        font-size: 12.5px;
+    }
+    /* 모바일에서 서비스 카드 설명 텍스트 줄바꿈 보장 */
+    .t2c-service-card-title {
+        min-width: 0;
+    }
+    .t2c-service-card-title strong,
+    .t2c-service-card-sub {
+        white-space: normal;
+        word-break: break-word;
+    }
+}
+
+/* [C-PATCH 7] Mobile landscape handling */
+@media (max-width: 640px) and (orientation: landscape) {
+    .t2-collab-modal {
+        max-height: 100vh;
+        border-radius: 0;
+        padding-top: 0;
+    }
+    .t2-collab-modal::before { display: none; }
+    .t2-collab-header { padding: 4px 16px; }
+    .t2c-chat-msgs { min-height: 60px; }
+    /* 도움말·보안 팝업도 가로 모드 최적화 */
+    .t2-collab-help-modal {
+        max-height: 100vh;
+        border-radius: 0;
+        padding-top: 0;
+    }
+    .t2-collab-help-modal::before { display: none; }
+    .t2-collab-help-modal .t2-collab-header { padding: 4px 16px; }
+    .t2c-security-popup {
+        max-height: 100vh;
+        border-radius: 0;
+    }
+    .t2c-security-popup::before { display: none; }
+}
+
+/* [C-PATCH 8] Hover media query for touch devices */
+@media (hover: none) {
+    .t2-collab-user-item:hover { background: transparent; }
+    .t2c-dl-btn:hover { transform: none; }
+}
+
+
+/* ============================================================
+   [v3.2.1] 크로스 브라우저 보강 블록
+   - Firefox / Edge / Chromium 데스크톱과 Android Chrome 에서
+     iOS/Safari 전용 속성들이 작동하지 않을 때를 대비한 표준 폴백.
+   - 모든 신규 규칙은 기존 클래스 훅을 그대로 사용한다 (호환).
+   - v3.2.1: inset 축약형 폴백, 서비스 카드 텍스트 줄바꿈,
+     스크롤 영역 보강, 아이콘 정렬 통일, -ms- 접두어 제거
+   ============================================================ */
+
+/* 모달·시트 컨테이너 — 입력 폼/스크롤 영역에서 텍스트 자동 확대 방지 */
+.t2-collab-modal,
+.t2c-security-popup,
+.t2-collab-help-modal {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* ── inset 축약형 폴백 ──
+   inset:0 은 Chrome 87+, Firefox 66+, Safari 14.1+ 에서만 지원.
+   구형 Android WebView / 삼성 인터넷 등에서 누락 방지를 위해
+   개별 방향을 명시적으로 재선언.                            */
+.t2-collab-modal-overlay,
+.t2c-security-popup-overlay,
+.t2-collab-help-overlay {
+    top: 0; right: 0; bottom: 0; left: 0;
+}
+.t2-collab-cursor-layer {
+    top: 0; right: 0; bottom: 0; left: 0;
+}
+.t2c-qr-popup-overlay {
+    top: 0; right: 0; bottom: 0; left: 0;
+}
+
+/* 모든 스크롤 영역 — 표준 + WebKit 동시 지원 */
+.t2-collab-pane-pre,
+.t2-collab-pane-info,
+.t2c-info-pane,
+.t2-collab-status-card,
+.t2-collab-users-list,
+.t2c-chat-msgs,
+.t2c-status-picker,
+.t2c-security-popup-body,
+.t2-collab-help-content,
+.t2c-info-pane[data-infopane="status"] {
+    scrollbar-width: thin;
+    scrollbar-color: var(--t2c-border-strong) transparent;
+    overscroll-behavior: contain;
+}
+
+/* Firefox 등에서 ::-webkit-scrollbar 가 무시되어도 두께가 자연스럽도록
+   표준 scrollbar-width 를 기본 적용 */
+
+/* 버튼·인터랙티브 요소 — iOS 탭 하이라이트 제거(표준 outline 유지) */
+.t2-collab-btn,
+.t2-collab-icon-btn,
+.t2-collab-close-btn,
+.t2-collab-tab,
+.t2c-info-tab,
+.t2c-status-btn,
+.t2c-action-btn,
+.t2c-react-opt,
+.t2c-attach-btn,
+.t2c-send-btn,
+.t2c-dl-btn,
+.t2c-ctx-item,
+.t2c-status-opt,
+.t2c-ch-btn,
+.t2c-security-link-btn,
+.t2c-security-popup-close,
+.t2c-qr-popup-close,
+.t2c-search-toggle-btn,
+.t2c-search-close-btn,
+.t2c-dm-close-btn,
+.t2c-reply-cancel-btn,
+.t2c-chat-qr-btn,
+.t2c-compact-qr-btn,
+.t2c-qr-toggle,
+.t2-collab-help-head {            /* [v3.2.2] 아코디언 헤드 터치 최적화 */
+    -webkit-tap-highlight-color: transparent;
+    /* 모든 브라우저에서 동일한 user-select 동작 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    /* 터치 동작 표준화 */
+    touch-action: manipulation;
+}
+
+/* 입력 필드 — iOS 자동 확대 방지(16px 이상)와 폰트 일관성 */
+.t2-collab-field input,
+.t2c-chat-txt,
+.t2c-search-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 16px;
+}
+@media (min-width: 641px) {
+    /* 데스크톱에서는 가독성 차원에서 원래 크기로 복귀 */
+    .t2-collab-field input { font-size: 14.5px; }
+    .t2c-chat-txt { font-size: 13.5px; }
+    .t2c-search-input { font-size: 13px; }
+}
+
+/* backdrop-filter 미지원 브라우저용 폴백 — 좀 더 진한 배경 */
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .t2-collab-modal-overlay,
+    .t2-collab-help-overlay {
+        background: rgba(15, 23, 42, 0.55);
+    }
+    .t2c-qr-popup-overlay {
+        background: rgba(0, 0, 0, 0.40);
+    }
+    .t2c-security-popup-overlay {
+        background: rgba(15, 23, 42, 0.50);
+    }
+}
+
+/* mix-blend-mode 미지원 폴백 — 선택 영역이 흐려지면 단색으로 */
+@supports not (mix-blend-mode: multiply) {
+    .t2-collab-remote-selection {
+        background: var(--t2c-primary-soft);
+    }
+}
+
+/* Windows / Linux Chrome 에서 둥근 모서리 클리핑이 어색하지 않도록 */
+.t2-collab-modal,
+.t2c-security-popup,
+.t2-collab-help-modal,
+.t2c-qr-popup {
+    transform: translateZ(0); /* 합성 레이어 강제 → 클리핑 안정 */
+    isolation: isolate;       /* 추가: 합성 컨텍스트 명시적 격리 */
+}
+
+/* 다크 테마 — 도움말 스크롤바 */
+html[data-t2editor-theme="dark"] .t2-collab-help-content {
+    scrollbar-color: var(--t2c-text-soft) transparent;
+}
+html[data-t2editor-theme="dark"] .t2-collab-help-content::-webkit-scrollbar-thumb {
+    background: var(--t2c-text-soft);
+}
+
+/* ── 아이콘·텍스트 정렬 통일 (v3.2.3) ──
+   베이스라인/inline-flex 간섭으로 인한 수직 어긋남을 원천 차단.
+   (기존 vertical-align:middle 은 flex 컨텍스트에서 무의미하므로 제거)
+
+   [A] 래퍼 컨테이너(비 .material-icons)에 line-height:1 적용
+       — .material-icons 요소 자체는 글로벌 규칙(line 90)의
+         line-height:1 !important 가 이미 커버하므로 생략
+   [B] 복합 셀렉터로 display:flex 명시성 상승
+       — Google Material Icons 의 .material-icons{display:inline-block}
+         과 단일 클래스 셀렉터(0,1,0)가 동일하여 소스 순서에 의존하던
+         문제를 복합 셀렉터(0,2,0)로 확실히 오버라이드              */
+
+/* [A] 래퍼 컨테이너 line-height 정규화 */
+.t2-collab-title-icon {
+    line-height: 1;
+}
+
+/* [B] .material-icons 요소 display:flex 명시성 부스트 */
+.material-icons.t2c-service-icon,
+.material-icons.t2c-security-shield-icon {
+    display: flex;
+}
+
+/* 버튼·링크 아이콘 컨테이너 line-height 정규화 */
+.t2-collab-close-btn,
+.t2-collab-icon-btn,
+.t2c-status-btn,
+.t2c-security-link-btn,
+.t2c-security-popup-close,
+.t2c-chat-qr-btn,
+.t2c-search-toggle-btn,
+.t2c-compact-qr-btn {
+    line-height: 1;
+}
+
+/* flex 행 내부 아이콘+텍스트 수직 중앙 정렬 보정 */
+.t2c-service-card-header,
+.t2-collab-header,
+.t2c-chat-header,
+.t2c-security-popup-header {
+    align-items: center;
+}
+
+/* 체크박스 — Firefox 에서 기본 체크박스 테두리 보정 */
+.t2-collab-checkbox input[type="checkbox"] {
+    -moz-appearance: none;
+}
+
+/* Reduced-motion 강화 */
+@media (prefers-reduced-motion: reduce) {
+    .t2c-msg-actions,
+    .t2c-react-pill,
+    .t2c-action-btn,
+    .t2-collab-btn-primary,
+    .t2c-send-btn,
+    .t2c-dl-btn,
+    .t2c-scroll-btn {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+    /* 스크롤 애니메이션도 축소 — 모션 민감 사용자 배려 */
+    .t2-collab-help-content,
+    .t2c-security-popup-body,
+    .t2c-chat-msgs,
+    .t2c-info-pane[data-infopane="status"] {
+        scroll-behavior: auto !important;
+    }
+}
+
+/* T2Editor Coding-Agent Rule: Write only concise, high-value comments. Preserve "Path: T2Editor/..." comments; update them when files move—never delete them. */

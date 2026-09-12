@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "code": "en",
+    "plugin": "link",
+    "source": "plugin",
+    "version": "10.3.0"
+  },
+  "link": {
+    "modal_title": "Add link",
+    "modal_title_edit": "Edit link",
+    "url_label": "URL",
+    "url_placeholder": "https://example.com",
+    "text_label": "Link text",
+    "text_placeholder": "Link description (optional)",
+    "target_label": "Open in new tab",
+    "select_text_first": "Please select text before adding a link.",
+    "invalid_url": "Invalid URL format.",
+    "no_url": "Please enter a URL.",
+    "btn_insert": "Insert link",
+    "btn_update": "Update",
+    "btn_remove": "Remove link",
+    "no_selection": "Cannot find selection range.",
+    "no_text_selected": "No text selected.",
+    "apply_error": "Error applying link.",
+    "remove_error": "Error removing link."
+  }
+}

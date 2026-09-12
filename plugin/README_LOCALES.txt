@@ -1,0 +1,42 @@
+Path: T2Editor/plugin/README_LOCALES.txt
+T2Editor 플러그인 번역 규격
+============================
+
+플러그인 번역은 반드시 플러그인 자체 폴더에 둡니다.
+
+  plugin/my_plugin/locales/ko.json
+  plugin/my_plugin/locales/en.json
+
+권장 형식
+---------
+{
+  "_meta": {
+    "code": "ko",
+    "plugin": "my_plugin",
+    "version": "1.0.0"
+  },
+  "my_plugin": {
+    "modal_title": "플러그인 제목",
+    "save": "저장"
+  }
+}
+
+규칙
+----
+1. 최상위 번역 네임스페이스는 플러그인 폴더명과 정확히 같아야 합니다.
+2. _meta.plugin을 쓸 경우에도 플러그인 폴더명과 같아야 합니다.
+3. 코어 common.*은 재사용할 수 있지만 플러그인 언어팩에서 덮어쓸 수 없습니다.
+4. 플러그인 언어팩은 코어가 이미 등록한 언어에 번역만 보충합니다.
+5. 번역이 준비되지 않았으면 locales 폴더를 만들지 않아도 됩니다.
+6. 파일이 없거나 JSON이 잘못되어도 플러그인의 등록·로딩·실행은 계속됩니다.
+7. 누락된 키는 설치 언어의 폴백 체인으로 조회되고, 그래도 없으면 읽을 수
+   있는 키 이름으로 표시됩니다. 누락 번역 때문에 예외가 발생하지 않습니다.
+
+서드파티 마켓 제출 권장 사항
+----------------------------
+- plugin.json의 플러그인 id와 폴더명, 번역 네임스페이스를 동일하게 유지
+- locales/<BCP47>.json 파일 사용: ko.json, en.json, pt-BR.json 등
+- 한 파일 4 MiB 이하, UTF-8 JSON, 실행 코드 포함 금지
+- 최소 en.json 권장. 단, 번역 미제공도 플러그인 설치/실행 결격 사유가 아님
+
+# T2Editor Coding-Agent Rule: Write only concise, high-value comments. Preserve "Path: T2Editor/..." comments; update them when files move—never delete them.

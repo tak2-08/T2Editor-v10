@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "code": "zh",
+    "plugin": "table",
+    "source": "plugin",
+    "version": "10.5.0"
+  },
+  "table": {
+    "modal_title": "插入表格",
+    "rows_label": "行",
+    "cols_label": "列",
+    "header_row_label": "包含标题行",
+    "border_label": "边框",
+    "btn_insert": "插入表格",
+    "add_row": "添加行",
+    "add_col": "添加列",
+    "del_row": "删除行",
+    "del_col": "删除列",
+    "header_row": "标题行",
+    "header_col": "标题列",
+    "cols_count_label": "列数:",
+    "rows_count_label": "行数:",
+    "large_table_warning": "大表格会产生水平滚动。",
+    "width_label": "表格宽度:",
+    "width_full": "100% (全部)",
+    "width_custom": "自定义",
+    "border_style_label": "边框样式:",
+    "border_solid": "实线",
+    "border_dashed": "虚线",
+    "border_dotted": "点线",
+    "border_double": "双线",
+    "header_label": "标题 {n}",
+    "cols_short_label": "列:",
+    "rows_short_label": "行:",
+    "cells_short_label": "单元格:",
+    "merge_cells": "合并所选单元格",
+    "merge_cells_hint": "选择第一个单元格后按住 Shift 点击最后一个单元格，或先点击合并按钮再选择最后一个单元格。",
+    "split_cell": "拆分合并单元格",
+    "delete_table": "删除表格",
+    "move_up": "上移",
+    "move_down": "下移"
+  }
+}
