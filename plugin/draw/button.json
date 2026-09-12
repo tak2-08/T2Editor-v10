@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "buttons": [
+    {
+      "command": "insertDrawing",
+      "plugin": "draw",
+      "ariaLabel": "draw",
+      "order": 23,
+      "icon": { "type": "material-icons", "name": "brush" }
+    }
+  ]
+}
